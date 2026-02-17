@@ -44,12 +44,30 @@ export function Question({
 	};
 
 	const getOptionStyle = (index: number): React.CSSProperties => {
-		const base: React.CSSProperties = {
+		let borderColor = colors.border;
+		let backgroundColor = colors.surface;
+
+		if (answerResult) {
+			if (index === answerResult.correct_index) {
+				borderColor = colors.success;
+				backgroundColor = `${colors.success}15`;
+			} else if (index === selectedIndex && !answerResult.correct) {
+				borderColor = colors.error;
+				backgroundColor = `${colors.error}15`;
+			}
+		} else if (index === selectedIndex) {
+			borderColor = colors.primary;
+			backgroundColor = `${colors.primary}15`;
+		}
+
+		return {
 			padding: spacing.lg,
 			marginBottom: spacing.sm,
 			borderRadius: borderRadius.md,
-			border: `2px solid ${colors.border}`,
-			backgroundColor: colors.surface,
+			borderWidth: "2px",
+			borderStyle: "solid",
+			borderColor,
+			backgroundColor,
 			color: colors.text,
 			fontSize: typography.sizes.lg,
 			cursor: hasAnswered ? "default" : "pointer",
@@ -58,19 +76,6 @@ export function Question({
 			width: "100%",
 			fontFamily: typography.fontFamily,
 		};
-
-		if (answerResult) {
-			if (index === answerResult.correct_index) {
-				return { ...base, borderColor: colors.success, backgroundColor: `${colors.success}15` };
-			}
-			if (index === selectedIndex && !answerResult.correct) {
-				return { ...base, borderColor: colors.error, backgroundColor: `${colors.error}15` };
-			}
-		} else if (index === selectedIndex) {
-			return { ...base, borderColor: colors.primary, backgroundColor: `${colors.primary}15` };
-		}
-
-		return base;
 	};
 
 	return (
