@@ -23,6 +23,7 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 					Question {currentQuestion.question_index + 1} of {currentQuestion.total_questions}
 				</span>
 				<Timer
+					key={currentQuestion.question_index}
 					totalSeconds={currentQuestion.time_limit_sec}
 					running={gameState.phase === "question"}
 				/>
