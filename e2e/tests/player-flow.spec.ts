@@ -16,7 +16,7 @@ test.describe("Player Flow", () => {
 		await page.getByPlaceholder("Your name").fill("TestPlayer");
 		await page.getByRole("button", { name: "Join Game" }).click();
 
-		await expect(page.getByText(/Failed|not found/i)).toBeVisible({ timeout: 10000 });
+		await expect(page.getByText(/No active game session/i)).toBeVisible({ timeout: 10000 });
 	});
 
 	test("player gets validation error without name", async ({ page }) => {
@@ -34,6 +34,6 @@ test.describe("Player Flow", () => {
 		await page.getByRole("button", { name: "Join a Game" }).click();
 
 		await expect(page).toHaveURL("/play");
-		await expect(page.getByText("Join a Game")).toBeVisible();
+		await expect(page.getByRole("heading", { name: "Join a Game" })).toBeVisible();
 	});
 });

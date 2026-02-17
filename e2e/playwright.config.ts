@@ -11,7 +11,7 @@ export default defineConfig({
 	webServer: [
 		{
 			command: "cd ../backend && cargo run",
-			url: "http://localhost:3000/api/sessions/health",
+			url: "http://localhost:3000/api/health",
 			reuseExistingServer: true,
 			timeout: 120_000,
 		},

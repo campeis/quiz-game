@@ -24,6 +24,7 @@ pub fn build_router(session_manager: SessionManager, config: AppConfig) -> Route
     };
 
     Router::new()
+        .route("/api/health", get(|| async { "ok" }))
         .route("/api/quiz", post(handlers::quiz_upload::upload_quiz))
         .route("/api/sessions", post(handlers::session::create_session))
         .route(
