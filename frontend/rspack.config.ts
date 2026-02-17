@@ -49,7 +49,6 @@ export default defineConfig({
 		historyApiFallback: true,
 		proxy: [
 			{ context: ["/api"], target: "http://localhost:3000" },
-			{ context: ["/ws"], target: "http://localhost:3000", ws: true },
 		],
 	},
 });

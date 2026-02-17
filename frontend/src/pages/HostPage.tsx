@@ -8,6 +8,7 @@ import { useWebSocket } from "../hooks/useWebSocket";
 import type { QuizPreview } from "../services/api";
 import { createSession } from "../services/api";
 import { MSG } from "../services/messages";
+import { buildWsUrl } from "../services/ws-url";
 import { colors, spacing, typography } from "../components/ui/tokens";
 
 type HostPhase = "upload" | "lobby" | "playing" | "finished";
@@ -42,8 +43,7 @@ export function HostPage() {
 		try {
 			const session = await createSession(preview.quiz_id);
 			setJoinCode(session.join_code);
-			const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-			setWsUrl(`${protocol}//${window.location.host}${session.ws_url}`);
+			setWsUrl(buildWsUrl(session.ws_url));
 			setPhase("lobby");
 		} catch (err) {
 			setError("Failed to create session");

@@ -7,6 +7,7 @@ import { useGameState } from "../hooks/useGameState";
 import { useWebSocket } from "../hooks/useWebSocket";
 import type { SessionInfo } from "../services/api";
 import { MSG } from "../services/messages";
+import { buildWsUrl } from "../services/ws-url";
 import { colors, spacing, typography } from "../components/ui/tokens";
 
 type PlayerPhase = "join" | "lobby" | "starting" | "question" | "question_ended" | "finished";
@@ -47,10 +48,7 @@ export function PlayerPage() {
 
 	const handleJoined = (info: SessionInfo, displayName: string) => {
 		setJoinCode(info.join_code);
-		const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-		setWsUrl(
-			`${protocol}//${window.location.host}${info.ws_url}?name=${encodeURIComponent(displayName)}`,
-		);
+		setWsUrl(buildWsUrl(`${info.ws_url}?name=${encodeURIComponent(displayName)}`));
 		setPhase("lobby");
 	};
 
