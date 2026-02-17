@@ -77,4 +77,44 @@ describe("Question", () => {
 		expect(screen.getByText("Incorrect")).toBeInTheDocument();
 		expect(screen.getByText("+0 points")).toBeInTheDocument();
 	});
+
+	it("resets selection state when questionIndex changes", () => {
+		const onAnswer = vi.fn();
+		const { rerender } = render(
+			<Question {...defaultProps} questionIndex={0} onAnswer={onAnswer} />,
+		);
+
+		// Answer question 0
+		fireEvent.click(screen.getByText("4"));
+		expect(onAnswer).toHaveBeenCalledTimes(1);
+
+		// Buttons should be disabled after answering
+		const buttons = screen.getAllByRole("button");
+		for (const btn of buttons) {
+			expect(btn).toBeDisabled();
+		}
+
+		// Move to question 1 — buttons must be enabled again
+		rerender(
+			<Question
+				{...defaultProps}
+				questionIndex={1}
+				text="What is 3+3?"
+				options={["5", "6", "7", "8"]}
+				answerResult={null}
+				phase="question"
+				onAnswer={onAnswer}
+			/>,
+		);
+
+		const newButtons = screen.getAllByRole("button");
+		for (const btn of newButtons) {
+			expect(btn).not.toBeDisabled();
+		}
+
+		// Should be able to click an answer on the new question
+		fireEvent.click(screen.getByText("6"));
+		expect(onAnswer).toHaveBeenCalledTimes(2);
+		expect(onAnswer).toHaveBeenLastCalledWith(1);
+	});
 });

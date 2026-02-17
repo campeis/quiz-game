@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Timer } from "./ui/Timer";
 import { Card } from "./ui/Card";
 import { colors, spacing, typography, borderRadius } from "./ui/tokens";
@@ -29,6 +29,12 @@ export function Question({
 	phase,
 }: QuestionProps) {
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+	// Reset selection when moving to a new question
+	useEffect(() => {
+		setSelectedIndex(null);
+	}, [questionIndex]);
+
 	const hasAnswered = selectedIndex !== null;
 
 	const handleSelect = (index: number) => {
@@ -73,7 +79,7 @@ export function Question({
 				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
 					Question {questionIndex + 1} of {totalQuestions}
 				</span>
-				<Timer totalSeconds={timeLimitSec} running={phase === "question" && !hasAnswered} />
+				<Timer key={questionIndex} totalSeconds={timeLimitSec} running={phase === "question" && !hasAnswered} />
 			</div>
 			<h2
 				style={{
