@@ -7,7 +7,8 @@
 - **Rust** (stable, latest) — [rustup.rs](https://rustup.rs)
 - **Node.js** 20+ and npm — [nodejs.org](https://nodejs.org)
 - **just** (command runner) — `cargo install just` or `brew install just`
-- **Playwright browsers** — installed via `npx playwright install` (in e2e/)
+- **cargo-watch** (optional, for auto-reload) — `cargo install cargo-watch`
+- **Playwright browsers** — installed via `npx playwright install chromium` (in e2e/)
 
 ## Setup
 
@@ -22,7 +23,7 @@ just setup
 The `just setup` command runs:
 1. `cargo build` in `backend/`
 2. `npm install` in `frontend/`
-3. `npm install && npx playwright install` in `e2e/`
+3. `npm install && npx playwright install chromium` in `e2e/`
 
 ## Development
 
@@ -32,8 +33,8 @@ just dev
 ```
 
 This runs concurrently:
-- **Backend**: `cargo watch -x run` on `http://localhost:3000` (auto-reloads on Rust changes)
-- **Frontend**: `rspack serve` on `http://localhost:5173` (HMR enabled, proxies `/api` and `/ws` to backend)
+- **Backend**: `cargo watch -x run` on `http://localhost:3000` (auto-reloads on Rust changes; requires `cargo-watch`)
+- **Frontend**: `rspack serve` on `http://localhost:5173` (HMR enabled, proxies `/api` to backend; WebSocket connects directly to backend)
 
 Open `http://localhost:5173` in your browser.
 
@@ -49,7 +50,7 @@ just test-backend
 # Run only frontend tests
 just test-frontend
 
-# Run end-to-end tests (requires backend + frontend running)
+# Run end-to-end tests (starts backend + frontend automatically)
 just test-e2e
 ```
 
@@ -112,11 +113,11 @@ The server runs on `http://localhost:3000` serving both the API and the frontend
 
 1. Open `http://localhost:5173` (dev) or `http://localhost:3000` (prod)
 2. Click **"Host a Quiz"**
-3. Upload a quiz file (see sample below)
-4. Click **"Start Game"** — note the join code
-5. Open another browser tab/window
-6. Enter the join code and a display name
-7. Host clicks **"Begin Quiz"**
+3. Upload a quiz file (see sample below or use `fixtures/sample.txt`)
+4. Note the **join code** shown in the lobby
+5. Open another browser tab/window, click **"Join a Game"**
+6. Enter the join code and a display name, click **"Join Game"**
+7. Back on the host tab, click **"Start Quiz"**
 8. Answer questions and watch the leaderboard update
 
 ### Sample Quiz File (`sample.txt`)
@@ -158,7 +159,7 @@ File format rules:
 | `MAX_PLAYERS`         | 50      | Maximum players per session              |
 | `QUESTION_TIME_SEC`   | 20      | Default time limit per question          |
 | `RECONNECT_TIMEOUT`   | 120     | Seconds before disconnected player/host is dropped |
-| `STATIC_DIR`          | ./dist  | Path to frontend build output            |
+| `STATIC_DIR`          | _(none)_| Path to frontend build output (set to `../frontend/dist` for production) |
 
 ## Justfile Recipes Summary
 
