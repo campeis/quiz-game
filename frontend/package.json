@@ -1,0 +1,32 @@
+{
+  "name": "quiz-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "rspack serve",
+    "build": "rspack build",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --fix src/",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@rspack/cli": "^1.2.0",
+    "@rspack/core": "^1.2.0",
+    "@rspack/plugin-react-refresh": "^1.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^25.0.0",
+    "react-refresh": "^0.14.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

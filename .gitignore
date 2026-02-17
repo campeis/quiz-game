@@ -1,0 +1,29 @@
+# Rust
+backend/target/
+*.rs.bk
+
+# Node.js
+node_modules/
+frontend/dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env*
+!.env.example
+
+# Logs
+*.log
+
+# Test artifacts
+e2e/test-results/
+e2e/playwright-report/
+frontend/coverage/

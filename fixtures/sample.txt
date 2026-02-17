@@ -1,0 +1,28 @@
+# General Knowledge
+
+? What is the capital of France?
+- London
+- Berlin
+* Paris
+- Madrid
+
+? How many continents are there?
+- 5
+* 7
+- 9
+
+? Which planet is closest to the Sun?
+* Mercury
+- Venus
+- Earth
+
+? What is the largest ocean on Earth?
+* Pacific Ocean
+- Atlantic Ocean
+- Indian Ocean
+- Arctic Ocean
+
+? In which year did World War II end?
+- 1943
+* 1945
+- 1947
