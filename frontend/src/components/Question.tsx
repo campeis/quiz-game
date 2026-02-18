@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Timer } from "./ui/Timer";
 import { Card } from "./ui/Card";
-import { colors, spacing, typography, borderRadius } from "./ui/tokens";
+import { Timer } from "./ui/Timer";
+import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
 interface QuestionProps {
 	questionIndex: number;
@@ -30,7 +30,7 @@ export function Question({
 }: QuestionProps) {
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-	// Reset selection when moving to a new question
+	// biome-ignore lint/correctness/useExhaustiveDependencies: questionIndex is intentionally used to reset state on question change
 	useEffect(() => {
 		setSelectedIndex(null);
 	}, [questionIndex]);
@@ -80,11 +80,22 @@ export function Question({
 
 	return (
 		<Card style={{ maxWidth: "600px", width: "100%" }}>
-			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.md }}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginBottom: spacing.md,
+				}}
+			>
 				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
 					Question {questionIndex + 1} of {totalQuestions}
 				</span>
-				<Timer key={questionIndex} totalSeconds={timeLimitSec} running={phase === "question" && !hasAnswered} />
+				<Timer
+					key={questionIndex}
+					totalSeconds={timeLimitSec}
+					running={phase === "question" && !hasAnswered}
+				/>
 			</div>
 			<h2
 				style={{
@@ -99,7 +110,7 @@ export function Question({
 			<div>
 				{options.map((option, i) => (
 					<button
-						key={i}
+						key={option}
 						type="button"
 						onClick={() => handleSelect(i)}
 						disabled={hasAnswered}

@@ -24,7 +24,13 @@ export function Lobby({ joinCode, gameState, isHost, onStartGame }: LobbyProps) 
 					marginBottom: spacing.lg,
 				}}
 			>
-				<p style={{ color: colors.textSecondary, fontSize: typography.sizes.sm, marginBottom: spacing.xs }}>
+				<p
+					style={{
+						color: colors.textSecondary,
+						fontSize: typography.sizes.sm,
+						marginBottom: spacing.xs,
+					}}
+				>
 					Join Code
 				</p>
 				<p
@@ -42,11 +48,19 @@ export function Lobby({ joinCode, gameState, isHost, onStartGame }: LobbyProps) 
 				{gameState.playerCount} player{gameState.playerCount !== 1 ? "s" : ""} connected
 			</p>
 			{gameState.players.length > 0 && (
-				<div role="list" aria-label="Connected players" style={{ marginBottom: spacing.lg, textAlign: "left" }}>
+				<ul
+					aria-label="Connected players"
+					style={{
+						marginBottom: spacing.lg,
+						textAlign: "left",
+						listStyle: "none",
+						padding: 0,
+						margin: 0,
+					}}
+				>
 					{gameState.players.map((p) => (
-						<div
+						<li
 							key={p.id}
-							role="listitem"
 							style={{
 								padding: spacing.sm,
 								borderBottom: `1px solid ${colors.border}`,
@@ -54,9 +68,9 @@ export function Lobby({ joinCode, gameState, isHost, onStartGame }: LobbyProps) 
 							}}
 						>
 							{p.name}
-						</div>
+						</li>
 					))}
-				</div>
+				</ul>
 			)}
 			{isHost && (
 				<Button

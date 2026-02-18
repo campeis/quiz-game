@@ -1,11 +1,11 @@
 import { useCallback, useReducer } from "react";
 import {
-	MSG,
 	type AnswerCountPayload,
 	type AnswerResultPayload,
 	type GameFinishedPayload,
 	type GameStartingPayload,
 	type LeaderboardEntryPayload,
+	MSG,
 	type PlayerJoinedPayload,
 	type PlayerLeftPayload,
 	type QuestionEndedPayload,
@@ -13,7 +13,13 @@ import {
 	type WsMessage,
 } from "../services/messages";
 
-export type GamePhase = "lobby" | "starting" | "question" | "question_ended" | "finished" | "paused";
+export type GamePhase =
+	| "lobby"
+	| "starting"
+	| "question"
+	| "question_ended"
+	| "finished"
+	| "paused";
 
 export interface GameState {
 	phase: GamePhase;
@@ -64,11 +70,22 @@ function reducer(state: GameState, action: Action): GameState {
 		}
 		case MSG.GAME_STARTING: {
 			const p = message.payload as GameStartingPayload;
-			return { ...state, phase: "starting", totalQuestions: p.total_questions, countdown: p.countdown_sec };
+			return {
+				...state,
+				phase: "starting",
+				totalQuestions: p.total_questions,
+				countdown: p.countdown_sec,
+			};
 		}
 		case MSG.QUESTION: {
 			const p = message.payload as QuestionPayload;
-			return { ...state, phase: "question", currentQuestion: p, answerResult: null, answerCount: null };
+			return {
+				...state,
+				phase: "question",
+				currentQuestion: p,
+				answerResult: null,
+				answerCount: null,
+			};
 		}
 		case MSG.ANSWER_COUNT:
 			return { ...state, answerCount: message.payload as AnswerCountPayload };

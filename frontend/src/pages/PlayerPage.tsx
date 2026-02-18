@@ -3,12 +3,12 @@ import { JoinForm } from "../components/JoinForm";
 import { Leaderboard } from "../components/Leaderboard";
 import { Lobby } from "../components/Lobby";
 import { Question } from "../components/Question";
+import { colors, spacing, typography } from "../components/ui/tokens";
 import { useGameState } from "../hooks/useGameState";
 import { useWebSocket } from "../hooks/useWebSocket";
 import type { SessionInfo } from "../services/api";
 import { MSG } from "../services/messages";
 import { buildWsUrl } from "../services/ws-url";
-import { colors, spacing, typography } from "../components/ui/tokens";
 
 type PlayerPhase = "join" | "lobby" | "starting" | "question" | "question_ended" | "finished";
 
@@ -83,9 +83,7 @@ export function PlayerPage() {
 
 			{phase === "join" && <JoinForm onJoined={handleJoined} />}
 
-			{phase === "lobby" && (
-				<Lobby joinCode={joinCode} gameState={gameState} isHost={false} />
-			)}
+			{phase === "lobby" && <Lobby joinCode={joinCode} gameState={gameState} isHost={false} />}
 
 			{phase === "starting" && (
 				<div style={{ textAlign: "center" }}>
@@ -109,9 +107,7 @@ export function PlayerPage() {
 				/>
 			)}
 
-			{phase === "finished" && (
-				<Leaderboard entries={gameState.leaderboard} isFinal={true} />
-			)}
+			{phase === "finished" && <Leaderboard entries={gameState.leaderboard} isFinal={true} />}
 		</main>
 	);
 }

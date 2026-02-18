@@ -42,7 +42,9 @@ export function HomePage() {
 			</p>
 			<div style={{ display: "flex", gap: spacing.lg, flexWrap: "wrap", justifyContent: "center" }}>
 				<Card style={{ textAlign: "center", width: "280px" }}>
-					<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.sm }}>
+					<h2
+						style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.sm }}
+					>
 						Host a Quiz
 					</h2>
 					<p style={{ color: colors.textSecondary, marginBottom: spacing.lg }}>
@@ -53,7 +55,9 @@ export function HomePage() {
 					</Button>
 				</Card>
 				<Card style={{ textAlign: "center", width: "280px" }}>
-					<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.sm }}>
+					<h2
+						style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.sm }}
+					>
 						Join a Game
 					</h2>
 					<p style={{ color: colors.textSecondary, marginBottom: spacing.lg }}>

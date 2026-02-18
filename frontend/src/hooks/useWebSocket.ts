@@ -10,7 +10,12 @@ interface UseWebSocketOptions {
 	maxRetries?: number;
 }
 
-export function useWebSocket({ url, onMessage, reconnect = true, maxRetries = 5 }: UseWebSocketOptions) {
+export function useWebSocket({
+	url,
+	onMessage,
+	reconnect = true,
+	maxRetries = 5,
+}: UseWebSocketOptions) {
 	const [connectionState, setConnectionState] = useState<ConnectionState>("disconnected");
 	const wsRef = useRef<WebSocket | null>(null);
 	const retriesRef = useRef(0);

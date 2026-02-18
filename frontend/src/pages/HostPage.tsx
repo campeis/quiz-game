@@ -3,13 +3,13 @@ import { HostDashboard } from "../components/HostDashboard";
 import { Leaderboard } from "../components/Leaderboard";
 import { Lobby } from "../components/Lobby";
 import { QuizUpload } from "../components/QuizUpload";
+import { colors, spacing, typography } from "../components/ui/tokens";
 import { useGameState } from "../hooks/useGameState";
 import { useWebSocket } from "../hooks/useWebSocket";
 import type { QuizPreview } from "../services/api";
 import { createSession } from "../services/api";
 import { MSG } from "../services/messages";
 import { buildWsUrl } from "../services/ws-url";
-import { colors, spacing, typography } from "../components/ui/tokens";
 
 type HostPhase = "upload" | "lobby" | "playing" | "finished";
 
@@ -96,9 +96,7 @@ export function HostPage() {
 
 			{phase === "playing" && <HostDashboard gameState={gameState} />}
 
-			{phase === "finished" && (
-				<Leaderboard entries={gameState.leaderboard} isFinal={true} />
-			)}
+			{phase === "finished" && <Leaderboard entries={gameState.leaderboard} isFinal={true} />}
 		</main>
 	);
 }

@@ -1,7 +1,7 @@
 import type { GameState } from "../hooks/useGameState";
-import { Timer } from "./ui/Timer";
 import { Card } from "./ui/Card";
-import { colors, spacing, typography, borderRadius } from "./ui/tokens";
+import { Timer } from "./ui/Timer";
+import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
 interface HostDashboardProps {
 	gameState: GameState;
@@ -12,13 +12,18 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 
 	if (!currentQuestion) return null;
 
-	const answeredRatio = answerCount
-		? answerCount.answered / answerCount.total
-		: 0;
+	const answeredRatio = answerCount ? answerCount.answered / answerCount.total : 0;
 
 	return (
 		<Card style={{ maxWidth: "600px", width: "100%" }}>
-			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.md }}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginBottom: spacing.md,
+				}}
+			>
 				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
 					Question {currentQuestion.question_index + 1} of {currentQuestion.total_questions}
 				</span>
@@ -39,9 +44,9 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 				{currentQuestion.text}
 			</h2>
 			<div style={{ marginBottom: spacing.lg }}>
-				{currentQuestion.options.map((option, i) => (
+				{currentQuestion.options.map((option) => (
 					<div
-						key={i}
+						key={option}
 						style={{
 							padding: spacing.md,
 							marginBottom: spacing.sm,
@@ -62,6 +67,7 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 					</p>
 					<div
 						role="progressbar"
+						tabIndex={0}
 						aria-valuenow={answerCount?.answered ?? 0}
 						aria-valuemin={0}
 						aria-valuemax={answerCount?.total ?? 0}
@@ -87,12 +93,14 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 			)}
 			{leaderboard.length > 0 && (
 				<div>
-					<h3 style={{ color: colors.text, fontSize: typography.sizes.lg, marginBottom: spacing.sm }}>
+					<h3
+						style={{ color: colors.text, fontSize: typography.sizes.lg, marginBottom: spacing.sm }}
+					>
 						Standings
 					</h3>
-					{leaderboard.slice(0, 5).map((entry, i) => (
+					{leaderboard.slice(0, 5).map((entry) => (
 						<div
-							key={i}
+							key={`${entry.rank}-${entry.display_name}`}
 							style={{
 								display: "flex",
 								justifyContent: "space-between",
@@ -104,9 +112,7 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 							<span>
 								#{entry.rank} {entry.display_name}
 							</span>
-							<span style={{ fontWeight: typography.weights.semibold }}>
-								{entry.score} pts
-							</span>
+							<span style={{ fontWeight: typography.weights.semibold }}>{entry.score} pts</span>
 						</div>
 					))}
 				</div>

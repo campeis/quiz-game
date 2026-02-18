@@ -43,7 +43,9 @@ export function QuizUpload({ onQuizUploaded }: QuizUploadProps) {
 
 	return (
 		<Card style={{ maxWidth: "500px", width: "100%" }}>
-			<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.md }}>Upload Quiz File</h2>
+			<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.md }}>
+				Upload Quiz File
+			</h2>
 			<p style={{ color: colors.textSecondary, marginBottom: spacing.lg }}>
 				Select a .txt quiz file to upload
 			</p>
@@ -65,15 +67,23 @@ export function QuizUpload({ onQuizUploaded }: QuizUploadProps) {
 				Upload Quiz
 			</Button>
 			{error && (
-				<p role="alert" style={{ color: colors.error, marginTop: spacing.md }}>{error}</p>
+				<p role="alert" style={{ color: colors.error, marginTop: spacing.md }}>
+					{error}
+				</p>
 			)}
 			{errors.length > 0 && (
 				<div role="alert" aria-label="Validation errors" style={{ marginTop: spacing.md }}>
-					<p style={{ color: colors.error, fontWeight: typography.weights.semibold, marginBottom: spacing.sm }}>
+					<p
+						style={{
+							color: colors.error,
+							fontWeight: typography.weights.semibold,
+							marginBottom: spacing.sm,
+						}}
+					>
 						Validation errors:
 					</p>
-					{errors.map((e, i) => (
-						<p key={i} style={{ color: colors.error, fontSize: typography.sizes.sm }}>
+					{errors.map((e) => (
+						<p key={e.line} style={{ color: colors.error, fontSize: typography.sizes.sm }}>
 							Line {e.line}: {e.message}
 						</p>
 					))}
