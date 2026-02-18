@@ -2,8 +2,8 @@ use std::sync::Arc;
 use std::time::Instant;
 
 use serde_json::json;
-use tokio::sync::{broadcast, RwLock};
-use tokio::time::{sleep, Duration};
+use tokio::sync::{RwLock, broadcast};
+use tokio::time::{Duration, sleep};
 
 use crate::models::leaderboard::compute_leaderboard;
 use crate::models::player::{Answer, Player};
@@ -207,7 +207,13 @@ pub async fn handle_answer(
     };
 
     if all_answered {
-        do_end_question(session.clone(), tx.clone(), question_time_sec, question_index).await;
+        do_end_question(
+            session.clone(),
+            tx.clone(),
+            question_time_sec,
+            question_index,
+        )
+        .await;
     }
 }
 

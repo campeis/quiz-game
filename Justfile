@@ -4,20 +4,20 @@
 # Install all dependencies
 setup:
     cd backend && cargo build
-    cd frontend && npm install
-    cd e2e && npm install && npx playwright install chromium
+    cd frontend && pnpm install
+    cd e2e && pnpm install && pnpm exec playwright install chromium
 
 # Start backend + frontend dev servers
 dev:
     #!/usr/bin/env bash
     trap 'kill 0' EXIT
-    cd backend && cargo watch -x run &
-    cd frontend && npm run dev &
+    cd backend && cargo run &
+    cd frontend && pnpm run dev &
     wait
 
 # Production build
 build:
-    cd frontend && npm run build
+    cd frontend && pnpm run build
     cd backend && cargo build --release
 
 # Run production server
@@ -33,19 +33,19 @@ test-backend:
 
 # Frontend tests only
 test-frontend:
-    cd frontend && npm test
+    cd frontend && pnpm test
 
 # E2E tests only
 test-e2e:
-    cd e2e && npx playwright test
+    cd e2e && pnpm exec playwright test
 
 # Lint all code
 lint:
     cd backend && cargo clippy -- -D warnings
     cd backend && cargo fmt --check
-    cd frontend && npx biome check src/
+    cd frontend && pnpm exec biome check src/
 
 # Auto-fix lint issues
 lint-fix:
     cd backend && cargo fmt
-    cd frontend && npx biome check --fix src/
+    cd frontend && pnpm exec biome check --fix src/

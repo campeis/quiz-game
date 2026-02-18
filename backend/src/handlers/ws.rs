@@ -10,10 +10,10 @@ use serde::Deserialize;
 use serde_json::json;
 use tokio::sync::broadcast;
 
+use crate::AppState;
 use crate::models::player::{ConnectionStatus, Player};
 use crate::models::session::SessionStatus;
 use crate::services::game_engine::{self, GameEvent};
-use crate::AppState;
 
 /// Reconnection timeout — after this, player is permanently removed.
 const RECONNECT_TIMEOUT_SECS: u64 = 120;
@@ -84,7 +84,9 @@ pub async fn ws_host(
                     GameEvent::HostOnly(m) => Some(m),
                     GameEvent::PlayerOnly { .. } => None,
                 };
-                if let Some(m) = msg && ws_sender.send(Message::Text(m.into())).await.is_err() {
+                if let Some(m) = msg
+                    && ws_sender.send(Message::Text(m.into())).await.is_err()
+                {
                     break;
                 }
             }
@@ -161,8 +163,10 @@ pub async fn ws_host(
                 if s.status == SessionStatus::Paused {
                     s.status = SessionStatus::Finished;
 
-                    let player_refs: Vec<&crate::models::player::Player> = s.players.values().collect();
-                    let leaderboard = crate::models::leaderboard::compute_leaderboard(&player_refs, true);
+                    let player_refs: Vec<&crate::models::player::Player> =
+                        s.players.values().collect();
+                    let leaderboard =
+                        crate::models::leaderboard::compute_leaderboard(&player_refs, true);
                     let leaderboard_json: Vec<_> = leaderboard
                         .iter()
                         .map(|e| {
@@ -235,10 +239,14 @@ pub async fn ws_player(
         // Check for reconnection: find a disconnected player with the same display name
         let reconnect_result = {
             let mut s = session.write().await;
-            let disconnected_player = s.players.iter().find(|(_, p)| {
-                p.display_name == requested_name
-                    && p.connection_status == ConnectionStatus::Disconnected
-            }).map(|(id, _)| id.clone());
+            let disconnected_player = s
+                .players
+                .iter()
+                .find(|(_, p)| {
+                    p.display_name == requested_name
+                        && p.connection_status == ConnectionStatus::Disconnected
+                })
+                .map(|(id, _)| id.clone());
 
             if let Some(existing_id) = disconnected_player {
                 if let Some(player) = s.players.get_mut(&existing_id) {
@@ -263,83 +271,86 @@ pub async fn ws_player(
             }
         };
 
-        let (player_id, display_name, is_reconnect) = if let Some((existing_id, name, player_count)) = reconnect_result {
-            // Broadcast reconnection
-            let _ = tx.send(GameEvent::BroadcastAll(
-                json!({
-                    "type": "player_reconnected",
-                    "payload": {
-                        "player_id": existing_id,
-                        "display_name": name,
-                        "player_count": player_count,
-                    }
-                })
-                .to_string(),
-            ));
-            (existing_id, name, true)
-        } else {
-            // New player join
-            let player_id = uuid::Uuid::new_v4().to_string();
-
-            let (final_name, name_was_changed, player_count) = {
-                let mut s = session.write().await;
-                if !s.is_joinable() {
-                    return;
-                }
-
-                // Ensure display name uniqueness
-                let mut final_name = requested_name.clone();
-                let existing_names: Vec<String> = s.players.values()
-                    .filter(|p| p.connection_status != ConnectionStatus::Disconnected)
-                    .map(|p| p.display_name.clone())
-                    .collect();
-                if existing_names.contains(&final_name) {
-                    let mut suffix = 2;
-                    loop {
-                        let candidate = format!("{} {}", requested_name, suffix);
-                        if !existing_names.contains(&candidate) {
-                            final_name = candidate;
-                            break;
-                        }
-                        suffix += 1;
-                    }
-                }
-
-                let name_changed = final_name != requested_name;
-                let player = Player::new(player_id.clone(), final_name.clone());
-                s.players.insert(player_id.clone(), player);
-                (final_name, name_changed, s.player_count())
-            };
-
-            // Send name_assigned if name was modified
-            if name_was_changed {
-                let _ = tx.send(GameEvent::PlayerOnly {
-                    player_id: player_id.clone(),
-                    message: json!({
-                        "type": "name_assigned",
+        let (player_id, display_name, is_reconnect) =
+            if let Some((existing_id, name, player_count)) = reconnect_result {
+                // Broadcast reconnection
+                let _ = tx.send(GameEvent::BroadcastAll(
+                    json!({
+                        "type": "player_reconnected",
                         "payload": {
-                            "requested_name": requested_name,
-                            "assigned_name": final_name,
+                            "player_id": existing_id,
+                            "display_name": name,
+                            "player_count": player_count,
                         }
                     })
                     .to_string(),
-                });
-            }
+                ));
+                (existing_id, name, true)
+            } else {
+                // New player join
+                let player_id = uuid::Uuid::new_v4().to_string();
 
-            let _ = tx.send(GameEvent::BroadcastAll(
-                json!({
-                    "type": "player_joined",
-                    "payload": {
-                        "player_id": player_id,
-                        "display_name": final_name,
-                        "player_count": player_count,
+                let (final_name, name_was_changed, player_count) = {
+                    let mut s = session.write().await;
+                    if !s.is_joinable() {
+                        return;
                     }
-                })
-                .to_string(),
-            ));
 
-            (player_id, final_name, false)
-        };
+                    // Ensure display name uniqueness
+                    let mut final_name = requested_name.clone();
+                    let existing_names: Vec<String> = s
+                        .players
+                        .values()
+                        .filter(|p| p.connection_status != ConnectionStatus::Disconnected)
+                        .map(|p| p.display_name.clone())
+                        .collect();
+                    if existing_names.contains(&final_name) {
+                        let mut suffix = 2;
+                        loop {
+                            let candidate = format!("{} {}", requested_name, suffix);
+                            if !existing_names.contains(&candidate) {
+                                final_name = candidate;
+                                break;
+                            }
+                            suffix += 1;
+                        }
+                    }
+
+                    let name_changed = final_name != requested_name;
+                    let player = Player::new(player_id.clone(), final_name.clone());
+                    s.players.insert(player_id.clone(), player);
+                    (final_name, name_changed, s.player_count())
+                };
+
+                // Send name_assigned if name was modified
+                if name_was_changed {
+                    let _ = tx.send(GameEvent::PlayerOnly {
+                        player_id: player_id.clone(),
+                        message: json!({
+                            "type": "name_assigned",
+                            "payload": {
+                                "requested_name": requested_name,
+                                "assigned_name": final_name,
+                            }
+                        })
+                        .to_string(),
+                    });
+                }
+
+                let _ = tx.send(GameEvent::BroadcastAll(
+                    json!({
+                        "type": "player_joined",
+                        "payload": {
+                            "player_id": player_id,
+                            "display_name": final_name,
+                            "player_count": player_count,
+                        }
+                    })
+                    .to_string(),
+                ));
+
+                (player_id, final_name, false)
+            };
         let _ = is_reconnect; // used in future for state restoration
         let (mut ws_sender, mut ws_receiver) = socket.split();
 
@@ -355,7 +366,9 @@ pub async fn ws_player(
                     } if pid == &pid_for_send => Some(message.clone()),
                     _ => None,
                 };
-                if let Some(m) = msg && ws_sender.send(Message::Text(m.into())).await.is_err() {
+                if let Some(m) = msg
+                    && ws_sender.send(Message::Text(m.into())).await.is_err()
+                {
                     break;
                 }
             }
@@ -372,8 +385,10 @@ pub async fn ws_player(
                         if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(text)
                             && parsed["type"].as_str() == Some("submit_answer")
                         {
-                            let qi = parsed["payload"]["question_index"].as_u64().unwrap_or(0) as usize;
-                            let si = parsed["payload"]["selected_index"].as_u64().unwrap_or(0) as usize;
+                            let qi =
+                                parsed["payload"]["question_index"].as_u64().unwrap_or(0) as usize;
+                            let si =
+                                parsed["payload"]["selected_index"].as_u64().unwrap_or(0) as usize;
                             game_engine::handle_answer(
                                 &recv_session,
                                 &recv_tx,

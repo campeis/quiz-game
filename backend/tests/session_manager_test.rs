@@ -96,7 +96,10 @@ async fn join_code_is_6_uppercase_alphanumeric() {
     let code = session.read().await.join_code.clone();
 
     assert_eq!(code.len(), 6);
-    assert!(code.chars().all(|c| c.is_ascii_alphanumeric() && c.is_uppercase() || c.is_ascii_digit()));
+    assert!(
+        code.chars()
+            .all(|c| c.is_ascii_alphanumeric() && c.is_uppercase() || c.is_ascii_digit())
+    );
 }
 
 #[test]

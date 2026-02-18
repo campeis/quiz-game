@@ -5,10 +5,10 @@
 ## Prerequisites
 
 - **Rust** (stable, latest) — [rustup.rs](https://rustup.rs)
-- **Node.js** 20+ and npm — [nodejs.org](https://nodejs.org)
+- **Node.js** 20+ — [nodejs.org](https://nodejs.org)
+- **pnpm** (v9+) — `npm install -g pnpm` or `corepack enable && corepack prepare pnpm@latest --activate`
 - **just** (command runner) — `cargo install just` or `brew install just`
-- **cargo-watch** (optional, for auto-reload) — `cargo install cargo-watch`
-- **Playwright browsers** — installed via `npx playwright install chromium` (in e2e/)
+- **Playwright browsers** — installed via `pnpm exec playwright install chromium` (in e2e/)
 
 ## Setup
 
@@ -22,8 +22,8 @@ just setup
 
 The `just setup` command runs:
 1. `cargo build` in `backend/`
-2. `npm install` in `frontend/`
-3. `npm install && npx playwright install chromium` in `e2e/`
+2. `pnpm install` in `frontend/`
+3. `pnpm install && pnpm exec playwright install chromium` in `e2e/`
 
 ## Development
 
@@ -33,7 +33,7 @@ just dev
 ```
 
 This runs concurrently:
-- **Backend**: `cargo watch -x run` on `http://localhost:3000` (auto-reloads on Rust changes; requires `cargo-watch`)
+- **Backend**: `cargo run` on `http://localhost:3000`
 - **Frontend**: `rspack serve` on `http://localhost:5173` (HMR enabled, proxies `/api` to backend; WebSocket connects directly to backend)
 
 Open `http://localhost:5173` in your browser.
@@ -61,10 +61,10 @@ just test-e2e
 cd backend && cargo test
 
 # Frontend unit tests
-cd frontend && npx vitest run
+cd frontend && pnpm exec vitest run
 
 # E2E tests
-cd e2e && npx playwright test
+cd e2e && pnpm exec playwright test
 ```
 
 ## Linting & Formatting
@@ -85,8 +85,8 @@ cd backend && cargo clippy -- -D warnings
 cd backend && cargo fmt --check
 
 # Frontend
-cd frontend && npx biome check src/
-cd frontend && npx biome check --fix src/
+cd frontend && pnpm exec biome check src/
+cd frontend && pnpm exec biome check --fix src/
 ```
 
 ## Build for Production

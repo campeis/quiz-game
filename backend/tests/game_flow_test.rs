@@ -78,9 +78,10 @@ async fn host_game_flow_upload_create_start_finish() {
     let join_code = create_session(&addr, &quiz_id).await;
 
     // Host connects via WebSocket
-    let (mut host_ws, _) = tokio_tungstenite::connect_async(format!("ws://{addr}/ws/host/{join_code}"))
-        .await
-        .unwrap();
+    let (mut host_ws, _) =
+        tokio_tungstenite::connect_async(format!("ws://{addr}/ws/host/{join_code}"))
+            .await
+            .unwrap();
 
     // Player connects via WebSocket
     let (mut player_ws, _) = tokio_tungstenite::connect_async(format!(
@@ -111,7 +112,9 @@ async fn host_game_flow_upload_create_start_finish() {
     // Host starts the game
     host_ws
         .send(Message::Text(
-            serde_json::json!({"type": "start_game", "payload": {}}).to_string().into(),
+            serde_json::json!({"type": "start_game", "payload": {}})
+                .to_string()
+                .into(),
         ))
         .await
         .unwrap();
@@ -159,7 +162,8 @@ async fn host_game_flow_upload_create_start_finish() {
                 "type": "submit_answer",
                 "payload": {"question_index": 0, "selected_index": 1}
             })
-            .to_string().into(),
+            .to_string()
+            .into(),
         ))
         .await
         .unwrap();
@@ -229,7 +233,8 @@ async fn host_game_flow_upload_create_start_finish() {
                 "type": "submit_answer",
                 "payload": {"question_index": 1, "selected_index": 0}
             })
-            .to_string().into(),
+            .to_string()
+            .into(),
         ))
         .await
         .unwrap();

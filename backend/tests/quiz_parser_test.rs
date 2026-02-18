@@ -121,7 +121,11 @@ fn parse_quiz_missing_correct_answer() {
 - B
 ";
     let errors = parse_quiz(content, 20).unwrap_err();
-    assert!(errors.iter().any(|e| e.message.contains("no correct answer")));
+    assert!(
+        errors
+            .iter()
+            .any(|e| e.message.contains("no correct answer"))
+    );
 }
 
 #[test]
@@ -134,7 +138,11 @@ fn parse_quiz_multiple_correct_answers() {
 - C
 ";
     let errors = parse_quiz(content, 20).unwrap_err();
-    assert!(errors.iter().any(|e| e.message.contains("multiple correct answers")));
+    assert!(
+        errors
+            .iter()
+            .any(|e| e.message.contains("multiple correct answers"))
+    );
 }
 
 #[test]
@@ -172,7 +180,11 @@ fn parse_quiz_empty_option_text() {
 * B
 ";
     let errors = parse_quiz(content, 20).unwrap_err();
-    assert!(errors.iter().any(|e| e.message.contains("Option text is empty")));
+    assert!(
+        errors
+            .iter()
+            .any(|e| e.message.contains("Option text is empty"))
+    );
 }
 
 #[test]
@@ -228,7 +240,11 @@ fn parse_quiz_option_before_question() {
 * B
 ";
     let errors = parse_quiz(content, 20).unwrap_err();
-    assert!(errors.iter().any(|e| e.message.contains("before any question")));
+    assert!(
+        errors
+            .iter()
+            .any(|e| e.message.contains("before any question"))
+    );
 }
 
 #[test]

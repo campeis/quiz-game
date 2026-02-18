@@ -1,12 +1,12 @@
+use axum::Json;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
 use serde::Deserialize;
 use serde_json::json;
 
-use crate::errors::AppError;
 use crate::AppState;
+use crate::errors::AppError;
 
 #[derive(Deserialize)]
 pub struct CreateSessionRequest {

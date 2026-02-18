@@ -1,6 +1,6 @@
+use axum::Router;
 use axum::body::Body;
 use axum::http::{Request, StatusCode};
-use axum::Router;
 use http_body_util::BodyExt;
 use tower::ServiceExt;
 
@@ -30,7 +30,8 @@ fn test_app() -> Router {
 async fn upload_valid_quiz_returns_200_with_preview() {
     let app = test_app();
 
-    let quiz_content = "# Test Quiz\n? Q1\n- Wrong\n* Right\n- Also wrong\n? Q2\n* Correct\n- Nope\n";
+    let quiz_content =
+        "# Test Quiz\n? Q1\n- Wrong\n* Right\n- Also wrong\n? Q2\n* Correct\n- Nope\n";
     let boundary = "----TestBoundary";
     let body = format!(
         "--{boundary}\r\nContent-Disposition: form-data; name=\"quiz_file\"; filename=\"quiz.txt\"\r\nContent-Type: text/plain\r\n\r\n{quiz_content}\r\n--{boundary}--\r\n"
@@ -41,7 +42,10 @@ async fn upload_valid_quiz_returns_200_with_preview() {
             Request::builder()
                 .method("POST")
                 .uri("/api/quiz")
-                .header("Content-Type", format!("multipart/form-data; boundary={boundary}"))
+                .header(
+                    "Content-Type",
+                    format!("multipart/form-data; boundary={boundary}"),
+                )
                 .body(Body::from(body))
                 .unwrap(),
         )
@@ -75,7 +79,10 @@ async fn upload_invalid_quiz_returns_400() {
             Request::builder()
                 .method("POST")
                 .uri("/api/quiz")
-                .header("Content-Type", format!("multipart/form-data; boundary={boundary}"))
+                .header(
+                    "Content-Type",
+                    format!("multipart/form-data; boundary={boundary}"),
+                )
                 .body(Body::from(body))
                 .unwrap(),
         )
@@ -108,7 +115,10 @@ async fn create_session_returns_201_with_join_code() {
             Request::builder()
                 .method("POST")
                 .uri("/api/quiz")
-                .header("Content-Type", format!("multipart/form-data; boundary={boundary}"))
+                .header(
+                    "Content-Type",
+                    format!("multipart/form-data; boundary={boundary}"),
+                )
                 .body(Body::from(body))
                 .unwrap(),
         )
@@ -156,7 +166,10 @@ async fn setup_session(app: &Router) -> String {
             Request::builder()
                 .method("POST")
                 .uri("/api/quiz")
-                .header("Content-Type", format!("multipart/form-data; boundary={boundary}"))
+                .header(
+                    "Content-Type",
+                    format!("multipart/form-data; boundary={boundary}"),
+                )
                 .body(Body::from(body))
                 .unwrap(),
         )

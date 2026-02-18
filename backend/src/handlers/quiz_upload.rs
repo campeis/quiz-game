@@ -1,12 +1,12 @@
+use axum::Json;
 use axum::extract::{Multipart, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
 use serde_json::json;
 
+use crate::AppState;
 use crate::errors::AppError;
 use crate::models::quiz::parse_quiz;
-use crate::AppState;
 
 pub async fn upload_quiz(
     State(state): State<AppState>,
@@ -32,11 +32,12 @@ pub async fn upload_quiz(
         }
     }
 
-    let content = file_content
-        .ok_or_else(|| AppError::InvalidUpload("Expected a text file upload in the 'quiz_file' field".into()))?;
+    let content = file_content.ok_or_else(|| {
+        AppError::InvalidUpload("Expected a text file upload in the 'quiz_file' field".into())
+    })?;
 
-    let quiz = parse_quiz(&content, state.config.question_time_sec)
-        .map_err(AppError::InvalidQuizFile)?;
+    let quiz =
+        parse_quiz(&content, state.config.question_time_sec).map_err(AppError::InvalidQuizFile)?;
 
     let preview: Vec<_> = quiz
         .questions
@@ -63,7 +64,8 @@ pub async fn upload_quiz(
     });
 
     if question_count > 100 {
-        response["warning"] = json!("Quiz has more than 100 questions. This may result in very long game sessions.");
+        response["warning"] =
+            json!("Quiz has more than 100 questions. This may result in very long game sessions.");
     }
 
     Ok((StatusCode::OK, Json(response)))

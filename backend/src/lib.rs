@@ -4,8 +4,8 @@ pub mod handlers;
 pub mod models;
 pub mod services;
 
-use axum::routing::{get, post};
 use axum::Router;
+use axum::routing::{get, post};
 use tower_http::cors::CorsLayer;
 
 use crate::config::AppConfig;

@@ -43,11 +43,11 @@ fn incorrect_answer_always_gets_0() {
 fn boundary_at_exact_third_boundaries() {
     // 30 second limit: thirds at 10000, 20000, 30000
     assert_eq!(calculate_points(true, 10000, 30), 1000); // exactly at first third boundary
-    assert_eq!(calculate_points(true, 10001, 30), 500);   // just past first third
-    assert_eq!(calculate_points(true, 20000, 30), 500);   // exactly at second third boundary
-    assert_eq!(calculate_points(true, 20001, 30), 250);   // just past second third
-    assert_eq!(calculate_points(true, 30000, 30), 250);   // exactly at time limit
-    assert_eq!(calculate_points(true, 30001, 30), 0);     // just past time limit
+    assert_eq!(calculate_points(true, 10001, 30), 500); // just past first third
+    assert_eq!(calculate_points(true, 20000, 30), 500); // exactly at second third boundary
+    assert_eq!(calculate_points(true, 20001, 30), 250); // just past second third
+    assert_eq!(calculate_points(true, 30000, 30), 250); // exactly at time limit
+    assert_eq!(calculate_points(true, 30001, 30), 0); // just past time limit
 }
 
 #[test]

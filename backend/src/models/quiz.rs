@@ -39,57 +39,50 @@ pub fn parse_quiz(content: &str, default_time_limit: u64) -> Result<Quiz, Vec<Pa
     let mut current_options: Vec<(String, bool)> = Vec::new();
     let mut question_start_line: usize = 0;
 
-    let finalize_question =
-        |questions: &mut Vec<Question>,
-         errors: &mut Vec<ParseError>,
-         text: &str,
-         options: &[(String, bool)],
-         start_line: usize,
-         default_time: u64| {
-            let correct_count = options.iter().filter(|(_, c)| *c).count();
-            if correct_count == 0 {
-                errors.push(ParseError {
-                    line: start_line,
-                    message: "Question has no correct answer (no line starting with *)".into(),
-                });
-            } else if correct_count > 1 {
-                errors.push(ParseError {
-                    line: start_line,
-                    message: "Question has multiple correct answers (only one * allowed)".into(),
-                });
-            }
-            if options.len() < 2 {
-                errors.push(ParseError {
-                    line: start_line,
-                    message: format!(
-                        "Question has {} option(s), minimum is 2",
-                        options.len()
-                    ),
-                });
-            }
-            if options.len() > 4 {
-                errors.push(ParseError {
-                    line: start_line,
-                    message: format!(
-                        "Question has {} options, maximum is 4",
-                        options.len()
-                    ),
-                });
-            }
+    let finalize_question = |questions: &mut Vec<Question>,
+                             errors: &mut Vec<ParseError>,
+                             text: &str,
+                             options: &[(String, bool)],
+                             start_line: usize,
+                             default_time: u64| {
+        let correct_count = options.iter().filter(|(_, c)| *c).count();
+        if correct_count == 0 {
+            errors.push(ParseError {
+                line: start_line,
+                message: "Question has no correct answer (no line starting with *)".into(),
+            });
+        } else if correct_count > 1 {
+            errors.push(ParseError {
+                line: start_line,
+                message: "Question has multiple correct answers (only one * allowed)".into(),
+            });
+        }
+        if options.len() < 2 {
+            errors.push(ParseError {
+                line: start_line,
+                message: format!("Question has {} option(s), minimum is 2", options.len()),
+            });
+        }
+        if options.len() > 4 {
+            errors.push(ParseError {
+                line: start_line,
+                message: format!("Question has {} options, maximum is 4", options.len()),
+            });
+        }
 
-            if correct_count == 1 && options.len() >= 2 && options.len() <= 4 {
-                let correct_index = options.iter().position(|(_, c)| *c).unwrap();
-                questions.push(Question {
-                    text: text.to_string(),
-                    options: options
-                        .iter()
-                        .map(|(t, _)| QuizOption { text: t.clone() })
-                        .collect(),
-                    correct_index,
-                    time_limit_sec: default_time,
-                });
-            }
-        };
+        if correct_count == 1 && options.len() >= 2 && options.len() <= 4 {
+            let correct_index = options.iter().position(|(_, c)| *c).unwrap();
+            questions.push(Question {
+                text: text.to_string(),
+                options: options
+                    .iter()
+                    .map(|(t, _)| QuizOption { text: t.clone() })
+                    .collect(),
+                correct_index,
+                time_limit_sec: default_time,
+            });
+        }
+    };
 
     for (line_num, line) in content.lines().enumerate() {
         let line_num = line_num + 1; // 1-based
