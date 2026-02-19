@@ -56,13 +56,18 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - name: Install Playwright system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3 libatk-bridge2.0-0 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1
 
       - name: Setup (just setup)
         run: just setup
 
       - name: Test (just test)
         run: just test
+
+      - name: Install yamllint
+        run: pip install yamllint
 
       - name: Lint (just lint)
         run: just lint

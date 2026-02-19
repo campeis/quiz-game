@@ -39,7 +39,7 @@ specs/             Feature specifications and implementation plans
 | **Backend** | Rust (stable) with Axum web framework |
 | **Frontend** | React 19, TypeScript 5.x |
 | **Bundler** | Rspack |
-| **Linting** | Biome (frontend), Clippy + rustfmt (backend) |
+| **Linting** | Biome (frontend), Clippy + rustfmt (backend), yamllint (YAML) |
 | **Testing** | cargo test (backend), Vitest (frontend), Playwright (E2E) |
 | **Package Manager** | pnpm |
 | **Task Runner** | just |
@@ -68,7 +68,7 @@ For detailed setup instructions, game walkthrough, environment configuration, an
 
 ```bash
 just test     # Run all tests (backend + frontend + e2e)
-just lint     # Check linting (clippy + biome + rustfmt)
+just lint     # Check linting (clippy + biome + rustfmt + yamllint)
 just lint-fix # Auto-fix lint issues
 ```
 

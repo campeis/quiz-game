@@ -44,6 +44,7 @@ lint:
     cd backend && cargo clippy -- -D warnings
     cd backend && cargo fmt --check
     cd frontend && pnpm exec biome check src/
+    yamllint .
 
 # Auto-fix lint issues
 lint-fix:
