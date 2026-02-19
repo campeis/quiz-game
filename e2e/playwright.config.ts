@@ -12,13 +12,13 @@ export default defineConfig({
 		{
 			command: "cd ../backend && cargo run",
 			url: "http://localhost:3000/api/health",
-			reuseExistingServer: true,
+			reuseExistingServer: !process.env.CI,
 			timeout: 120_000,
 		},
 		{
 			command: "cd ../frontend && pnpm run dev",
 			url: "http://localhost:5173",
-			reuseExistingServer: true,
+			reuseExistingServer: !process.env.CI,
 			timeout: 30_000,
 		},
 	],
