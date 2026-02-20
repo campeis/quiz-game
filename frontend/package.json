@@ -16,7 +16,7 @@
     "react-router-dom": "^7.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.0",
+    "@biomejs/biome": "^2.4.3",
     "@rspack/cli": "^1.2.0",
     "@rspack/core": "^1.2.0",
     "@rspack/plugin-react-refresh": "^1.0.0",
