@@ -47,8 +47,6 @@ export default defineConfig({
 		port: 5173,
 		hot: true,
 		historyApiFallback: true,
-		proxy: [
-			{ context: ["/api"], target: "http://localhost:3000" },
-		],
+		proxy: [{ context: ["/api"], target: "http://localhost:3000" }],
 	},
 });

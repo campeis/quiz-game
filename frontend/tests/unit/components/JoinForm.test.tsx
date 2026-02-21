@@ -1,6 +1,7 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { JoinForm } from "../../../src/components/JoinForm";
+import type { SessionInfo } from "../../../src/services/api";
 
 // Mock the API module
 vi.mock("../../../src/services/api", () => ({
@@ -8,6 +9,7 @@ vi.mock("../../../src/services/api", () => ({
 }));
 
 import { getSession } from "../../../src/services/api";
+
 const mockGetSession = vi.mocked(getSession);
 
 describe("JoinForm", () => {
@@ -56,8 +58,14 @@ describe("JoinForm", () => {
 	});
 
 	it("calls onJoined with session info on successful join", async () => {
-		const mockSession = { join_code: "ABC123", ws_url: "/ws/player/ABC123", status: "lobby", player_count: 0 };
-		mockGetSession.mockResolvedValueOnce(mockSession as any);
+		const mockSession: SessionInfo = {
+			join_code: "ABC123",
+			ws_url: "/ws/player/ABC123",
+			session_status: "lobby",
+			player_count: 0,
+			quiz_title: "Test Quiz",
+		};
+		mockGetSession.mockResolvedValueOnce(mockSession);
 
 		render(<JoinForm onJoined={mockOnJoined} />);
 

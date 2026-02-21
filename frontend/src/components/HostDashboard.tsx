@@ -67,7 +67,6 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 					</p>
 					<div
 						role="progressbar"
-						tabIndex={0}
 						aria-valuenow={answerCount?.answered ?? 0}
 						aria-valuemin={0}
 						aria-valuemax={answerCount?.total ?? 0}

@@ -45,7 +45,7 @@ export function HostPage() {
 			setJoinCode(session.join_code);
 			setWsUrl(buildWsUrl(session.ws_url));
 			setPhase("lobby");
-		} catch (err) {
+		} catch (_err) {
 			setError("Failed to create session");
 		}
 	};

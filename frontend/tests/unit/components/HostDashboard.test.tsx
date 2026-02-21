@@ -1,5 +1,5 @@
-import { render, screen, act } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { act, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { HostDashboard } from "../../../src/components/HostDashboard";
 import type { GameState } from "../../../src/hooks/useGameState";
 
@@ -44,11 +44,7 @@ describe("HostDashboard", () => {
 	});
 
 	it("renders answer progress bar", () => {
-		render(
-			<HostDashboard
-				gameState={makeGameState({ answerCount: { answered: 1, total: 2 } })}
-			/>,
-		);
+		render(<HostDashboard gameState={makeGameState({ answerCount: { answered: 1, total: 2 } })} />);
 
 		expect(screen.getByText("Answers: 1 / 2")).toBeInTheDocument();
 		expect(screen.getByRole("progressbar")).toBeInTheDocument();
