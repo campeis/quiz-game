@@ -19,7 +19,14 @@ pub struct LeaderboardEntry {
 pub fn compute_leaderboard(players: &[&Player], mark_winner: bool) -> Vec<LeaderboardEntry> {
     let mut entries: Vec<_> = players
         .iter()
-        .map(|p| (p.display_name.clone(), p.score, p.correct_count, p.avatar.clone()))
+        .map(|p| {
+            (
+                p.display_name.clone(),
+                p.score,
+                p.correct_count,
+                p.avatar.clone(),
+            )
+        })
         .collect();
 
     // Sort by score desc, then name asc

@@ -236,7 +236,11 @@ pub async fn ws_player(
         let requested_name = params.name.unwrap_or_else(|| "Player".to_string());
         let avatar = {
             let a = params.avatar.unwrap_or_default();
-            if a.is_empty() { DEFAULT_AVATAR.to_string() } else { a }
+            if a.is_empty() {
+                DEFAULT_AVATAR.to_string()
+            } else {
+                a
+            }
         };
 
         // Subscribe before broadcasting so player receives its own join/reconnect message

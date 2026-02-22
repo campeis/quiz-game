@@ -5,6 +5,7 @@ ignore: |
   e2e/node_modules/
   frontend/pnpm-lock.yaml
   e2e/pnpm-lock.yaml
+  backend/target/
 
 rules:
   document-start: disable  # GitHub Actions workflows don't use ---
