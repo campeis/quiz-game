@@ -89,9 +89,10 @@ test.describe("Full Multiplayer Game", () => {
 			await expect(player2Page.getByText("Final Results")).toBeVisible({ timeout: 30000 });
 			await expect(hostPage.getByText("Final Results")).toBeVisible({ timeout: 30000 });
 
-			// Leaderboard rows include avatar to the left of the name
-			await expect(hostPage.getByText(/🦁.*Alice|Alice.*🦁/)).toBeVisible();
-			await expect(hostPage.getByText(/🤖.*Bob|Bob.*🤖/)).toBeVisible();
+			// Leaderboard rows include avatar to the left of the name (scoped to the list, not the podium)
+			const leaderboardList = hostPage.locator('[aria-label="Final results"] ul');
+			await expect(leaderboardList.getByText(/🦁.*Alice|Alice.*🦁/)).toBeVisible();
+			await expect(leaderboardList.getByText(/🤖.*Bob|Bob.*🤖/)).toBeVisible();
 		} finally {
 			await hostContext.close();
 			await player1Context.close();
