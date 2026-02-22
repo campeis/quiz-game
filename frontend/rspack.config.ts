@@ -43,6 +43,9 @@ export default defineConfig({
 		new rspack.HtmlRspackPlugin({ template: "./src/index.html" }),
 		isDev && new RefreshPlugin(),
 	].filter(Boolean),
+	experiments: {
+		lazyCompilation: false,
+	},
 	devServer: {
 		port: 5173,
 		hot: true,
