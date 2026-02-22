@@ -62,7 +62,7 @@ just dev      # Starts backend and frontend dev servers
 
 Open `http://localhost:5173` to access the application.
 
-For detailed setup instructions, game walkthrough, environment configuration, and production builds, see the [Quickstart Guide](specs/001-multiplayer-quiz/quickstart.md).
+For detailed setup instructions, game walkthrough, environment configuration, and production builds, see the [Quickstart Guide](docs/quickstart.md).
 
 ## Testing and Linting
 
