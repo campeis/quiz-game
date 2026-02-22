@@ -56,7 +56,7 @@ update-docs:
     #!/usr/bin/env bash
     set -euo pipefail
     mkdir -p docs/images
-    for f in docs/*.mmd; do
+    for f in docs/diagrams/*.mmd; do
         name=$(basename "$f" .mmd)
         echo "Generating docs/images/${name}.png from ${f}"
         pnpm dlx @mermaid-js/mermaid-cli -i "$f" -o "docs/images/${name}.png" -t dark -b transparent --width 1600
