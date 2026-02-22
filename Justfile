@@ -59,6 +59,6 @@ update-docs:
     for f in docs/*.mmd; do
         name=$(basename "$f" .mmd)
         echo "Generating docs/images/${name}.png from ${f}"
-        npx @mermaid-js/mermaid-cli -i "$f" -o "docs/images/${name}.png" -t dark -b transparent --width 1600
+        pnpm dlx @mermaid-js/mermaid-cli -i "$f" -o "docs/images/${name}.png" -t dark -b transparent --width 1600
     done
     echo "Done."
