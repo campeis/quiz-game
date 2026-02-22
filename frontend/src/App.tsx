@@ -1,16 +1,20 @@
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePage } from "./pages/HomePage";
-import { HostPage } from "./pages/HostPage";
-import { PlayerPage } from "./pages/PlayerPage";
+
+const HomePage = lazy(() => import("./pages/HomePage").then((m) => ({ default: m.HomePage })));
+const HostPage = lazy(() => import("./pages/HostPage").then((m) => ({ default: m.HostPage })));
+const PlayerPage = lazy(() => import("./pages/PlayerPage").then((m) => ({ default: m.PlayerPage })));
 
 export function App() {
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<HomePage />} />
-				<Route path="/host" element={<HostPage />} />
-				<Route path="/play" element={<PlayerPage />} />
-			</Routes>
+			<Suspense>
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/host" element={<HostPage />} />
+					<Route path="/play" element={<PlayerPage />} />
+				</Routes>
+			</Suspense>
 		</BrowserRouter>
 	);
 }
