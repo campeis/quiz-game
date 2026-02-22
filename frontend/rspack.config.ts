@@ -43,8 +43,9 @@ export default defineConfig({
 		new rspack.HtmlRspackPlugin({ template: "./src/index.html" }),
 		isDev && new RefreshPlugin(),
 	].filter(Boolean),
-	experiments: {
-		lazyCompilation: false,
+	performance: {
+		maxAssetSize: 300_000,
+		maxEntrypointSize: 300_000,
 	},
 	devServer: {
 		port: 5173,
