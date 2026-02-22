@@ -1,11 +1,11 @@
 graph TB
     subgraph Browser["Browser"]
-        Host["🖥️ Host\n(quiz upload,\ngame control)"]
-        Player["🎮 Players\n(join, answer)"]
+        Host["🖥️ Host<br/>(quiz upload,<br/>game control)"]
+        Player["🎮 Players<br/>(join, answer)"]
     end
 
     subgraph Frontend["Frontend — React SPA (localhost:5173)"]
-        App["App.tsx\n(routing)"]
+        App["App.tsx<br/>(routing)"]
 
         subgraph Pages["Pages"]
             HomePage["HomePage"]
@@ -20,7 +20,7 @@ graph TB
 
         subgraph Components["Components"]
             QuizUpload["QuizUpload"]
-            JoinForm["JoinForm +\nAvatarPickerModal"]
+            JoinForm["JoinForm +<br/>AvatarPickerModal"]
             HostDashboard["HostDashboard"]
             Lobby["Lobby"]
             Question["Question"]
@@ -28,35 +28,35 @@ graph TB
         end
 
         subgraph Services["Services"]
-            API["api.ts\n(REST client)"]
+            API["api.ts<br/>(REST client)"]
             WsUrl["ws-url.ts"]
-            Messages["messages.ts\n(type definitions)"]
+            Messages["messages.ts<br/>(type definitions)"]
         end
     end
 
     subgraph Backend["Backend — Rust / Axum (localhost:3000)"]
         subgraph Handlers["Handlers"]
-            QuizUploadH["quiz_upload.rs\nPOST /api/upload"]
-            SessionH["session.rs\nGET /api/session/:code"]
-            WsHostH["ws.rs\nGET /ws/host/:code"]
-            WsPlayerH["ws.rs\nGET /ws/player/:code"]
+            QuizUploadH["quiz_upload.rs<br/>POST /api/upload"]
+            SessionH["session.rs<br/>GET /api/session/:code"]
+            WsHostH["ws.rs<br/>GET /ws/host/:code"]
+            WsPlayerH["ws.rs<br/>GET /ws/player/:code"]
         end
 
         subgraph Services_BE["Services"]
-            SessionMgr["session_manager.rs\n(create / lookup sessions)"]
-            GameEngine["game_engine.rs\n(question flow, timer,\nbroadcast events)"]
-            Scoring["scoring.rs\n(points calculation)"]
+            SessionMgr["session_manager.rs<br/>(create / lookup sessions)"]
+            GameEngine["game_engine.rs<br/>(question flow, timer,<br/>broadcast events)"]
+            Scoring["scoring.rs<br/>(points calculation)"]
         end
 
         subgraph Models["Models"]
-            SessionM["GameSession\n(status, players,\ncurrent question)"]
-            QuizM["Quiz\n(questions, options)"]
-            PlayerM["Player\n(name, avatar,\nscore, connection)"]
-            Leaderboard_BE["LeaderboardEntry\n(compute_leaderboard)"]
+            SessionM["GameSession<br/>(status, players,<br/>current question)"]
+            QuizM["Quiz<br/>(questions, options)"]
+            PlayerM["Player<br/>(name, avatar,<br/>score, connection)"]
+            Leaderboard_BE["LeaderboardEntry<br/>(compute_leaderboard)"]
         end
 
-        Broadcast["tokio::broadcast\nGameEvent channel\n(BroadcastAll / HostOnly / PlayerOnly)"]
-        State["AppState\nArc&lt;SessionManager&gt;\nConfig"]
+        Broadcast["tokio::broadcast<br/>GameEvent channel<br/>(BroadcastAll / HostOnly / PlayerOnly)"]
+        State["AppState<br/>Arc&lt;SessionManager&gt;<br/>Config"]
     end
 
     Host --> App
@@ -67,10 +67,10 @@ graph TB
     Hooks --> Services
     Components --> Services
 
-    API -- "REST\nHTTP/JSON" --> QuizUploadH
-    API -- "REST\nHTTP/JSON" --> SessionH
-    useWS -- "WebSocket\n/ws/host/:code" --> WsHostH
-    useWS -- "WebSocket\n/ws/player/:code" --> WsPlayerH
+    API -- "REST<br/>HTTP/JSON" --> QuizUploadH
+    API -- "REST<br/>HTTP/JSON" --> SessionH
+    useWS -- "WebSocket<br/>/ws/host/:code" --> WsHostH
+    useWS -- "WebSocket<br/>/ws/player/:code" --> WsPlayerH
 
     WsHostH --> SessionMgr
     WsHostH --> Broadcast
