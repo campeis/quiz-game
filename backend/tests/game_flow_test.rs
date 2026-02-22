@@ -85,7 +85,7 @@ async fn host_game_flow_upload_create_start_finish() {
 
     // Player connects via WebSocket
     let (mut player_ws, _) = tokio_tungstenite::connect_async(format!(
-        "ws://{addr}/ws/player/{join_code}?name=TestPlayer"
+        "ws://{addr}/ws/player/{join_code}?name=TestPlayer&avatar=🦁"
     ))
     .await
     .unwrap();
@@ -99,6 +99,7 @@ async fn host_game_flow_upload_create_start_finish() {
     let json: serde_json::Value = serde_json::from_str(msg.to_text().unwrap()).unwrap();
     assert_eq!(json["type"], "player_joined");
     assert_eq!(json["payload"]["display_name"], "TestPlayer");
+    assert_eq!(json["payload"]["avatar"], "🦁");
 
     // Player should also receive player_joined (their own join)
     let msg = tokio::time::timeout(Duration::from_secs(10), player_ws.next())

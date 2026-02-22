@@ -1,17 +1,21 @@
 import { useState } from "react";
 import type { ApiError, SessionInfo } from "../services/api";
 import { getSession } from "../services/api";
+import { EmojiPicker } from "./EmojiPicker";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { colors, spacing, typography } from "./ui/tokens";
 
+const DEFAULT_AVATAR = "🙂";
+
 interface JoinFormProps {
-	onJoined: (info: SessionInfo, displayName: string) => void;
+	onJoined: (info: SessionInfo, displayName: string, avatar: string) => void;
 }
 
 export function JoinForm({ onJoined }: JoinFormProps) {
 	const [joinCode, setJoinCode] = useState("");
 	const [displayName, setDisplayName] = useState("");
+	const [avatar, setAvatar] = useState(DEFAULT_AVATAR);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +34,7 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 
 		try {
 			const info = await getSession(joinCode.trim().toUpperCase());
-			onJoined(info, displayName.trim());
+			onJoined(info, displayName.trim(), avatar);
 		} catch (err) {
 			const apiError = err as ApiError;
 			setError(apiError.message || "Failed to join game");
@@ -120,6 +124,7 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 						boxSizing: "border-box",
 					}}
 				/>
+				<EmojiPicker onSelect={setAvatar} selected={avatar} />
 				<Button onClick={handleSubmit} loading={loading} style={{ width: "100%" }}>
 					Join Game
 				</Button>

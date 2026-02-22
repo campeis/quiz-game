@@ -109,7 +109,7 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 							}}
 						>
 							<span>
-								#{entry.rank} {entry.display_name}
+								#{entry.rank} {entry.avatar} {entry.display_name}
 							</span>
 							<span style={{ fontWeight: typography.weights.semibold }}>{entry.score} pts</span>
 						</div>

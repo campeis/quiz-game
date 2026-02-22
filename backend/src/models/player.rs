@@ -2,6 +2,8 @@ use std::time::Instant;
 
 use serde::{Deserialize, Serialize};
 
+pub const DEFAULT_AVATAR: &str = "🙂";
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ConnectionStatus {
@@ -22,6 +24,7 @@ pub struct Answer {
 pub struct Player {
     pub id: String,
     pub display_name: String,
+    pub avatar: String,
     pub score: u32,
     pub correct_count: u32,
     pub answers: Vec<Answer>,
@@ -30,10 +33,11 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(id: String, display_name: String) -> Self {
+    pub fn new(id: String, display_name: String, avatar: String) -> Self {
         Self {
             id,
             display_name,
+            avatar,
             score: 0,
             correct_count: 0,
             answers: Vec::new(),

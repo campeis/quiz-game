@@ -9,12 +9,14 @@ export interface WsMessage<T = unknown> {
 export interface PlayerJoinedPayload {
 	player_id: string;
 	display_name: string;
+	avatar: string;
 	player_count: number;
 }
 
 export interface PlayerLeftPayload {
 	player_id: string;
 	display_name: string;
+	avatar: string;
 	player_count: number;
 	reason: string;
 }
@@ -22,6 +24,7 @@ export interface PlayerLeftPayload {
 export interface PlayerReconnectedPayload {
 	player_id: string;
 	display_name: string;
+	avatar: string;
 	player_count: number;
 }
 
@@ -52,6 +55,7 @@ export interface AnswerResultPayload {
 export interface LeaderboardEntryPayload {
 	rank: number;
 	display_name: string;
+	avatar: string;
 	score: number;
 	correct_count: number;
 	is_winner?: boolean;

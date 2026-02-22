@@ -1,12 +1,26 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Player Flow", () => {
-	test("player sees join form", async ({ page }) => {
+	test("player sees join form with emoji picker", async ({ page }) => {
 		await page.goto("/play");
 
 		await expect(page.getByText("Join a Game")).toBeVisible();
 		await expect(page.getByPlaceholder("Enter 6-character code")).toBeVisible();
 		await expect(page.getByPlaceholder("Your name")).toBeVisible();
+		// EmojiPicker renders 30 buttons
+		const emojiButtons = page.locator(".emoji-picker button");
+		await expect(emojiButtons).toHaveCount(30);
+	});
+
+	test("player can select emoji and it gets highlighted", async ({ page }) => {
+		await page.goto("/play");
+
+		// Click the lion emoji
+		await page.getByText("🦁").click();
+
+		// The button should have aria-pressed="true"
+		const lionButton = page.locator("button", { hasText: "🦁" });
+		await expect(lionButton).toHaveAttribute("aria-pressed", "true");
 	});
 
 	test("player gets error for invalid join code", async ({ page }) => {

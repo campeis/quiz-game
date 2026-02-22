@@ -50,21 +50,21 @@ describe("HostDashboard", () => {
 		expect(screen.getByRole("progressbar")).toBeInTheDocument();
 	});
 
-	it("renders leaderboard standings", () => {
+	it("renders leaderboard standings with avatars", () => {
 		render(
 			<HostDashboard
 				gameState={makeGameState({
 					leaderboard: [
-						{ display_name: "Alice", score: 1000, rank: 1 },
-						{ display_name: "Bob", score: 500, rank: 2 },
+						{ display_name: "Alice", avatar: "🦁", score: 1000, rank: 1 },
+						{ display_name: "Bob", avatar: "🤖", score: 500, rank: 2 },
 					],
 				})}
 			/>,
 		);
 
 		expect(screen.getByText("Standings")).toBeInTheDocument();
-		expect(screen.getByText(/Alice/)).toBeInTheDocument();
-		expect(screen.getByText(/Bob/)).toBeInTheDocument();
+		expect(screen.getByText(/🦁.*Alice|Alice.*🦁/)).toBeInTheDocument();
+		expect(screen.getByText(/🤖.*Bob|Bob.*🤖/)).toBeInTheDocument();
 	});
 
 	it("resets timer when question changes", () => {

@@ -11,7 +11,7 @@ use serde_json::json;
 use tokio::sync::broadcast;
 
 use crate::AppState;
-use crate::models::player::{ConnectionStatus, Player};
+use crate::models::player::{ConnectionStatus, DEFAULT_AVATAR, Player};
 use crate::models::session::SessionStatus;
 use crate::services::game_engine::{self, GameEvent};
 
@@ -25,6 +25,7 @@ static BROADCAST_CHANNELS: Lazy<DashMap<String, broadcast::Sender<GameEvent>>> =
 #[derive(Deserialize)]
 pub struct PlayerParams {
     pub name: Option<String>,
+    pub avatar: Option<String>,
 }
 
 /// Host WebSocket: GET /ws/host/:join_code
@@ -173,6 +174,7 @@ pub async fn ws_host(
                             json!({
                                 "rank": e.rank,
                                 "display_name": e.display_name,
+                                "avatar": e.avatar,
                                 "score": e.score,
                                 "correct_count": e.correct_count,
                                 "is_winner": e.is_winner,
@@ -232,6 +234,10 @@ pub async fn ws_player(
         };
 
         let requested_name = params.name.unwrap_or_else(|| "Player".to_string());
+        let avatar = {
+            let a = params.avatar.unwrap_or_default();
+            if a.is_empty() { DEFAULT_AVATAR.to_string() } else { a }
+        };
 
         // Subscribe before broadcasting so player receives its own join/reconnect message
         let mut rx = tx.subscribe();
@@ -256,10 +262,11 @@ pub async fn ws_player(
                         .map(|t| t.elapsed().as_secs() < RECONNECT_TIMEOUT_SECS)
                         .unwrap_or(false);
                     if within_window {
+                        let stored_avatar = player.avatar.clone();
                         player.connection_status = ConnectionStatus::Connected;
                         player.disconnected_at = None;
                         let count = s.player_count();
-                        Some((existing_id, requested_name.clone(), count))
+                        Some((existing_id, requested_name.clone(), count, stored_avatar))
                     } else {
                         None
                     }
@@ -272,7 +279,7 @@ pub async fn ws_player(
         };
 
         let (player_id, display_name, is_reconnect) =
-            if let Some((existing_id, name, player_count)) = reconnect_result {
+            if let Some((existing_id, name, player_count, stored_avatar)) = reconnect_result {
                 // Broadcast reconnection
                 let _ = tx.send(GameEvent::BroadcastAll(
                     json!({
@@ -280,6 +287,7 @@ pub async fn ws_player(
                         "payload": {
                             "player_id": existing_id,
                             "display_name": name,
+                            "avatar": stored_avatar,
                             "player_count": player_count,
                         }
                     })
@@ -317,7 +325,7 @@ pub async fn ws_player(
                     }
 
                     let name_changed = final_name != requested_name;
-                    let player = Player::new(player_id.clone(), final_name.clone());
+                    let player = Player::new(player_id.clone(), final_name.clone(), avatar.clone());
                     s.players.insert(player_id.clone(), player);
                     (final_name, name_changed, s.player_count())
                 };
@@ -343,6 +351,7 @@ pub async fn ws_player(
                         "payload": {
                             "player_id": player_id,
                             "display_name": final_name,
+                            "avatar": avatar,
                             "player_count": player_count,
                         }
                     })
@@ -412,13 +421,15 @@ pub async fn ws_player(
         }
 
         // Mark player as disconnected instead of removing
-        let player_count = {
+        let (player_count, player_avatar) = {
             let mut s = session.write().await;
+            let mut stored_avatar = DEFAULT_AVATAR.to_string();
             if let Some(player) = s.players.get_mut(&player_id) {
+                stored_avatar = player.avatar.clone();
                 player.connection_status = ConnectionStatus::Disconnected;
                 player.disconnected_at = Some(std::time::Instant::now());
             }
-            s.player_count()
+            (s.player_count(), stored_avatar)
         };
 
         let _ = tx.send(GameEvent::BroadcastAll(
@@ -427,6 +438,7 @@ pub async fn ws_player(
                 "payload": {
                     "player_id": player_id,
                     "display_name": display_name,
+                    "avatar": player_avatar,
                     "player_count": player_count,
                     "reason": "disconnected",
                 }
@@ -445,6 +457,7 @@ pub async fn ws_player(
                 && player.connection_status == ConnectionStatus::Disconnected
             {
                 let name = player.display_name.clone();
+                let timeout_avatar = player.avatar.clone();
                 s.players.remove(&timeout_pid);
                 let count = s.player_count();
                 let _ = timeout_tx.send(GameEvent::BroadcastAll(
@@ -453,6 +466,7 @@ pub async fn ws_player(
                         "payload": {
                             "player_id": timeout_pid,
                             "display_name": name,
+                            "avatar": timeout_avatar,
                             "player_count": count,
                             "reason": "timeout",
                         }

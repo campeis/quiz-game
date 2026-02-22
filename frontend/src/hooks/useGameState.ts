@@ -8,6 +8,7 @@ import {
 	MSG,
 	type PlayerJoinedPayload,
 	type PlayerLeftPayload,
+	type PlayerReconnectedPayload,
 	type QuestionEndedPayload,
 	type QuestionPayload,
 	type WsMessage,
@@ -23,7 +24,7 @@ export type GamePhase =
 
 export interface GameState {
 	phase: GamePhase;
-	players: { id: string; name: string }[];
+	players: { id: string; name: string; avatar: string }[];
 	playerCount: number;
 	totalQuestions: number;
 	currentQuestion: QuestionPayload | null;
@@ -56,7 +57,17 @@ function reducer(state: GameState, action: Action): GameState {
 			const p = message.payload as PlayerJoinedPayload;
 			return {
 				...state,
-				players: [...state.players, { id: p.player_id, name: p.display_name }],
+				players: [...state.players, { id: p.player_id, name: p.display_name, avatar: p.avatar }],
+				playerCount: p.player_count,
+			};
+		}
+		case MSG.PLAYER_RECONNECTED: {
+			const p = message.payload as PlayerReconnectedPayload;
+			return {
+				...state,
+				players: state.players.map((pl) =>
+					pl.id === p.player_id ? { ...pl, avatar: p.avatar } : pl,
+				),
 				playerCount: p.player_count,
 			};
 		}

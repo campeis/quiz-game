@@ -42,22 +42,28 @@ test.describe("Full Multiplayer Game", () => {
 			expect(joinCode).toBeTruthy();
 			expect(joinCode).toMatch(/^[A-Z0-9]{6}$/);
 
-			// === Player 1: Join ===
+			// === Player 1: Join with lion avatar ===
 			await player1Page.goto("/play");
 			await player1Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
 			await player1Page.getByPlaceholder("Your name").fill("Alice");
+			await player1Page.getByText("🦁").click();
 			await player1Page.getByRole("button", { name: "Join Game" }).click();
 
 			await expect(player1Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
 
-			// === Player 2: Join ===
+			// === Player 2: Join with robot avatar ===
 			await player2Page.goto("/play");
 			await player2Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
 			await player2Page.getByPlaceholder("Your name").fill("Bob");
+			await player2Page.getByText("🤖").click();
 			await player2Page.getByRole("button", { name: "Join Game" }).click();
 
 			await expect(player2Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
 			await expect(hostPage.getByText("2 players connected")).toBeVisible({ timeout: 5000 });
+
+			// Verify avatars appear in lobby player list
+			await expect(player1Page.getByText(/🦁.*Alice|Alice.*🦁/)).toBeVisible();
+			await expect(player1Page.getByText(/🤖.*Bob|Bob.*🤖/)).toBeVisible();
 
 			// === Host: Start game ===
 			await hostPage.getByRole("button", { name: /Start/i }).click();
@@ -81,8 +87,57 @@ test.describe("Full Multiplayer Game", () => {
 			await expect(player2Page.getByText("Final Results")).toBeVisible({ timeout: 30000 });
 			await expect(hostPage.getByText("Final Results")).toBeVisible({ timeout: 30000 });
 
-			await expect(hostPage.getByText(/Alice/)).toBeVisible();
-			await expect(hostPage.getByText(/Bob/)).toBeVisible();
+			// Leaderboard rows include avatar to the left of the name
+			await expect(hostPage.getByText(/🦁.*Alice|Alice.*🦁/)).toBeVisible();
+			await expect(hostPage.getByText(/🤖.*Bob|Bob.*🤖/)).toBeVisible();
+		} finally {
+			await hostContext.close();
+			await player1Context.close();
+			await player2Context.close();
+		}
+	});
+
+	test("duplicate avatars are allowed (FR-006)", async ({ browser }) => {
+		test.setTimeout(60_000);
+
+		const hostContext = await browser.newContext();
+		const player1Context = await browser.newContext();
+		const player2Context = await browser.newContext();
+
+		const hostPage = await hostContext.newPage();
+		const player1Page = await player1Context.newPage();
+		const player2Page = await player2Context.newPage();
+
+		try {
+			// Upload quiz and create session
+			await hostPage.goto("/host");
+			const fileInput = hostPage.locator('input[type="file"]');
+			await fileInput.setInputFiles(FIXTURE_PATH);
+			await hostPage.getByRole("button", { name: "Upload Quiz" }).click();
+
+			await expect(hostPage.getByText("Join Code")).toBeVisible({ timeout: 10000 });
+
+			const joinCodeEl = hostPage.locator("text=/[A-Z0-9]{6}/").first();
+			const joinCode = await joinCodeEl.textContent();
+
+			// Both players choose the same emoji (🤖)
+			await player1Page.goto("/play");
+			await player1Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
+			await player1Page.getByPlaceholder("Your name").fill("Alice");
+			await player1Page.getByText("🤖").click();
+			await player1Page.getByRole("button", { name: "Join Game" }).click();
+			await expect(player1Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
+
+			await player2Page.goto("/play");
+			await player2Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
+			await player2Page.getByPlaceholder("Your name").fill("Bob");
+			await player2Page.getByText("🤖").click();
+			await player2Page.getByRole("button", { name: "Join Game" }).click();
+			await expect(player2Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
+
+			// Both should appear in the lobby with the same emoji — no error
+			await expect(player1Page.getByText(/🤖.*Alice|Alice.*🤖/)).toBeVisible();
+			await expect(player1Page.getByText(/🤖.*Bob|Bob.*🤖/)).toBeVisible();
 		} finally {
 			await hostContext.close();
 			await player1Context.close();

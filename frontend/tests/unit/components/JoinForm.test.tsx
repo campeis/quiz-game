@@ -57,7 +57,17 @@ describe("JoinForm", () => {
 		expect(input).toHaveValue("ABC123");
 	});
 
-	it("calls onJoined with session info on successful join", async () => {
+	it("renders the emoji picker below the name field", () => {
+		render(<JoinForm onJoined={mockOnJoined} />);
+
+		// EmojiPicker renders 30 emoji buttons
+		const emojiButtons = screen
+			.getAllByRole("button")
+			.filter((btn) => btn.textContent !== "Join Game");
+		expect(emojiButtons.length).toBe(30);
+	});
+
+	it("calls onJoined with default avatar when no emoji is selected", async () => {
 		const mockSession: SessionInfo = {
 			join_code: "ABC123",
 			ws_url: "/ws/player/ABC123",
@@ -78,7 +88,34 @@ describe("JoinForm", () => {
 		fireEvent.click(screen.getByRole("button", { name: "Join Game" }));
 
 		await waitFor(() => {
-			expect(mockOnJoined).toHaveBeenCalledWith(mockSession, "Alice");
+			expect(mockOnJoined).toHaveBeenCalledWith(mockSession, "Alice", "🙂");
+		});
+	});
+
+	it("calls onJoined with selected avatar emoji", async () => {
+		const mockSession: SessionInfo = {
+			join_code: "ABC123",
+			ws_url: "/ws/player/ABC123",
+			session_status: "lobby",
+			player_count: 0,
+			quiz_title: "Test Quiz",
+		};
+		mockGetSession.mockResolvedValueOnce(mockSession);
+
+		render(<JoinForm onJoined={mockOnJoined} />);
+
+		fireEvent.change(screen.getByPlaceholderText("Enter 6-character code"), {
+			target: { value: "ABC123" },
+		});
+		fireEvent.change(screen.getByPlaceholderText("Your name"), {
+			target: { value: "Alice" },
+		});
+		// Select the lion emoji
+		fireEvent.click(screen.getByText("🦁"));
+		fireEvent.click(screen.getByRole("button", { name: "Join Game" }));
+
+		await waitFor(() => {
+			expect(mockOnJoined).toHaveBeenCalledWith(mockSession, "Alice", "🦁");
 		});
 	});
 
