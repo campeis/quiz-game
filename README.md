@@ -1,5 +1,7 @@
 # Multiplayer Online Quiz
 
+[![CI](https://github.com/campeis/quiz-game/actions/workflows/ci.yml/badge.svg)](https://github.com/campeis/quiz-game/actions/workflows/ci.yml)
+
 A real-time multiplayer quiz game where a host uploads questions, players join via a code, and everyone competes live with instant scoring and leaderboards. Built with a Rust backend and React frontend communicating over WebSockets.
 
 ## Features
