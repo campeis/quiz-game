@@ -1,4 +1,5 @@
 import type { LeaderboardEntryPayload } from "../services/messages";
+import { Podium } from "./Podium";
 import { Card } from "./ui/Card";
 import { colors, spacing, typography } from "./ui/tokens";
 
@@ -23,6 +24,7 @@ export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
 			>
 				{isFinal ? "Final Results" : "Leaderboard"}
 			</h2>
+			{isFinal && <Podium entries={entries} />}
 			<ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
 				{entries.map((entry) => (
 					<li
