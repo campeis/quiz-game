@@ -6,11 +6,7 @@
 
 The application is a real-time multiplayer quiz game with a Rust backend and a React frontend communicating over WebSockets. All game state is held in memory for the duration of a session — there is no database.
 
-```
-Browser → React SPA (port 5173) → Rust/Axum server (port 3000)
-                                      ├── REST  (quiz upload, session lookup)
-                                      └── WebSocket  (all real-time game events)
-```
+![Overview](images/overview.png)
 
 ---
 
@@ -101,46 +97,16 @@ Each connected WebSocket task subscribes to this channel and forwards matching m
 
 ## Data Flow: Joining a Game
 
-```
-Player browser                Frontend                    Backend
-     │                            │                           │
-     │── fills join form ─────────▶                           │
-     │                            │── GET /api/session/:code ▶│
-     │                            │◀─ { join_code, ws_url } ──│
-     │                            │                           │
-     │                            │── WS /ws/player/:code ────▶
-     │                            │     ?name=Alice            │
-     │                            │     &avatar=🦁             │
-     │                            │                           │── PlayerJoined → broadcast
-     │◀─ Lobby (waiting room) ────│◀── player_joined msg ─────│
-```
+![Join flow](images/flow-join.png)
 
 ## Data Flow: Running a Question
 
-```
-Host                        game_engine                  Players
- │── "start" msg ──────────▶ │                               │
- │                           │── question msg (BroadcastAll)▶│
- │◀── question msg ──────────│                               │
- │                           │   [countdown timer]           │
- │                           │◀──── answer msg ──────────────│
- │                           │   calculate_points()          │
- │                           │── feedback (PlayerOnly) ─────▶│
- │◀── question_result ───────│── question_result (HostOnly)  │
- │                           │── leaderboard (BroadcastAll) ▶│
- │◀── leaderboard ───────────│                               │
-```
+![Question flow](images/flow-question.png)
 
 ---
 
 ## Session Lifecycle
 
-```
-Created (Lobby) ──▶ Active ──▶ Finished
-                      │
-                   Paused  (host disconnected)
-                      │
-                   Active  (host reconnected)
-```
+![Session lifecycle](images/session-lifecycle.png)
 
 Players and hosts can reconnect within a 120-second window after disconnecting. On reconnect, they receive the current game state and resume participation.

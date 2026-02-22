@@ -1,0 +1,15 @@
+sequenceDiagram
+    actor H as Host
+    participant GE as game_engine
+    actor PL as Players
+
+    H->>GE: start msg
+    GE->>H: question msg
+    GE->>PL: question msg (BroadcastAll)
+    Note over GE: countdown timer
+    PL->>GE: answer msg
+    GE->>GE: calculate_points()
+    GE->>PL: feedback (PlayerOnly)
+    GE->>H: question_result (HostOnly)
+    GE->>H: leaderboard (BroadcastAll)
+    GE->>PL: leaderboard (BroadcastAll)

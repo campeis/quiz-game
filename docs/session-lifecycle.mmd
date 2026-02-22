@@ -1,0 +1,7 @@
+stateDiagram-v2
+    [*] --> Lobby : session created
+    Lobby --> Active : host starts game
+    Active --> Paused : host disconnects
+    Paused --> Active : host reconnects\n(within 120s)
+    Active --> Finished : last question answered
+    Finished --> [*]

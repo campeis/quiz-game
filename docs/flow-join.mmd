@@ -1,0 +1,12 @@
+sequenceDiagram
+    actor P as Player browser
+    participant FE as Frontend
+    participant BE as Backend
+
+    P->>FE: fills join form
+    FE->>BE: GET /api/session/:code
+    BE-->>FE: join_code, ws_url
+    FE->>BE: WS /ws/player/:code?name=Alice&avatar=...
+    BE-->>BE: PlayerJoined → broadcast
+    BE-->>FE: player_joined msg
+    FE-->>P: Lobby (waiting room)
