@@ -46,9 +46,13 @@ export function PlayerPage() {
 		onMessage,
 	});
 
-	const handleJoined = (info: SessionInfo, displayName: string) => {
+	const handleJoined = (info: SessionInfo, displayName: string, avatar: string) => {
 		setJoinCode(info.join_code);
-		setWsUrl(buildWsUrl(`${info.ws_url}?name=${encodeURIComponent(displayName)}`));
+		setWsUrl(
+			buildWsUrl(
+				`${info.ws_url}?name=${encodeURIComponent(displayName)}&avatar=${encodeURIComponent(avatar)}`,
+			),
+		);
 		setPhase("lobby");
 	};
 

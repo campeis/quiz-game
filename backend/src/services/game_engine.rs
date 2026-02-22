@@ -243,6 +243,7 @@ async fn do_end_question(
                 json!({
                     "rank": e.rank,
                     "display_name": e.display_name,
+                    "avatar": e.avatar,
                     "score": e.score,
                     "correct_count": e.correct_count,
                 })
@@ -278,6 +279,7 @@ fn broadcast_game_finished(session: &GameSession, tx: &broadcast::Sender<GameEve
             json!({
                 "rank": e.rank,
                 "display_name": e.display_name,
+                "avatar": e.avatar,
                 "score": e.score,
                 "correct_count": e.correct_count,
                 "is_winner": e.is_winner,

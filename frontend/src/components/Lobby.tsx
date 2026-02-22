@@ -67,7 +67,7 @@ export function Lobby({ joinCode, gameState, isHost, onStartGame }: LobbyProps) 
 								color: colors.text,
 							}}
 						>
-							{p.name}
+							{p.avatar} {p.name}
 						</li>
 					))}
 				</ul>

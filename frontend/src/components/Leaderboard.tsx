@@ -50,7 +50,7 @@ export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
 							</span>
 							<div>
 								<p style={{ color: colors.text, fontWeight: typography.weights.semibold }}>
-									{entry.display_name}
+									{entry.avatar} {entry.display_name}
 									{entry.is_winner && " (Winner)"}
 								</p>
 								<p style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>

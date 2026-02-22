@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { Leaderboard } from "../../../src/components/Leaderboard";
 
 const mockEntries = [
-	{ rank: 1, display_name: "Alice", score: 2500, correct_count: 3, is_winner: true },
-	{ rank: 2, display_name: "Bob", score: 1500, correct_count: 2, is_winner: false },
-	{ rank: 3, display_name: "Charlie", score: 500, correct_count: 1, is_winner: false },
+	{ rank: 1, display_name: "Alice", avatar: "🦁", score: 2500, correct_count: 3, is_winner: true },
+	{ rank: 2, display_name: "Bob", avatar: "🤖", score: 1500, correct_count: 2, is_winner: false },
+	{ rank: 3, display_name: "Charlie", avatar: "🐸", score: 500, correct_count: 1, is_winner: false },
 ];
 
 describe("Leaderboard", () => {
@@ -21,12 +21,12 @@ describe("Leaderboard", () => {
 		expect(screen.getByText("Leaderboard")).toBeInTheDocument();
 	});
 
-	it("displays all player entries", () => {
+	it("displays all player entries with avatars", () => {
 		render(<Leaderboard entries={mockEntries} isFinal={true} />);
 
-		expect(screen.getByText(/Alice/)).toBeInTheDocument();
-		expect(screen.getByText(/Bob/)).toBeInTheDocument();
-		expect(screen.getByText(/Charlie/)).toBeInTheDocument();
+		expect(screen.getByText(/🦁.*Alice|Alice.*🦁/)).toBeInTheDocument();
+		expect(screen.getByText(/🤖.*Bob|Bob.*🤖/)).toBeInTheDocument();
+		expect(screen.getByText(/🐸.*Charlie|Charlie.*🐸/)).toBeInTheDocument();
 	});
 
 	it("displays scores", () => {
