@@ -30,6 +30,7 @@ frontend/          React single-page application
 e2e/               Playwright end-to-end tests
 fixtures/          Sample quiz files for testing and demos
 specs/             Feature specifications and implementation plans
+docs/              Architecture documentation and guides
 ```
 
 ## Tech Stack
@@ -62,7 +63,7 @@ just dev      # Starts backend and frontend dev servers
 
 Open `http://localhost:5173` to access the application.
 
-For detailed setup instructions, game walkthrough, environment configuration, and production builds, see the [Quickstart Guide](docs/quickstart.md).
+For detailed setup instructions, game walkthrough, environment configuration, and production builds, see the [Quickstart Guide](docs/quickstart.md). For a full system overview, see the [Architecture](docs/architecture.md).
 
 ## Testing and Linting
 

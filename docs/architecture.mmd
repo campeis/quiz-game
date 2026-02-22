@@ -1,0 +1,89 @@
+graph TB
+    subgraph Browser["Browser"]
+        Host["🖥️ Host\n(quiz upload,\ngame control)"]
+        Player["🎮 Players\n(join, answer)"]
+    end
+
+    subgraph Frontend["Frontend — React SPA (localhost:5173)"]
+        App["App.tsx\n(routing)"]
+
+        subgraph Pages["Pages"]
+            HomePage["HomePage"]
+            HostPage["HostPage"]
+            PlayerPage["PlayerPage"]
+        end
+
+        subgraph Hooks["Hooks"]
+            useWS["useWebSocket"]
+            useGS["useGameState"]
+        end
+
+        subgraph Components["Components"]
+            QuizUpload["QuizUpload"]
+            JoinForm["JoinForm +\nAvatarPickerModal"]
+            HostDashboard["HostDashboard"]
+            Lobby["Lobby"]
+            Question["Question"]
+            Leaderboard["Leaderboard"]
+        end
+
+        subgraph Services["Services"]
+            API["api.ts\n(REST client)"]
+            WsUrl["ws-url.ts"]
+            Messages["messages.ts\n(type definitions)"]
+        end
+    end
+
+    subgraph Backend["Backend — Rust / Axum (localhost:3000)"]
+        subgraph Handlers["Handlers"]
+            QuizUploadH["quiz_upload.rs\nPOST /api/upload"]
+            SessionH["session.rs\nGET /api/session/:code"]
+            WsHostH["ws.rs\nGET /ws/host/:code"]
+            WsPlayerH["ws.rs\nGET /ws/player/:code"]
+        end
+
+        subgraph Services_BE["Services"]
+            SessionMgr["session_manager.rs\n(create / lookup sessions)"]
+            GameEngine["game_engine.rs\n(question flow, timer,\nbroadcast events)"]
+            Scoring["scoring.rs\n(points calculation)"]
+        end
+
+        subgraph Models["Models"]
+            SessionM["GameSession\n(status, players,\ncurrent question)"]
+            QuizM["Quiz\n(questions, options)"]
+            PlayerM["Player\n(name, avatar,\nscore, connection)"]
+            Leaderboard_BE["LeaderboardEntry\n(compute_leaderboard)"]
+        end
+
+        Broadcast["tokio::broadcast\nGameEvent channel\n(BroadcastAll / HostOnly / PlayerOnly)"]
+        State["AppState\nArc&lt;SessionManager&gt;\nConfig"]
+    end
+
+    Host --> App
+    Player --> App
+    App --> Pages
+    Pages --> Hooks
+    Pages --> Components
+    Hooks --> Services
+    Components --> Services
+
+    API -- "REST\nHTTP/JSON" --> QuizUploadH
+    API -- "REST\nHTTP/JSON" --> SessionH
+    useWS -- "WebSocket\n/ws/host/:code" --> WsHostH
+    useWS -- "WebSocket\n/ws/player/:code" --> WsPlayerH
+
+    WsHostH --> SessionMgr
+    WsHostH --> Broadcast
+    WsPlayerH --> SessionMgr
+    WsPlayerH --> Broadcast
+    QuizUploadH --> SessionMgr
+    SessionH --> SessionMgr
+
+    SessionMgr --> State
+    GameEngine --> Broadcast
+    GameEngine --> Scoring
+    GameEngine --> Leaderboard_BE
+
+    SessionMgr --> SessionM
+    SessionM --> QuizM
+    SessionM --> PlayerM

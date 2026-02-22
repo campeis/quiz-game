@@ -50,3 +50,15 @@ lint:
 lint-fix:
     cd backend && cargo fmt
     cd frontend && pnpm exec biome check --fix src/
+
+# Regenerate PNG files from Mermaid diagram sources in docs/
+update-docs:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p docs/images
+    for f in docs/*.mmd; do
+        name=$(basename "$f" .mmd)
+        echo "Generating docs/images/${name}.png from ${f}"
+        npx @mermaid-js/mermaid-cli -i "$f" -o "docs/images/${name}.png" -t dark -b transparent --width 1600
+    done
+    echo "Done."
