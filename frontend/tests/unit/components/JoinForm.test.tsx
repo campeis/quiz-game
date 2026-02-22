@@ -57,14 +57,67 @@ describe("JoinForm", () => {
 		expect(input).toHaveValue("ABC123");
 	});
 
-	it("renders the emoji picker below the name field", () => {
+	it("renders avatar preview button to the left of the name input", () => {
 		render(<JoinForm onJoined={mockOnJoined} />);
 
-		// EmojiPicker renders 30 emoji buttons
+		// Avatar preview button present
+		const previewBtn = screen.getByRole("button", { name: "Choose avatar" });
+		expect(previewBtn).toBeInTheDocument();
+
+		// No inline emoji grid on the page
 		const emojiButtons = screen
 			.getAllByRole("button")
-			.filter((btn) => btn.textContent !== "Join Game");
-		expect(emojiButtons.length).toBe(30);
+			.filter(
+				(btn) =>
+					btn.getAttribute("aria-label") !== "Choose avatar" &&
+					btn.textContent !== "Join Game",
+			);
+		expect(emojiButtons).toHaveLength(0);
+	});
+
+	it("shows default avatar 🙂 in the preview button", () => {
+		render(<JoinForm onJoined={mockOnJoined} />);
+		const previewBtn = screen.getByRole("button", { name: "Choose avatar" });
+		expect(previewBtn).toHaveTextContent("🙂");
+	});
+
+	it("opens avatar picker modal when preview button is clicked", () => {
+		render(<JoinForm onJoined={mockOnJoined} />);
+
+		expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+		fireEvent.click(screen.getByRole("button", { name: "Choose avatar" }));
+
+		expect(screen.getByRole("dialog")).toBeInTheDocument();
+	});
+
+	it("closes modal and updates preview after emoji selection in modal", () => {
+		render(<JoinForm onJoined={mockOnJoined} />);
+
+		// Open modal
+		fireEvent.click(screen.getByRole("button", { name: "Choose avatar" }));
+		expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+		// Select lion in modal
+		fireEvent.click(screen.getByText("🦁"));
+
+		// Modal closed, preview updated
+		expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Choose avatar" })).toHaveTextContent("🦁");
+	});
+
+	it("closes modal without changing avatar when ✕ is clicked", () => {
+		render(<JoinForm onJoined={mockOnJoined} />);
+
+		// Open modal
+		fireEvent.click(screen.getByRole("button", { name: "Choose avatar" }));
+
+		// Close via ✕
+		fireEvent.click(screen.getByRole("button", { name: "Close avatar picker" }));
+
+		// Modal closed, avatar unchanged
+		expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Choose avatar" })).toHaveTextContent("🙂");
 	});
 
 	it("calls onJoined with default avatar when no emoji is selected", async () => {
@@ -92,7 +145,7 @@ describe("JoinForm", () => {
 		});
 	});
 
-	it("calls onJoined with selected avatar emoji", async () => {
+	it("calls onJoined with selected avatar emoji after modal selection", async () => {
 		const mockSession: SessionInfo = {
 			join_code: "ABC123",
 			ws_url: "/ws/player/ABC123",
@@ -110,8 +163,11 @@ describe("JoinForm", () => {
 		fireEvent.change(screen.getByPlaceholderText("Your name"), {
 			target: { value: "Alice" },
 		});
-		// Select the lion emoji
+
+		// Select lion via modal
+		fireEvent.click(screen.getByRole("button", { name: "Choose avatar" }));
 		fireEvent.click(screen.getByText("🦁"));
+
 		fireEvent.click(screen.getByRole("button", { name: "Join Game" }));
 
 		await waitFor(() => {

@@ -1,26 +1,38 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Player Flow", () => {
-	test("player sees join form with emoji picker", async ({ page }) => {
+	test("player sees join form with avatar preview button and no inline emoji grid", async ({ page }) => {
 		await page.goto("/play");
 
 		await expect(page.getByText("Join a Game")).toBeVisible();
 		await expect(page.getByPlaceholder("Enter 6-character code")).toBeVisible();
 		await expect(page.getByPlaceholder("Your name")).toBeVisible();
-		// EmojiPicker renders 30 buttons
+		// Avatar preview button is present
+		await expect(page.getByRole("button", { name: "Choose avatar" })).toBeVisible();
+		// No inline emoji grid on the page
 		const emojiButtons = page.locator(".emoji-picker button");
-		await expect(emojiButtons).toHaveCount(30);
+		await expect(emojiButtons).toHaveCount(0);
 	});
 
-	test("player can select emoji and it gets highlighted", async ({ page }) => {
+	test("player can select emoji via modal and preview updates", async ({ page }) => {
 		await page.goto("/play");
 
-		// Click the lion emoji
-		await page.getByText("🦁").click();
+		// Default preview shows 🙂
+		const previewBtn = page.getByRole("button", { name: "Choose avatar" });
+		await expect(previewBtn).toContainText("🙂");
 
-		// The button should have aria-pressed="true"
-		const lionButton = page.locator("button", { hasText: "🦁" });
-		await expect(lionButton).toHaveAttribute("aria-pressed", "true");
+		// Click preview to open modal
+		await previewBtn.click();
+		await expect(page.getByRole("dialog")).toBeVisible();
+
+		// Click lion emoji in modal
+		await page.getByRole("dialog").getByText("🦁").click();
+
+		// Modal closes
+		await expect(page.getByRole("dialog")).not.toBeVisible();
+
+		// Preview now shows 🦁
+		await expect(previewBtn).toContainText("🦁");
 	});
 
 	test("player gets error for invalid join code", async ({ page }) => {

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ApiError, SessionInfo } from "../services/api";
 import { getSession } from "../services/api";
-import { EmojiPicker } from "./EmojiPicker";
+import { AvatarPickerModal } from "./AvatarPickerModal";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
-import { colors, spacing, typography } from "./ui/tokens";
+import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
 const DEFAULT_AVATAR = "🙂";
 
@@ -16,8 +16,21 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 	const [joinCode, setJoinCode] = useState("");
 	const [displayName, setDisplayName] = useState("");
 	const [avatar, setAvatar] = useState(DEFAULT_AVATAR);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const avatarPreviewRef = useRef<HTMLButtonElement>(null);
+
+	const handleAvatarSelect = (emoji: string) => {
+		setAvatar(emoji);
+		setIsModalOpen(false);
+		avatarPreviewRef.current?.focus();
+	};
+
+	const handleModalClose = () => {
+		setIsModalOpen(false);
+		avatarPreviewRef.current?.focus();
+	};
 
 	const handleSubmit = async () => {
 		if (!joinCode.trim()) {
@@ -102,29 +115,56 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 				>
 					Display Name
 				</label>
-				<input
-					id="display-name"
-					type="text"
-					value={displayName}
-					onChange={(e) => setDisplayName(e.target.value)}
-					placeholder="Your name"
-					autoComplete="off"
-					maxLength={20}
+				<div
 					style={{
-						display: "block",
-						width: "100%",
-						padding: spacing.md,
+						display: "flex",
+						alignItems: "center",
+						gap: spacing.sm,
 						marginBottom: spacing.lg,
-						fontSize: typography.sizes.md,
-						border: `2px solid ${colors.border}`,
-						borderRadius: "8px",
-						backgroundColor: colors.background,
-						color: colors.text,
-						fontFamily: typography.fontFamily,
-						boxSizing: "border-box",
 					}}
-				/>
-				<EmojiPicker onSelect={setAvatar} selected={avatar} />
+				>
+					<button
+						ref={avatarPreviewRef}
+						type="button"
+						aria-label="Choose avatar"
+						onClick={() => setIsModalOpen(true)}
+						style={{
+							fontSize: typography.sizes.xxl,
+							minWidth: "48px",
+							minHeight: "48px",
+							backgroundColor: colors.surface,
+							border: `2px solid ${colors.border}`,
+							borderRadius: borderRadius.md,
+							cursor: "pointer",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							flexShrink: 0,
+						}}
+					>
+						{avatar}
+					</button>
+					<input
+						id="display-name"
+						type="text"
+						value={displayName}
+						onChange={(e) => setDisplayName(e.target.value)}
+						placeholder="Your name"
+						autoComplete="off"
+						maxLength={20}
+						style={{
+							flex: 1,
+							padding: spacing.md,
+							fontSize: typography.sizes.md,
+							border: `2px solid ${colors.border}`,
+							borderRadius: "8px",
+							backgroundColor: colors.background,
+							color: colors.text,
+							fontFamily: typography.fontFamily,
+							boxSizing: "border-box",
+						}}
+					/>
+				</div>
 				<Button onClick={handleSubmit} loading={loading} style={{ width: "100%" }}>
 					Join Game
 				</Button>
@@ -137,6 +177,12 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 					</p>
 				)}
 			</form>
+			<AvatarPickerModal
+				open={isModalOpen}
+				selected={avatar}
+				onSelect={handleAvatarSelect}
+				onClose={handleModalClose}
+			/>
 		</Card>
 	);
 }

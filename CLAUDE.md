@@ -10,6 +10,8 @@ Auto-generated from all feature plans. Last updated: 2026-02-15
 - Python (yamllint is a Python CLI tool, version latest stable) + `yamllint` (Python package, installed via pip) (006-yaml-lint)
 - Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum (WebSocket handler) — backend; React 19 — frontend; Vitest — frontend unit tests; Playwright — e2e tests (007-player-avatar)
 - In-memory only (session-scoped `HashMap<String, Player>` — no persistence change) (007-player-avatar)
+- TypeScript 5.x + React 19 + React 19, Vitest + @testing-library/react (unit tests), Playwright (e2e) (008-avatar-picker-modal)
+- N/A — avatar state remains component-local in `JoinForm` (no persistence change) (008-avatar-picker-modal)
 
 - Rust (stable, latest edition 2024) for backend; TypeScript 5.x for frontend + Axum (backend web framework + WebSocket support), React 19 (frontend UI), Rspack (frontend bundler), Biome (frontend linting + formatting) (001-multiplayer-quiz)
 
@@ -29,9 +31,9 @@ cargo test [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECH
 Rust (stable, latest edition 2024) for backend; TypeScript 5.x for frontend: Follow standard conventions
 
 ## Recent Changes
+- 008-avatar-picker-modal: Added TypeScript 5.x + React 19 + React 19, Vitest + @testing-library/react (unit tests), Playwright (e2e)
 - 007-player-avatar: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum (WebSocket handler) — backend; React 19 — frontend; Vitest — frontend unit tests; Playwright — e2e tests
 - 006-yaml-lint: Added Python (yamllint is a Python CLI tool, version latest stable) + `yamllint` (Python package, installed via pip)
-- 005-dependabot-expand: Added YAML (Dependabot configuration syntax v2) + None — modifies existing `.github/dependabot.yml`
 
 
 <!-- MANUAL ADDITIONS START -->

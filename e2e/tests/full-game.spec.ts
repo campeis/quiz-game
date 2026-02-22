@@ -42,20 +42,22 @@ test.describe("Full Multiplayer Game", () => {
 			expect(joinCode).toBeTruthy();
 			expect(joinCode).toMatch(/^[A-Z0-9]{6}$/);
 
-			// === Player 1: Join with lion avatar ===
+			// === Player 1: Join with lion avatar (via modal) ===
 			await player1Page.goto("/play");
 			await player1Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
 			await player1Page.getByPlaceholder("Your name").fill("Alice");
-			await player1Page.getByText("🦁").click();
+			await player1Page.getByRole("button", { name: "Choose avatar" }).click();
+			await player1Page.getByRole("dialog").getByText("🦁").click();
 			await player1Page.getByRole("button", { name: "Join Game" }).click();
 
 			await expect(player1Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
 
-			// === Player 2: Join with robot avatar ===
+			// === Player 2: Join with robot avatar (via modal) ===
 			await player2Page.goto("/play");
 			await player2Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
 			await player2Page.getByPlaceholder("Your name").fill("Bob");
-			await player2Page.getByText("🤖").click();
+			await player2Page.getByRole("button", { name: "Choose avatar" }).click();
+			await player2Page.getByRole("dialog").getByText("🤖").click();
 			await player2Page.getByRole("button", { name: "Join Game" }).click();
 
 			await expect(player2Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
@@ -120,18 +122,20 @@ test.describe("Full Multiplayer Game", () => {
 			const joinCodeEl = hostPage.locator("text=/[A-Z0-9]{6}/").first();
 			const joinCode = await joinCodeEl.textContent();
 
-			// Both players choose the same emoji (🤖)
+			// Both players choose the same emoji (🤖) via modal
 			await player1Page.goto("/play");
 			await player1Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
 			await player1Page.getByPlaceholder("Your name").fill("Alice");
-			await player1Page.getByText("🤖").click();
+			await player1Page.getByRole("button", { name: "Choose avatar" }).click();
+			await player1Page.getByRole("dialog").getByText("🤖").click();
 			await player1Page.getByRole("button", { name: "Join Game" }).click();
 			await expect(player1Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
 
 			await player2Page.goto("/play");
 			await player2Page.getByPlaceholder("Enter 6-character code").fill(joinCode!);
 			await player2Page.getByPlaceholder("Your name").fill("Bob");
-			await player2Page.getByText("🤖").click();
+			await player2Page.getByRole("button", { name: "Choose avatar" }).click();
+			await player2Page.getByRole("dialog").getByText("🤖").click();
 			await player2Page.getByRole("button", { name: "Join Game" }).click();
 			await expect(player2Page.getByRole("heading", { name: "Waiting for Players" })).toBeVisible({ timeout: 10000 });
 
