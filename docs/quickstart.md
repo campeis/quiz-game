@@ -13,7 +13,7 @@
 ```bash
 # Clone the repository
 git clone <repo-url>
-cd speckit
+cd quiz-game
 
 # Install all dependencies (backend + frontend + e2e)
 just setup
