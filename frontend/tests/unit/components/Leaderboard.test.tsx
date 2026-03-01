@@ -5,7 +5,14 @@ import { Leaderboard } from "../../../src/components/Leaderboard";
 const mockEntries = [
 	{ rank: 1, display_name: "Alice", avatar: "🦁", score: 2500, correct_count: 3, is_winner: true },
 	{ rank: 2, display_name: "Bob", avatar: "🤖", score: 1500, correct_count: 2, is_winner: false },
-	{ rank: 3, display_name: "Charlie", avatar: "🐸", score: 500, correct_count: 1, is_winner: false },
+	{
+		rank: 3,
+		display_name: "Charlie",
+		avatar: "🐸",
+		score: 500,
+		correct_count: 1,
+		is_winner: false,
+	},
 ];
 
 describe("Leaderboard", () => {

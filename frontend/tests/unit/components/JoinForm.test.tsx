@@ -69,8 +69,7 @@ describe("JoinForm", () => {
 			.getAllByRole("button")
 			.filter(
 				(btn) =>
-					btn.getAttribute("aria-label") !== "Choose avatar" &&
-					btn.textContent !== "Join Game",
+					btn.getAttribute("aria-label") !== "Choose avatar" && btn.textContent !== "Join Game",
 			);
 		expect(emojiButtons).toHaveLength(0);
 	});

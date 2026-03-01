@@ -11,6 +11,8 @@ import {
 	type PlayerReconnectedPayload,
 	type QuestionEndedPayload,
 	type QuestionPayload,
+	type ScoringRuleName,
+	type ScoringRuleSetPayload,
 	type WsMessage,
 } from "../services/messages";
 
@@ -32,6 +34,7 @@ export interface GameState {
 	answerCount: AnswerCountPayload | null;
 	leaderboard: LeaderboardEntryPayload[];
 	countdown: number;
+	scoringRule: ScoringRuleName;
 }
 
 const initialState: GameState = {
@@ -44,6 +47,7 @@ const initialState: GameState = {
 	answerCount: null,
 	leaderboard: [],
 	countdown: 0,
+	scoringRule: "stepped_decay",
 };
 
 type Action = { type: "WS_MESSAGE"; message: WsMessage } | { type: "RESET" };
@@ -96,6 +100,7 @@ function reducer(state: GameState, action: Action): GameState {
 				currentQuestion: p,
 				answerResult: null,
 				answerCount: null,
+				scoringRule: p.scoring_rule,
 			};
 		}
 		case MSG.ANSWER_COUNT:
@@ -109,6 +114,10 @@ function reducer(state: GameState, action: Action): GameState {
 		case MSG.GAME_FINISHED: {
 			const p = message.payload as GameFinishedPayload;
 			return { ...state, phase: "finished", leaderboard: p.leaderboard };
+		}
+		case MSG.SCORING_RULE_SET: {
+			const p = message.payload as ScoringRuleSetPayload;
+			return { ...state, scoringRule: p.rule };
 		}
 		case MSG.GAME_PAUSED:
 			return { ...state, phase: "paused" };

@@ -8,6 +8,7 @@ A real-time multiplayer quiz game where a host uploads questions, players join v
 
 - **Host a quiz**: Upload a text-based quiz file, get a join code, and control the game flow
 - **Join and play**: Enter a join code and display name to compete in real time
+- **Configurable scoring rules**: Host chooses Stepped Decay, Linear Decay, or Fixed Score before the game starts
 - **Live questions with countdown**: Timed questions with instant feedback on answers
 - **Real-time leaderboard**: Scores update live after each question with ranked standings
 - **WebSocket communication**: Low-latency game state synchronization between host and players
@@ -20,7 +21,7 @@ backend/           Rust/Axum API server and WebSocket handler
 ├── src/
 │   ├── handlers/  HTTP and WebSocket route handlers
 │   ├── models/    Game, session, quiz, and player data structures
-│   └── services/  Session management, scoring, and quiz parsing
+│   └── services/  Session management, game orchestration, and quiz parsing
 │
 frontend/          React single-page application
 ├── src/

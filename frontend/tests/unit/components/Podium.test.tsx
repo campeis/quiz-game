@@ -3,7 +3,12 @@ import { describe, expect, it } from "vitest";
 import { Podium } from "../../../src/components/Podium";
 import type { LeaderboardEntryPayload } from "../../../src/services/messages";
 
-const make = (rank: number, name: string, avatar: string, score: number): LeaderboardEntryPayload => ({
+const make = (
+	rank: number,
+	name: string,
+	avatar: string,
+	score: number,
+): LeaderboardEntryPayload => ({
 	rank,
 	display_name: name,
 	avatar,

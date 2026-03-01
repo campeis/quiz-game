@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use super::player::Player;
 use super::quiz::Quiz;
+use super::scoring_rule::ScoringRule;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -25,6 +26,7 @@ pub struct GameSession {
     pub status: SessionStatus,
     pub question_started: Option<Instant>,
     pub created_at: Instant,
+    pub scoring_rule: ScoringRule,
 }
 
 impl GameSession {
@@ -38,6 +40,7 @@ impl GameSession {
             status: SessionStatus::Lobby,
             question_started: None,
             created_at: Instant::now(),
+            scoring_rule: ScoringRule::default(),
         }
     }
 

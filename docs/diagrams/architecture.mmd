@@ -44,12 +44,12 @@ graph TB
 
         subgraph Services_BE["Services"]
             SessionMgr["session_manager.rs<br/>(create / lookup sessions)"]
-            GameEngine["game_engine.rs<br/>(question flow, timer,<br/>broadcast events)"]
-            Scoring["scoring.rs<br/>(points calculation)"]
+            GameEngine["game_engine.rs<br/>(question flow, timer,<br/>scoring rule dispatch,<br/>broadcast events)"]
         end
 
         subgraph Models["Models"]
-            SessionM["GameSession<br/>(status, players,<br/>current question)"]
+            SessionM["GameSession<br/>(status, players,<br/>current question,<br/>scoring_rule)"]
+            ScoringRule["ScoringRule<br/>(SteppedDecay /<br/>LinearDecay / FixedScore)"]
             QuizM["Quiz<br/>(questions, options)"]
             PlayerM["Player<br/>(name, avatar,<br/>score, connection)"]
             Leaderboard_BE["LeaderboardEntry<br/>(compute_leaderboard)"]
@@ -81,9 +81,9 @@ graph TB
 
     SessionMgr --> State
     GameEngine --> Broadcast
-    GameEngine --> Scoring
     GameEngine --> Leaderboard_BE
 
     SessionMgr --> SessionM
+    SessionM --> ScoringRule
     SessionM --> QuizM
     SessionM --> PlayerM

@@ -37,8 +37,8 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | `JoinForm` | Join code + display name form; hosts the avatar preview trigger |
 | `AvatarPickerModal` | Blocking modal overlay over the 30-emoji picker; opens on avatar preview click |
 | `HostDashboard` | Shows connected players, starts the game, displays per-question results |
-| `Lobby` | Waiting room shown to players before the game starts |
-| `Question` | Timed question view with answer options and countdown |
+| `Lobby` | Waiting room; host can select the scoring rule before starting |
+| `Question` | Timed question view with answer options, countdown, and active scoring rule label |
 | `Leaderboard` | Ranked standings shown after each question and at game end |
 
 ### Services
@@ -46,7 +46,7 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | Module | Responsibility |
 |--------|---------------|
 | `api.ts` | REST calls — quiz upload (`POST /api/upload`) and session lookup (`GET /api/session/:code`) |
-| `messages.ts` | TypeScript type definitions for all WebSocket message payloads |
+| `messages.ts` | TypeScript type definitions for all WebSocket message payloads, including `ScoringRuleName` |
 | `ws-url.ts` | Constructs the WebSocket URL with name + avatar query parameters |
 
 ---
@@ -69,14 +69,14 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | Service | Responsibility |
 |---------|---------------|
 | `session_manager.rs` | Creates, stores, and retrieves `GameSession` instances keyed by join code |
-| `game_engine.rs` | Orchestrates the question loop: sends questions, runs the countdown timer, collects answers, computes and broadcasts results, triggers the final leaderboard |
-| `scoring.rs` | Calculates points for a correct answer based on answer speed within the time window |
+| `game_engine.rs` | Orchestrates the question loop: sends questions, runs the countdown timer, collects answers, delegates point calculation to the session's `ScoringRule`, broadcasts results, triggers the final leaderboard |
 
 ### Models
 
 | Model | Fields |
 |-------|--------|
-| `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `status`, `question_started` |
+| `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `status`, `question_started`, `scoring_rule` |
+| `ScoringRule` | Enum: `SteppedDecay` (−250 pts every 5 s), `LinearDecay` (−50 pts/s), `FixedScore` (always max). Implements `calculate_points(correct, elapsed_ms, limit_sec)` — minimum 1 pt for a correct answer |
 | `Quiz` | Title, list of `Question` (text + options, one marked correct) |
 | `Player` | `display_name`, `avatar`, `score`, `correct_count`, `connection_status` |
 | `LeaderboardEntry` | Computed from `Player` slice — ranked by score, then name |
@@ -98,6 +98,10 @@ Each connected WebSocket task subscribes to this channel and forwards matching m
 ## Data Flow: Joining a Game
 
 ![Join flow](images/flow-join.png)
+
+## Data Flow: Selecting a Scoring Rule
+
+![Scoring rule flow](images/flow-scoring-rule.png)
 
 ## Data Flow: Running a Question
 

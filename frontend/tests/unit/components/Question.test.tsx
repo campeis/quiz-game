@@ -11,6 +11,7 @@ const defaultProps = {
 	onAnswer: vi.fn(),
 	answerResult: null,
 	phase: "question" as const,
+	scoringRule: "stepped_decay" as const,
 };
 
 describe("Question", () => {
@@ -76,6 +77,12 @@ describe("Question", () => {
 
 		expect(screen.getByText("Incorrect")).toBeInTheDocument();
 		expect(screen.getByText("+0 points")).toBeInTheDocument();
+	});
+
+	it("displays the scoring rule name when scoringRule is linear_decay", () => {
+		render(<Question {...defaultProps} scoringRule="linear_decay" />);
+
+		expect(screen.getByText("Linear Decay")).toBeInTheDocument();
 	});
 
 	it("resets selection state when questionIndex changes", () => {

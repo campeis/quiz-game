@@ -1,0 +1,13 @@
+sequenceDiagram
+    actor H as Host
+    participant FE as Frontend (Lobby)
+    participant BE as Backend (ws_host)
+    actor PL as Players
+
+    Note over H,PL: Host is in Lobby phase (game not yet started)
+    H->>FE: selects "Linear Decay" radio
+    FE->>BE: set_scoring_rule {rule: "linear_decay"}
+    BE->>BE: session.scoring_rule = LinearDecay
+    BE-->>H: scoring_rule_set {rule: "linear_decay"} (BroadcastAll)
+    BE-->>PL: scoring_rule_set {rule: "linear_decay"} (BroadcastAll)
+    Note over BE: rule locked once game starts
