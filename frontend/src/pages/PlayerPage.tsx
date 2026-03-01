@@ -108,6 +108,7 @@ export function PlayerPage() {
 					onAnswer={handleAnswer}
 					answerResult={gameState.answerResult}
 					phase={phase}
+					scoringRule={gameState.scoringRule}
 				/>
 			)}
 

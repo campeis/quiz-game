@@ -39,6 +39,7 @@ export interface QuestionPayload {
 	text: string;
 	options: string[];
 	time_limit_sec: number;
+	scoring_rule: ScoringRuleName;
 }
 
 export interface AnswerCountPayload {
@@ -92,6 +93,18 @@ export interface NameAssignedPayload {
 	assigned_name: string;
 }
 
+// === Scoring Rule Types ===
+
+export type ScoringRuleName = "stepped_decay" | "linear_decay" | "fixed_score";
+
+export interface SetScoringRulePayload {
+	rule: ScoringRuleName;
+}
+
+export interface ScoringRuleSetPayload {
+	rule: ScoringRuleName;
+}
+
 // === Client → Server Payloads ===
 
 export interface SubmitAnswerPayload {
@@ -121,4 +134,7 @@ export const MSG = {
 	START_GAME: "start_game",
 	NEXT_QUESTION: "next_question",
 	END_GAME: "end_game",
+	SET_SCORING_RULE: "set_scoring_rule",
+	// Server → Client (scoring rule)
+	SCORING_RULE_SET: "scoring_rule_set",
 } as const;

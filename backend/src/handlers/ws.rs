@@ -12,6 +12,7 @@ use tokio::sync::broadcast;
 
 use crate::AppState;
 use crate::models::player::{ConnectionStatus, DEFAULT_AVATAR, Player};
+use crate::models::scoring_rule::ScoringRule;
 use crate::models::session::SessionStatus;
 use crate::services::game_engine::{self, GameEvent};
 
@@ -119,6 +120,16 @@ pub async fn ws_host(
                                     let mut s = recv_session.write().await;
                                     s.status = SessionStatus::Finished;
                                     break;
+                                }
+                                Some("set_scoring_rule") => {
+                                    if let Ok(rule) = serde_json::from_value::<ScoringRule>(
+                                        parsed["payload"]["rule"].clone(),
+                                    ) {
+                                        let mut s = recv_session.write().await;
+                                        game_engine::handle_set_scoring_rule(
+                                            &mut s, rule, &recv_tx,
+                                        );
+                                    }
                                 }
                                 _ => {}
                             }

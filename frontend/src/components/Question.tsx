@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
+import type { ScoringRuleName } from "../services/messages";
 import { Card } from "./ui/Card";
 import { Timer } from "./ui/Timer";
 import { borderRadius, colors, spacing, typography } from "./ui/tokens";
+
+const SCORING_RULE_LABELS: Record<ScoringRuleName, string> = {
+	stepped_decay: "Stepped Decay",
+	linear_decay: "Linear Decay",
+	fixed_score: "Fixed Score",
+};
 
 interface QuestionProps {
 	questionIndex: number;
@@ -16,6 +23,7 @@ interface QuestionProps {
 		correct_index: number;
 	} | null;
 	phase: "question" | "question_ended";
+	scoringRule: ScoringRuleName;
 }
 
 export function Question({
@@ -27,6 +35,7 @@ export function Question({
 	onAnswer,
 	answerResult,
 	phase,
+	scoringRule,
 }: QuestionProps) {
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -90,6 +99,9 @@ export function Question({
 			>
 				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
 					Question {questionIndex + 1} of {totalQuestions}
+				</span>
+				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
+					{SCORING_RULE_LABELS[scoringRule]}
 				</span>
 				<Timer
 					key={questionIndex}

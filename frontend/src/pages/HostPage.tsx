@@ -8,7 +8,7 @@ import { useGameState } from "../hooks/useGameState";
 import { useWebSocket } from "../hooks/useWebSocket";
 import type { QuizPreview } from "../services/api";
 import { createSession } from "../services/api";
-import { MSG } from "../services/messages";
+import { MSG, type ScoringRuleName } from "../services/messages";
 import { buildWsUrl } from "../services/ws-url";
 
 type HostPhase = "upload" | "lobby" | "playing" | "finished";
@@ -54,6 +54,10 @@ export function HostPage() {
 		send({ type: MSG.START_GAME, payload: {} });
 	};
 
+	const handleScoringRuleChange = (rule: ScoringRuleName) => {
+		send({ type: MSG.SET_SCORING_RULE, payload: { rule } });
+	};
+
 	return (
 		<main
 			style={{
@@ -91,6 +95,7 @@ export function HostPage() {
 					gameState={gameState}
 					isHost={true}
 					onStartGame={handleStartGame}
+					onScoringRuleChange={handleScoringRuleChange}
 				/>
 			)}
 

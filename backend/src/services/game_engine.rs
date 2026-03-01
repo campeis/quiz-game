@@ -7,8 +7,8 @@ use tokio::time::{Duration, sleep};
 
 use crate::models::leaderboard::compute_leaderboard;
 use crate::models::player::{Answer, Player};
+use crate::models::scoring_rule::ScoringRule;
 use crate::models::session::{GameSession, SessionStatus};
-use crate::services::scoring::calculate_points;
 
 /// Message that can be sent through the broadcast channel.
 #[derive(Debug, Clone)]
@@ -19,6 +19,27 @@ pub enum GameEvent {
     HostOnly(String),
     /// Send to a specific player
     PlayerOnly { player_id: String, message: String },
+}
+
+/// Updates the session's scoring rule if still in Lobby and broadcasts the change.
+/// Silently ignored when the session is Active, Paused, or Finished.
+pub fn handle_set_scoring_rule(
+    session: &mut GameSession,
+    rule: ScoringRule,
+    tx: &broadcast::Sender<GameEvent>,
+) {
+    if session.status != SessionStatus::Lobby {
+        return;
+    }
+    session.scoring_rule = rule;
+    let rule_value = serde_json::to_value(&session.scoring_rule).unwrap_or_default();
+    let _ = tx.send(GameEvent::BroadcastAll(
+        json!({
+            "type": "scoring_rule_set",
+            "payload": { "rule": rule_value }
+        })
+        .to_string(),
+    ));
 }
 
 pub async fn start_game(
@@ -80,6 +101,7 @@ async fn do_advance_question(
         let q = &s.quiz.questions[idx];
         let options: Vec<String> = q.options.iter().map(|o| o.text.clone()).collect();
 
+        let scoring_rule_value = serde_json::to_value(&s.scoring_rule).unwrap_or_default();
         let _ = tx.send(GameEvent::BroadcastAll(
             json!({
                 "type": "question",
@@ -89,6 +111,7 @@ async fn do_advance_question(
                     "text": q.text,
                     "options": options,
                     "time_limit_sec": q.time_limit_sec,
+                    "scoring_rule": scoring_rule_value,
                 }
             })
             .to_string(),
@@ -157,7 +180,9 @@ pub async fn handle_answer(
             .map(|started| started.elapsed().as_millis() as u64)
             .unwrap_or(0);
 
-        let points = calculate_points(correct, time_taken_ms, question.time_limit_sec);
+        let points =
+            s.scoring_rule
+                .calculate_points(correct, time_taken_ms, question.time_limit_sec);
         let correct_index = question.correct_index;
 
         let player = s.players.get_mut(player_id).unwrap();

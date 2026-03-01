@@ -95,8 +95,9 @@ Produces:
 4. Open another browser tab, click **"Join a Game"**
 5. Enter the join code; optionally click the avatar preview to pick an emoji, then enter a display name
 6. Click **"Join Game"**
-7. Back on the host tab, click **"Start Quiz"**
-8. Answer questions and watch the leaderboard update live
+7. Back on the host tab, choose a **Scoring Rule** (Stepped Decay, Linear Decay, or Fixed Score) — this can be changed any time before starting
+8. Click **"Start Quiz"**
+9. Answer questions and watch the leaderboard update live
 
 ### Sample Quiz File (`fixtures/sample.txt`)
 
