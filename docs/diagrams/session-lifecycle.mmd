@@ -3,5 +3,9 @@ stateDiagram-v2
     Lobby --> Active : host starts game
     Active --> Paused : host disconnects
     Paused --> Active : host reconnects<br/>(within 120s)
-    Active --> Finished : last question answered
-    Finished --> [*]
+    Active --> Finished : last question answered<br/>→ remove session
+    Paused --> Finished : reconnect timeout (120s)<br/>→ game_terminated broadcast<br/>→ remove session
+    Lobby --> Removed : host disconnects from lobby<br/>or host sends end_game
+    Active --> Removed : host sends end_game<br/>or host disconnects after game ends
+    Finished --> Removed : host WebSocket closes
+    Removed --> [*]

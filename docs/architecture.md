@@ -68,8 +68,8 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 
 | Service | Responsibility |
 |---------|---------------|
-| `session_manager.rs` | Creates, stores, and retrieves `GameSession` instances keyed by join code |
-| `game_engine.rs` | Orchestrates the question loop: sends questions, runs the countdown timer, collects answers, delegates point calculation to the session's `ScoringRule`, broadcasts results, triggers the final leaderboard |
+| `session_manager.rs` | Creates, stores, retrieves, and removes `GameSession` instances keyed by join code; sessions are removed on game termination to reclaim memory |
+| `game_engine.rs` | Orchestrates the question loop: sends questions, runs the countdown timer, collects answers, delegates point calculation to the session's `ScoringRule`, broadcasts results, triggers the final leaderboard, removes the session from `SessionManager` on game end |
 
 ### Models
 
@@ -122,3 +122,8 @@ Each connected WebSocket task subscribes to this channel and forwards matching m
 ![Session lifecycle](images/session-lifecycle.png)
 
 Players and hosts can reconnect within a 120-second window after disconnecting. On reconnect, they receive the current game state and resume participation.
+
+Sessions are automatically removed from `SessionManager` when a game terminates, across three paths:
+- **Normal end**: `game_engine` removes the session when the final `game_finished` event is broadcast.
+- **Host timeout**: the reconnection-timeout task removes the session after broadcasting `game_terminated`.
+- **All other exits** (Lobby disconnect, `end_game` message, host closes after game ends): `ws_host` removes the session alongside the broadcast channel.
