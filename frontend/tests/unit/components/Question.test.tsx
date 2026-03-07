@@ -14,6 +14,13 @@ const defaultProps = {
 	scoringRule: "stepped_decay" as const,
 };
 
+const streakAnswerResult = {
+	correct: true,
+	points_awarded: 1500,
+	correct_index: 2,
+	streak_multiplier: 1.5,
+};
+
 describe("Question", () => {
 	it("renders question text and options", () => {
 		render(<Question {...defaultProps} />);
@@ -59,7 +66,7 @@ describe("Question", () => {
 		render(
 			<Question
 				{...defaultProps}
-				answerResult={{ correct: true, points_awarded: 1000, correct_index: 2 }}
+				answerResult={{ correct: true, points_awarded: 1000, correct_index: 2, streak_multiplier: 1.0 }}
 			/>,
 		);
 
@@ -71,7 +78,7 @@ describe("Question", () => {
 		render(
 			<Question
 				{...defaultProps}
-				answerResult={{ correct: false, points_awarded: 0, correct_index: 2 }}
+				answerResult={{ correct: false, points_awarded: 0, correct_index: 2, streak_multiplier: 1.0 }}
 			/>,
 		);
 
@@ -83,6 +90,60 @@ describe("Question", () => {
 		render(<Question {...defaultProps} scoringRule="linear_decay" />);
 
 		expect(screen.getByText("Linear Decay")).toBeInTheDocument();
+	});
+
+	it("displays scoring rule name for streak_bonus", () => {
+		render(<Question {...defaultProps} scoringRule="streak_bonus" />);
+
+		expect(screen.getByText("Streak Bonus")).toBeInTheDocument();
+	});
+
+	it("shows streak multiplier in answer result when scoringRule is streak_bonus", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="streak_bonus"
+				answerResult={streakAnswerResult}
+			/>,
+		);
+
+		expect(screen.getByText("×1.5")).toBeInTheDocument();
+	});
+
+	it("does NOT show streak multiplier when scoringRule is not streak_bonus", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="fixed_score"
+				answerResult={{ correct: true, points_awarded: 1000, correct_index: 2, streak_multiplier: 1.0 }}
+			/>,
+		);
+
+		expect(screen.queryByText(/×\d/)).not.toBeInTheDocument();
+	});
+
+	it("does NOT show streak multiplier on incorrect answer even if streak_multiplier > 1.0", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="streak_bonus"
+				answerResult={{ correct: false, points_awarded: 0, correct_index: 2, streak_multiplier: 1.5 }}
+			/>,
+		);
+
+		expect(screen.queryByText("×1.5")).not.toBeInTheDocument();
+	});
+
+	it("does NOT show streak multiplier at ×1.0 even for streak_bonus (no visual noise on first answer)", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="streak_bonus"
+				answerResult={{ correct: true, points_awarded: 1000, correct_index: 2, streak_multiplier: 1.0 }}
+			/>,
+		);
+
+		expect(screen.queryByText("×1.0")).not.toBeInTheDocument();
 	});
 
 	it("resets selection state when questionIndex changes", () => {

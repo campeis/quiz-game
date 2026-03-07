@@ -14,6 +14,8 @@ Auto-generated from all feature plans. Last updated: 2026-02-15
 - **Persistence**: In-memory only — no database; all session state lives in `HashMap` for the duration of a session
 - Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e) (010-question-time-limit)
 - In-memory only — `GameSession` in `HashMap`; no persistence (010-question-time-limit)
+- Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend), React 19 + Vitest (frontend), Playwright (e2e) (011-streak-bonus)
+- In-memory only (no database); streak counter lives on `Player` struct in `HashMap` (011-streak-bonus)
 
 ## Project Structure
 
@@ -45,9 +47,9 @@ Rust: follow standard rustfmt + Clippy conventions.
 TypeScript/React: follow Biome rules (no separate Prettier/ESLint config).
 
 ## Recent Changes
+- 011-streak-bonus: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend), React 19 + Vitest (frontend), Playwright (e2e)
 - 010-question-time-limit: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e)
 - 009-scoring-rules: Configurable scoring rules (SteppedDecay / LinearDecay / FixedScore) via strategy enum; new WS messages `set_scoring_rule` / `scoring_rule_set`
-- 008-avatar-picker-modal: Avatar picker modal with 30-emoji grid; `AvatarPickerModal` component; Vitest + @testing-library/react unit tests
 
 
 <!-- MANUAL ADDITIONS START -->

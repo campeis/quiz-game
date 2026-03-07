@@ -83,6 +83,35 @@ describe("Lobby — scoring rule selector", () => {
 
 		expect(onScoringRuleChange).toHaveBeenCalledWith("fixed_score");
 	});
+
+	it("renders Streak Bonus option in scoring rule selector", () => {
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				onScoringRuleChange={vi.fn()}
+			/>,
+		);
+
+		expect(screen.getByRole("radio", { name: /streak bonus/i })).toBeInTheDocument();
+	});
+
+	it("calls onScoringRuleChange with 'streak_bonus' when Streak Bonus is selected", () => {
+		const onScoringRuleChange = vi.fn();
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				onScoringRuleChange={onScoringRuleChange}
+			/>,
+		);
+
+		fireEvent.click(screen.getByRole("radio", { name: /streak bonus/i }));
+
+		expect(onScoringRuleChange).toHaveBeenCalledWith("streak_bonus");
+	});
 });
 
 describe("Lobby — question time limit", () => {

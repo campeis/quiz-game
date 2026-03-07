@@ -19,6 +19,11 @@ const SCORING_RULES: { value: ScoringRuleName; label: string; description: strin
 	{ value: "stepped_decay", label: "Stepped Decay", description: "Score drops every 5 seconds" },
 	{ value: "linear_decay", label: "Linear Decay", description: "Score drops every second" },
 	{ value: "fixed_score", label: "Fixed Score", description: "Full points regardless of time" },
+	{
+		value: "streak_bonus",
+		label: "Streak Bonus",
+		description: "Multiplier grows with consecutive correct answers",
+	},
 ];
 
 export function Lobby({

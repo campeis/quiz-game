@@ -8,6 +8,7 @@ const SCORING_RULE_LABELS: Record<ScoringRuleName, string> = {
 	stepped_decay: "Stepped Decay",
 	linear_decay: "Linear Decay",
 	fixed_score: "Fixed Score",
+	streak_bonus: "Streak Bonus",
 };
 
 interface QuestionProps {
@@ -21,6 +22,7 @@ interface QuestionProps {
 		correct: boolean;
 		points_awarded: number;
 		correct_index: number;
+		streak_multiplier: number;
 	} | null;
 	phase: "question" | "question_ended";
 	scoringRule: ScoringRuleName;
@@ -152,6 +154,17 @@ export function Question({
 					>
 						{answerResult.correct ? "Correct!" : "Incorrect"}
 					</p>
+					{scoringRule === "streak_bonus" && answerResult.correct && answerResult.streak_multiplier > 1.0 && (
+						<p
+							style={{
+								color: colors.primary,
+								fontSize: typography.sizes.md,
+								fontWeight: typography.weights.bold,
+							}}
+						>
+							×{answerResult.streak_multiplier.toFixed(1)}
+						</p>
+					)}
 					<p style={{ color: colors.textSecondary, fontSize: typography.sizes.md }}>
 						+{answerResult.points_awarded} points
 					</p>

@@ -51,6 +51,7 @@ export interface AnswerResultPayload {
 	correct: boolean;
 	points_awarded: number;
 	correct_index: number;
+	streak_multiplier: number;
 }
 
 export interface LeaderboardEntryPayload {
@@ -105,7 +106,7 @@ export interface TimeLimitSetPayload {
 
 // === Scoring Rule Types ===
 
-export type ScoringRuleName = "stepped_decay" | "linear_decay" | "fixed_score";
+export type ScoringRuleName = "stepped_decay" | "linear_decay" | "fixed_score" | "streak_bonus";
 
 export interface SetScoringRulePayload {
 	rule: ScoringRuleName;
