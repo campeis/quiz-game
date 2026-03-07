@@ -49,9 +49,9 @@ graph TB
 
         subgraph Models["Models"]
             SessionM["GameSession<br/>(status, players,<br/>current question,<br/>scoring_rule)"]
-            ScoringRule["ScoringRule<br/>(SteppedDecay /<br/>LinearDecay / FixedScore)"]
+            ScoringRule["ScoringRule<br/>(SteppedDecay / LinearDecay /<br/>FixedScore / StreakBonus)"]
             QuizM["Quiz<br/>(questions, options)"]
-            PlayerM["Player<br/>(name, avatar,<br/>score, connection)"]
+            PlayerM["Player<br/>(name, avatar, score,<br/>correct_streak, connection)"]
             Leaderboard_BE["LeaderboardEntry<br/>(compute_leaderboard)"]
         end
 

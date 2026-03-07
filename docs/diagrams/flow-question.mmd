@@ -11,8 +11,10 @@ sequenceDiagram
 
     alt Player answers before timer
         PL->>GE: submit_answer
-        GE->>GE: scoring_rule.calculate_points(elapsed, time_limit_sec)
-        GE-->>PL: answer_result (PlayerOnly)
+        GE->>GE: base = scoring_rule.calculate_points(elapsed, time_limit_sec)
+        GE->>GE: points = scoring_rule.apply_streak_multiplier(base, player.correct_streak)
+        GE->>GE: update player.correct_streak (increment or reset)
+        GE-->>PL: answer_result {correct, points_awarded, streak_multiplier} (PlayerOnly)
     end
 
     alt Host closes early
@@ -20,6 +22,8 @@ sequenceDiagram
     else Timer expires naturally
         Note over GE: sleep(time_limit_sec) completes
     end
+
+    Note over GE: StreakBonus: reset correct_streak for unanswered players
 
     GE->>H: question_ended {correct_index, leaderboard} (BroadcastAll)
     GE->>PL: question_ended {correct_index, leaderboard} (BroadcastAll)
