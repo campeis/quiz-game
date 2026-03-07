@@ -12,6 +12,8 @@ Auto-generated from all feature plans. Last updated: 2026-02-15
 - **CI/CD**: GitHub Actions — `actions/checkout`, `dtolnay/rust-toolchain`, `pnpm/action-setup`, `actions/setup-node`, `taiki-e/install-action`, `actions/cache`
 - **Dependencies**: Dependabot (`.github/dependabot.yml`)
 - **Persistence**: In-memory only — no database; all session state lives in `HashMap` for the duration of a session
+- Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e) (010-question-time-limit)
+- In-memory only — `GameSession` in `HashMap`; no persistence (010-question-time-limit)
 
 ## Project Structure
 
@@ -43,9 +45,9 @@ Rust: follow standard rustfmt + Clippy conventions.
 TypeScript/React: follow Biome rules (no separate Prettier/ESLint config).
 
 ## Recent Changes
+- 010-question-time-limit: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e)
 - 009-scoring-rules: Configurable scoring rules (SteppedDecay / LinearDecay / FixedScore) via strategy enum; new WS messages `set_scoring_rule` / `scoring_rule_set`
 - 008-avatar-picker-modal: Avatar picker modal with 30-emoji grid; `AvatarPickerModal` component; Vitest + @testing-library/react unit tests
-- 007-player-avatar: Player avatar support (emoji, URL param, default fallback); leaderboard avatar display
 
 
 <!-- MANUAL ADDITIONS START -->

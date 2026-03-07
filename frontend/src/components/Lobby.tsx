@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { GameState } from "../hooks/useGameState";
 import type { ScoringRuleName } from "../services/messages";
 import { Button } from "./ui/Button";
@@ -10,6 +11,8 @@ interface LobbyProps {
 	isHost: boolean;
 	onStartGame?: () => void;
 	onScoringRuleChange?: (rule: ScoringRuleName) => void;
+	timeLimitSec?: number;
+	onTimeLimitChange?: (seconds: number) => void;
 }
 
 const SCORING_RULES: { value: ScoringRuleName; label: string; description: string }[] = [
@@ -24,7 +27,30 @@ export function Lobby({
 	isHost,
 	onStartGame,
 	onScoringRuleChange,
+	timeLimitSec = 20,
+	onTimeLimitChange,
 }: LobbyProps) {
+	const [localTimeLimit, setLocalTimeLimit] = useState<string>(String(timeLimitSec));
+
+	const timeLimitNum = Number(localTimeLimit);
+	const timeLimitError =
+		localTimeLimit === "" || Number.isNaN(timeLimitNum)
+			? "Please enter a valid number."
+			: timeLimitNum < 10
+				? "Time must be at least 10 seconds."
+				: timeLimitNum > 60
+					? "Time must be no more than 60 seconds."
+					: null;
+
+	const handleTimeLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const raw = e.target.value;
+		setLocalTimeLimit(raw);
+		const num = Number(raw);
+		if (raw !== "" && !Number.isNaN(num) && num >= 10 && num <= 60) {
+			onTimeLimitChange?.(num);
+		}
+	};
+
 	return (
 		<Card style={{ maxWidth: "500px", width: "100%", textAlign: "center" }}>
 			<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.md }}>
@@ -140,6 +166,64 @@ export function Lobby({
 							</span>
 						</label>
 					))}
+				</fieldset>
+			)}
+			{isHost && (
+				<fieldset
+					aria-label="Question Time Limit"
+					style={{
+						border: `1px solid ${colors.border}`,
+						borderRadius: "8px",
+						padding: spacing.md,
+						marginBottom: spacing.md,
+						textAlign: "left",
+					}}
+				>
+					<legend
+						style={{
+							color: colors.textSecondary,
+							fontSize: typography.sizes.sm,
+							padding: `0 ${spacing.xs}`,
+						}}
+					>
+						Question Time Limit
+					</legend>
+					<div style={{ display: "flex", alignItems: "center", gap: spacing.sm }}>
+						<input
+							type="number"
+							min={10}
+							max={60}
+							value={localTimeLimit}
+							onChange={handleTimeLimitChange}
+							aria-describedby={timeLimitError ? "time-limit-error" : undefined}
+							style={{
+								width: "80px",
+								padding: `${spacing.xs} ${spacing.sm}`,
+								border: `1px solid ${timeLimitError ? colors.error : colors.border}`,
+								borderRadius: "4px",
+								backgroundColor: colors.surface,
+								color: colors.text,
+								fontSize: typography.sizes.md,
+								fontFamily: typography.fontFamily,
+							}}
+						/>
+						<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
+							seconds
+						</span>
+					</div>
+					{timeLimitError && (
+						<p
+							id="time-limit-error"
+							style={{
+								color: colors.error,
+								fontSize: typography.sizes.sm,
+								marginTop: spacing.xs,
+								marginBottom: 0,
+							}}
+						>
+							{timeLimitError}
+						</p>
+					)}
 				</fieldset>
 			)}
 			{isHost && (

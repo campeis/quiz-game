@@ -14,6 +14,7 @@ use crate::AppState;
 use crate::models::player::{ConnectionStatus, DEFAULT_AVATAR, Player};
 use crate::models::scoring_rule::ScoringRule;
 use crate::models::session::SessionStatus;
+use crate::services::game_engine::do_end_question;
 use crate::services::game_engine::{self, GameEvent};
 
 /// Reconnection timeout — after this, player is permanently removed.
@@ -36,7 +37,6 @@ pub async fn ws_host(
     Path(join_code): Path<String>,
 ) -> impl IntoResponse {
     let session = state.session_manager.get_session(&join_code);
-    let question_time_sec = state.config.question_time_sec;
 
     ws.on_upgrade(move |socket| async move {
         let Some(session) = session else {
@@ -112,7 +112,7 @@ pub async fn ws_host(
                                         let s = recv_session.clone();
                                         let t = recv_tx.clone();
                                         tokio::spawn(async move {
-                                            game_engine::start_game(s, t, question_time_sec).await;
+                                            game_engine::start_game(s, t).await;
                                         });
                                     }
                                 }
@@ -129,6 +129,27 @@ pub async fn ws_host(
                                         game_engine::handle_set_scoring_rule(
                                             &mut s, rule, &recv_tx,
                                         );
+                                    }
+                                }
+                                Some("set_time_limit") => {
+                                    if let Some(seconds) = parsed["payload"]["seconds"].as_u64() {
+                                        let mut s = recv_session.write().await;
+                                        game_engine::handle_set_time_limit(
+                                            &mut s, seconds, &recv_tx,
+                                        );
+                                    }
+                                }
+                                Some("end_question") => {
+                                    let current_question = {
+                                        let s = recv_session.read().await;
+                                        s.current_question
+                                    };
+                                    if current_question >= 0 {
+                                        let s = recv_session.clone();
+                                        let t = recv_tx.clone();
+                                        tokio::spawn(async move {
+                                            do_end_question(s, t, current_question as usize).await;
+                                        });
                                     }
                                 }
                                 _ => {}
@@ -222,7 +243,6 @@ pub async fn ws_player(
     Query(params): Query<PlayerParams>,
 ) -> impl IntoResponse {
     let session = state.session_manager.get_session(&join_code);
-    let question_time_sec = state.config.question_time_sec;
 
     ws.on_upgrade(move |socket| async move {
         let Some(session) = session else {
@@ -416,7 +436,6 @@ pub async fn ws_player(
                             game_engine::handle_answer(
                                 &recv_session,
                                 &recv_tx,
-                                question_time_sec,
                                 &pid_for_recv,
                                 qi,
                                 si,

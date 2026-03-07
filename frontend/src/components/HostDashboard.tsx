@@ -1,13 +1,15 @@
 import type { GameState } from "../hooks/useGameState";
+import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { Timer } from "./ui/Timer";
 import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
 interface HostDashboardProps {
 	gameState: GameState;
+	onEndQuestion?: () => void;
 }
 
-export function HostDashboard({ gameState }: HostDashboardProps) {
+export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) {
 	const { currentQuestion, answerCount, leaderboard } = gameState;
 
 	if (!currentQuestion) return null;
@@ -115,6 +117,11 @@ export function HostDashboard({ gameState }: HostDashboardProps) {
 						</div>
 					))}
 				</div>
+			)}
+			{gameState.phase === "question" && (
+				<Button onClick={onEndQuestion} style={{ width: "100%", marginTop: spacing.md }}>
+					End Question
+				</Button>
 			)}
 		</Card>
 	);

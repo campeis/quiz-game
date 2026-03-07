@@ -40,7 +40,7 @@ impl SessionManager {
         }
 
         let join_code = self.generate_join_code();
-        let session = GameSession::new(join_code.clone(), quiz);
+        let session = GameSession::new(join_code.clone(), quiz, self.config.question_time_sec);
         let shared = Arc::new(RwLock::new(session));
         self.sessions.insert(join_code, shared.clone());
         Ok(shared)

@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HostDashboard } from "../../../src/components/HostDashboard";
 import type { GameState } from "../../../src/hooks/useGameState";
@@ -20,6 +20,8 @@ function makeGameState(overrides: Partial<GameState> = {}): GameState {
 		answerCount: null,
 		leaderboard: [],
 		countdown: 0,
+		scoringRule: "stepped_decay",
+		timeLimitSec: 20,
 		...overrides,
 	};
 }
@@ -115,5 +117,28 @@ describe("HostDashboard", () => {
 		);
 
 		expect(container.innerHTML).toBe("");
+	});
+});
+
+describe("HostDashboard — End Question button", () => {
+	it("renders End Question button when phase is question", () => {
+		render(<HostDashboard gameState={makeGameState({ phase: "question" })} onEndQuestion={vi.fn()} />);
+
+		expect(screen.getByRole("button", { name: /end question/i })).toBeInTheDocument();
+	});
+
+	it("calls onEndQuestion when End Question button is clicked", () => {
+		const onEndQuestion = vi.fn();
+		render(<HostDashboard gameState={makeGameState({ phase: "question" })} onEndQuestion={onEndQuestion} />);
+
+		fireEvent.click(screen.getByRole("button", { name: /end question/i }));
+
+		expect(onEndQuestion).toHaveBeenCalledOnce();
+	});
+
+	it("does not render End Question button when phase is question_ended", () => {
+		render(<HostDashboard gameState={makeGameState({ phase: "question_ended" })} onEndQuestion={vi.fn()} />);
+
+		expect(screen.queryByRole("button", { name: /end question/i })).not.toBeInTheDocument();
 	});
 });
