@@ -59,66 +59,42 @@ impl ScoringRule {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rstest::rstest;
 
     // ── T006: apply_streak_multiplier ─────────────────────────────────────────
 
-    #[test]
-    fn streak_bonus_multiplier_streak_0_returns_base() {
+    #[rstest]
+    #[case(0, 1000)]
+    #[case(1, 1500)]
+    #[case(2, 2000)]
+    #[case(3, 2500)]
+    fn streak_bonus_multiplier(#[case] streak: u32, #[case] expected: u32) {
         assert_eq!(
-            ScoringRule::StreakBonus.apply_streak_multiplier(1000, 0),
-            1000
+            ScoringRule::StreakBonus.apply_streak_multiplier(1000, streak),
+            expected
         );
     }
 
-    #[test]
-    fn streak_bonus_multiplier_streak_1_returns_1_5x() {
-        assert_eq!(
-            ScoringRule::StreakBonus.apply_streak_multiplier(1000, 1),
-            1500
-        );
+    #[rstest]
+    #[case(ScoringRule::FixedScore, 1000, 5, 1000)]
+    #[case(ScoringRule::SteppedDecay, 850, 3, 850)]
+    #[case(ScoringRule::LinearDecay, 750, 2, 750)]
+    fn non_streak_rules_unaffected_by_multiplier(
+        #[case] rule: ScoringRule,
+        #[case] base: u32,
+        #[case] streak: u32,
+        #[case] expected: u32,
+    ) {
+        assert_eq!(rule.apply_streak_multiplier(base, streak), expected);
     }
 
-    #[test]
-    fn streak_bonus_multiplier_streak_2_returns_2_0x() {
+    #[rstest]
+    #[case(true, 1000)]
+    #[case(false, 0)]
+    fn streak_bonus_calculate_points(#[case] correct: bool, #[case] expected: u32) {
         assert_eq!(
-            ScoringRule::StreakBonus.apply_streak_multiplier(1000, 2),
-            2000
+            ScoringRule::StreakBonus.calculate_points(correct, 0, 20),
+            expected
         );
-    }
-
-    #[test]
-    fn streak_bonus_multiplier_streak_3_returns_2_5x() {
-        assert_eq!(
-            ScoringRule::StreakBonus.apply_streak_multiplier(1000, 3),
-            2500
-        );
-    }
-
-    #[test]
-    fn non_streak_rules_are_unaffected_by_apply_streak_multiplier() {
-        assert_eq!(
-            ScoringRule::FixedScore.apply_streak_multiplier(1000, 5),
-            1000
-        );
-        assert_eq!(
-            ScoringRule::SteppedDecay.apply_streak_multiplier(850, 3),
-            850
-        );
-        assert_eq!(
-            ScoringRule::LinearDecay.apply_streak_multiplier(750, 2),
-            750
-        );
-    }
-
-    #[test]
-    fn streak_bonus_base_score_is_1000_for_correct_answer() {
-        let points = ScoringRule::StreakBonus.calculate_points(true, 0, 20);
-        assert_eq!(points, 1000);
-    }
-
-    #[test]
-    fn streak_bonus_awards_zero_for_incorrect_answer() {
-        let points = ScoringRule::StreakBonus.calculate_points(false, 0, 20);
-        assert_eq!(points, 0);
     }
 }
