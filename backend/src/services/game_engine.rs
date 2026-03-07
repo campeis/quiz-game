@@ -9,6 +9,7 @@ use crate::models::leaderboard::compute_leaderboard;
 use crate::models::player::{Answer, Player};
 use crate::models::scoring_rule::ScoringRule;
 use crate::models::session::{GameSession, SessionStatus};
+use crate::services::session_manager::SessionManager;
 
 /// Message that can be sent through the broadcast channel.
 #[derive(Debug, Clone)]
@@ -76,7 +77,11 @@ pub fn handle_set_time_limit(
     ));
 }
 
-pub async fn start_game(session: Arc<RwLock<GameSession>>, tx: broadcast::Sender<GameEvent>) {
+pub async fn start_game(
+    session: Arc<RwLock<GameSession>>,
+    tx: broadcast::Sender<GameEvent>,
+    session_manager: SessionManager,
+) {
     {
         let mut s = session.write().await;
         s.status = SessionStatus::Active;
@@ -97,19 +102,24 @@ pub async fn start_game(session: Arc<RwLock<GameSession>>, tx: broadcast::Sender
 
     sleep(Duration::from_secs(3)).await;
 
-    send_next_question(session, tx);
+    send_next_question(session, tx, session_manager);
 }
 
 /// Spawns a task to send the next question (non-recursive, breaks the cycle).
-fn send_next_question(session: Arc<RwLock<GameSession>>, tx: broadcast::Sender<GameEvent>) {
+fn send_next_question(
+    session: Arc<RwLock<GameSession>>,
+    tx: broadcast::Sender<GameEvent>,
+    session_manager: SessionManager,
+) {
     tokio::spawn(async move {
-        do_advance_question(session, tx).await;
+        do_advance_question(session, tx, session_manager).await;
     });
 }
 
 pub(crate) async fn do_advance_question(
     session: Arc<RwLock<GameSession>>,
     tx: broadcast::Sender<GameEvent>,
+    session_manager: SessionManager,
 ) {
     let question_index = {
         let mut s = session.write().await;
@@ -119,6 +129,7 @@ pub(crate) async fn do_advance_question(
         if idx >= s.quiz.questions.len() {
             broadcast_game_finished(&s, &tx);
             s.status = SessionStatus::Finished;
+            session_manager.remove_session(&s.join_code);
             return;
         }
 
@@ -148,13 +159,14 @@ pub(crate) async fn do_advance_question(
     // Start question timer using session's time_limit_sec
     let timer_session = session.clone();
     let timer_tx = tx.clone();
+    let timer_sm = session_manager.clone();
     tokio::spawn(async move {
         let time_limit = timer_session.read().await.time_limit_sec;
         sleep(Duration::from_secs(time_limit)).await;
 
         let current = timer_session.read().await.current_question;
         if current as usize == question_index {
-            do_end_question(timer_session, timer_tx, question_index).await;
+            do_end_question(timer_session, timer_tx, question_index, timer_sm).await;
         }
     });
 }
@@ -165,6 +177,7 @@ pub async fn handle_answer(
     player_id: &str,
     question_index: usize,
     selected_index: usize,
+    session_manager: SessionManager,
 ) {
     let all_answered = {
         let mut s = session.write().await;
@@ -270,7 +283,7 @@ pub async fn handle_answer(
     };
 
     if all_answered {
-        do_end_question(session.clone(), tx.clone(), question_index).await;
+        do_end_question(session.clone(), tx.clone(), question_index, session_manager).await;
     }
 }
 
@@ -278,6 +291,7 @@ pub(crate) async fn do_end_question(
     session: Arc<RwLock<GameSession>>,
     tx: broadcast::Sender<GameEvent>,
     question_index: usize,
+    session_manager: SessionManager,
 ) {
     {
         let s = session.read().await;
@@ -333,7 +347,7 @@ pub(crate) async fn do_end_question(
 
     sleep(Duration::from_millis(500)).await;
 
-    send_next_question(session, tx);
+    send_next_question(session, tx, session_manager);
 }
 
 fn broadcast_game_finished(session: &GameSession, tx: &broadcast::Sender<GameEvent>) {
@@ -373,10 +387,16 @@ mod tests {
     use tokio::sync::broadcast;
 
     use super::*;
+    use crate::config::AppConfig;
     use crate::models::player::Player;
     use crate::models::quiz::{Question, Quiz, QuizOption};
     use crate::models::scoring_rule::ScoringRule;
     use crate::models::session::{GameSession, SessionStatus};
+    use crate::services::session_manager::SessionManager;
+
+    fn make_session_manager() -> SessionManager {
+        SessionManager::new(AppConfig::from_env())
+    }
 
     fn make_quiz(q_time_limit_sec: u64) -> Quiz {
         Quiz {
@@ -421,7 +441,7 @@ mod tests {
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
 
         // Call do_advance_question directly (pub(crate)) to skip the 3s start delay
-        do_advance_question(session.clone(), tx.clone()).await;
+        do_advance_question(session.clone(), tx.clone(), make_session_manager()).await;
 
         // Receive the question broadcast
         let event = tokio::time::timeout(Duration::from_millis(500), rx.recv())
@@ -467,7 +487,7 @@ mod tests {
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
 
         // correct answer is index 1
-        handle_answer(&session, &tx, player_id, 0, 1).await;
+        handle_answer(&session, &tx, player_id, 0, 1, make_session_manager()).await;
 
         // Collect events until we find answer_result
         let mut points_awarded = None;
@@ -613,7 +633,7 @@ mod tests {
         }
 
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
-        handle_answer(&session, &tx, player_id, 0, 1).await; // correct index is 1
+        handle_answer(&session, &tx, player_id, 0, 1, make_session_manager()).await; // correct index is 1
 
         let mut points_awarded = None;
         let mut streak_multiplier = None;
@@ -662,7 +682,7 @@ mod tests {
         }
 
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
-        handle_answer(&session, &tx, player_id, 0, 1).await;
+        handle_answer(&session, &tx, player_id, 0, 1, make_session_manager()).await;
 
         let mut points_awarded = None;
         let mut streak_multiplier = None;
@@ -711,7 +731,7 @@ mod tests {
         }
 
         let (tx, _rx) = broadcast::channel::<GameEvent>(16);
-        handle_answer(&session, &tx, player_id, 0, 1).await;
+        handle_answer(&session, &tx, player_id, 0, 1, make_session_manager()).await;
 
         let s = session.read().await;
         assert_eq!(
@@ -739,7 +759,7 @@ mod tests {
         }
 
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
-        handle_answer(&session, &tx, player_id, 0, 1).await;
+        handle_answer(&session, &tx, player_id, 0, 1, make_session_manager()).await;
 
         let mut streak_multiplier = None;
         for _ in 0..10 {
@@ -785,7 +805,7 @@ mod tests {
 
         let (tx, _rx) = broadcast::channel::<GameEvent>(16);
         // Submit wrong answer (correct is index 1, submit index 0)
-        handle_answer(&session, &tx, player_id, 0, 0).await;
+        handle_answer(&session, &tx, player_id, 0, 0, make_session_manager()).await;
 
         let s = session.read().await;
         assert_eq!(
@@ -813,7 +833,7 @@ mod tests {
         }
 
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
-        handle_answer(&session, &tx, player_id, 0, 0).await; // incorrect
+        handle_answer(&session, &tx, player_id, 0, 0, make_session_manager()).await; // incorrect
 
         let mut streak_multiplier = None;
         for _ in 0..10 {
@@ -862,7 +882,7 @@ mod tests {
         }
 
         let (tx, _rx) = broadcast::channel::<GameEvent>(16);
-        do_end_question(session.clone(), tx, 0).await;
+        do_end_question(session.clone(), tx, 0, make_session_manager()).await;
 
         let s = session.read().await;
         assert_eq!(
@@ -893,7 +913,7 @@ mod tests {
         }
 
         let (tx, _rx) = broadcast::channel::<GameEvent>(16);
-        do_end_question(session.clone(), tx, 0).await;
+        do_end_question(session.clone(), tx, 0, make_session_manager()).await;
 
         let s = session.read().await;
         assert_eq!(
@@ -917,7 +937,7 @@ mod tests {
         }
 
         let (tx, _rx) = broadcast::channel::<GameEvent>(16);
-        do_end_question(session.clone(), tx, 0).await;
+        do_end_question(session.clone(), tx, 0, make_session_manager()).await;
 
         let s = session.read().await;
         assert_eq!(
@@ -940,7 +960,7 @@ mod tests {
         let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
 
         // First call: question 0 is current → should broadcast question_ended
-        do_end_question(session.clone(), tx.clone(), 0).await;
+        do_end_question(session.clone(), tx.clone(), 0, make_session_manager()).await;
 
         // After do_end_question, it calls send_next_question which advances current_question
         // Wait briefly for the spawn to run
@@ -961,7 +981,7 @@ mod tests {
         }
 
         // Second call with the same index (0): current_question has advanced, so guard fires
-        do_end_question(session.clone(), tx.clone(), 0).await;
+        do_end_question(session.clone(), tx.clone(), 0, make_session_manager()).await;
 
         // No additional question_ended broadcast from the second call
         let mut extra_ended = 0usize;

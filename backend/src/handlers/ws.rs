@@ -37,6 +37,7 @@ pub async fn ws_host(
     Path(join_code): Path<String>,
 ) -> impl IntoResponse {
     let session = state.session_manager.get_session(&join_code);
+    let session_manager = state.session_manager.clone();
 
     ws.on_upgrade(move |socket| async move {
         let Some(session) = session else {
@@ -97,6 +98,7 @@ pub async fn ws_host(
         // Receive messages from host
         let recv_session = session.clone();
         let recv_tx = (*tx).clone();
+        let recv_sm = session_manager.clone();
         let recv_task = tokio::spawn(async move {
             while let Some(Ok(msg)) = ws_receiver.next().await {
                 match msg {
@@ -111,8 +113,9 @@ pub async fn ws_host(
                                     if can_start {
                                         let s = recv_session.clone();
                                         let t = recv_tx.clone();
+                                        let sm = recv_sm.clone();
                                         tokio::spawn(async move {
-                                            game_engine::start_game(s, t).await;
+                                            game_engine::start_game(s, t, sm).await;
                                         });
                                     }
                                 }
@@ -147,8 +150,10 @@ pub async fn ws_host(
                                     if current_question >= 0 {
                                         let s = recv_session.clone();
                                         let t = recv_tx.clone();
+                                        let sm = recv_sm.clone();
                                         tokio::spawn(async move {
-                                            do_end_question(s, t, current_question as usize).await;
+                                            do_end_question(s, t, current_question as usize, sm)
+                                                .await;
                                         });
                                     }
                                 }
@@ -190,6 +195,7 @@ pub async fn ws_host(
             let timeout_session = session.clone();
             let timeout_tx = (*tx).clone();
             let timeout_code = join_code.clone();
+            let timeout_sm = session_manager.clone();
             tokio::spawn(async move {
                 tokio::time::sleep(tokio::time::Duration::from_secs(RECONNECT_TIMEOUT_SECS)).await;
                 let mut s = timeout_session.write().await;
@@ -227,10 +233,12 @@ pub async fn ws_host(
                     ));
 
                     BROADCAST_CHANNELS.remove(&timeout_code);
+                    timeout_sm.remove_session(&timeout_code);
                 }
             });
         } else {
             BROADCAST_CHANNELS.remove(&join_code);
+            session_manager.remove_session(&join_code);
         }
     })
 }
@@ -243,6 +251,7 @@ pub async fn ws_player(
     Query(params): Query<PlayerParams>,
 ) -> impl IntoResponse {
     let session = state.session_manager.get_session(&join_code);
+    let session_manager = state.session_manager.clone();
 
     ws.on_upgrade(move |socket| async move {
         let Some(session) = session else {
@@ -422,6 +431,7 @@ pub async fn ws_player(
         let pid_for_recv = player_id.clone();
         let recv_session = session.clone();
         let recv_tx = tx.clone();
+        let recv_sm = session_manager.clone();
         let recv_task = tokio::spawn(async move {
             while let Some(Ok(msg)) = ws_receiver.next().await {
                 match msg {
@@ -439,6 +449,7 @@ pub async fn ws_player(
                                 &pid_for_recv,
                                 qi,
                                 si,
+                                recv_sm.clone(),
                             )
                             .await;
                         }
