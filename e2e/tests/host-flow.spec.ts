@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
-import * as path from "node:path";
-
-const FIXTURE_PATH = path.resolve(__dirname, "../../fixtures/sample.txt");
+import { FIXTURE_PATH } from "./helpers";
 
 test.describe("Host Flow", () => {
 	test("host can upload quiz and see lobby", async ({ page }) => {
