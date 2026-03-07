@@ -154,3 +154,4 @@ File format:
 | `just test-e2e`      | Playwright e2e tests                             |
 | `just lint`          | Check linting (clippy + rustfmt + biome + yamllint) |
 | `just lint-fix`      | Auto-fix linting issues                          |
+| `just audit`         | Security audit (cargo audit + pnpm audit)        |

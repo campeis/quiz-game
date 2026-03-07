@@ -51,6 +51,12 @@ lint-fix:
     cd backend && cargo fmt
     cd frontend && pnpm exec biome check --fix src/
 
+# Security audit for Rust and JS dependencies
+audit:
+    cd backend && cargo audit
+    cd frontend && pnpm audit
+    cd e2e && pnpm audit
+
 # Regenerate PNG files from Mermaid diagram sources in docs/
 update-docs:
     #!/usr/bin/env bash
