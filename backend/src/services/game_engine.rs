@@ -42,11 +42,41 @@ pub fn handle_set_scoring_rule(
     ));
 }
 
-pub async fn start_game(
-    session: Arc<RwLock<GameSession>>,
-    tx: broadcast::Sender<GameEvent>,
-    question_time_sec: u64,
+/// Updates the session's time limit if still in Lobby and broadcasts the change.
+/// Silently ignored when the session is Active, Paused, or Finished.
+/// Returns an error event to the host if `seconds` is out of the valid range [10, 60].
+pub fn handle_set_time_limit(
+    session: &mut GameSession,
+    seconds: u64,
+    tx: &broadcast::Sender<GameEvent>,
 ) {
+    if session.status != SessionStatus::Lobby {
+        return;
+    }
+    if !(10..=60).contains(&seconds) {
+        let _ = tx.send(GameEvent::HostOnly(
+            json!({
+                "type": "error",
+                "payload": {
+                    "code": "invalid_time_limit",
+                    "message": "Time limit must be between 10 and 60 seconds"
+                }
+            })
+            .to_string(),
+        ));
+        return;
+    }
+    session.time_limit_sec = seconds;
+    let _ = tx.send(GameEvent::BroadcastAll(
+        json!({
+            "type": "time_limit_set",
+            "payload": { "seconds": seconds }
+        })
+        .to_string(),
+    ));
+}
+
+pub async fn start_game(session: Arc<RwLock<GameSession>>, tx: broadcast::Sender<GameEvent>) {
     {
         let mut s = session.write().await;
         s.status = SessionStatus::Active;
@@ -67,24 +97,19 @@ pub async fn start_game(
 
     sleep(Duration::from_secs(3)).await;
 
-    send_next_question(session, tx, question_time_sec);
+    send_next_question(session, tx);
 }
 
 /// Spawns a task to send the next question (non-recursive, breaks the cycle).
-fn send_next_question(
-    session: Arc<RwLock<GameSession>>,
-    tx: broadcast::Sender<GameEvent>,
-    question_time_sec: u64,
-) {
+fn send_next_question(session: Arc<RwLock<GameSession>>, tx: broadcast::Sender<GameEvent>) {
     tokio::spawn(async move {
-        do_advance_question(session, tx, question_time_sec).await;
+        do_advance_question(session, tx).await;
     });
 }
 
-async fn do_advance_question(
+pub(crate) async fn do_advance_question(
     session: Arc<RwLock<GameSession>>,
     tx: broadcast::Sender<GameEvent>,
-    question_time_sec: u64,
 ) {
     let question_index = {
         let mut s = session.write().await;
@@ -110,7 +135,7 @@ async fn do_advance_question(
                     "total_questions": s.quiz.questions.len(),
                     "text": q.text,
                     "options": options,
-                    "time_limit_sec": q.time_limit_sec,
+                    "time_limit_sec": s.time_limit_sec,
                     "scoring_rule": scoring_rule_value,
                 }
             })
@@ -120,15 +145,16 @@ async fn do_advance_question(
         idx
     };
 
-    // Start question timer
+    // Start question timer using session's time_limit_sec
     let timer_session = session.clone();
     let timer_tx = tx.clone();
     tokio::spawn(async move {
-        sleep(Duration::from_secs(question_time_sec)).await;
+        let time_limit = timer_session.read().await.time_limit_sec;
+        sleep(Duration::from_secs(time_limit)).await;
 
         let current = timer_session.read().await.current_question;
         if current as usize == question_index {
-            do_end_question(timer_session, timer_tx, question_time_sec, question_index).await;
+            do_end_question(timer_session, timer_tx, question_index).await;
         }
     });
 }
@@ -136,7 +162,6 @@ async fn do_advance_question(
 pub async fn handle_answer(
     session: &Arc<RwLock<GameSession>>,
     tx: &broadcast::Sender<GameEvent>,
-    question_time_sec: u64,
     player_id: &str,
     question_index: usize,
     selected_index: usize,
@@ -180,9 +205,9 @@ pub async fn handle_answer(
             .map(|started| started.elapsed().as_millis() as u64)
             .unwrap_or(0);
 
-        let points =
-            s.scoring_rule
-                .calculate_points(correct, time_taken_ms, question.time_limit_sec);
+        let points = s
+            .scoring_rule
+            .calculate_points(correct, time_taken_ms, s.time_limit_sec);
         let correct_index = question.correct_index;
 
         let player = s.players.get_mut(player_id).unwrap();
@@ -232,20 +257,13 @@ pub async fn handle_answer(
     };
 
     if all_answered {
-        do_end_question(
-            session.clone(),
-            tx.clone(),
-            question_time_sec,
-            question_index,
-        )
-        .await;
+        do_end_question(session.clone(), tx.clone(), question_index).await;
     }
 }
 
-async fn do_end_question(
+pub(crate) async fn do_end_question(
     session: Arc<RwLock<GameSession>>,
     tx: broadcast::Sender<GameEvent>,
-    question_time_sec: u64,
     question_index: usize,
 ) {
     {
@@ -290,8 +308,7 @@ async fn do_end_question(
 
     sleep(Duration::from_millis(500)).await;
 
-    // Use send_next_question to break the async recursion cycle
-    send_next_question(session, tx, question_time_sec);
+    send_next_question(session, tx);
 }
 
 fn broadcast_game_finished(session: &GameSession, tx: &broadcast::Sender<GameEvent>) {
@@ -322,4 +339,282 @@ fn broadcast_game_finished(session: &GameSession, tx: &broadcast::Sender<GameEve
         })
         .to_string(),
     ));
+}
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use tokio::sync::broadcast;
+
+    use super::*;
+    use crate::models::player::Player;
+    use crate::models::quiz::{Question, Quiz, QuizOption};
+    use crate::models::scoring_rule::ScoringRule;
+    use crate::models::session::{GameSession, SessionStatus};
+
+    fn make_quiz(q_time_limit_sec: u64) -> Quiz {
+        Quiz {
+            title: "Test".to_string(),
+            questions: vec![Question {
+                text: "What is 1+1?".to_string(),
+                options: vec![
+                    QuizOption {
+                        text: "1".to_string(),
+                    },
+                    QuizOption {
+                        text: "2".to_string(),
+                    },
+                ],
+                correct_index: 1,
+                time_limit_sec: q_time_limit_sec,
+            }],
+        }
+    }
+
+    fn make_session(session_time_limit: u64, q_time_limit: u64) -> Arc<RwLock<GameSession>> {
+        let quiz = make_quiz(q_time_limit);
+        Arc::new(RwLock::new(GameSession::new(
+            "TSTCDE".to_string(),
+            quiz,
+            session_time_limit,
+        )))
+    }
+
+    // ── T003: question broadcast uses session.time_limit_sec ─────────────────
+
+    #[tokio::test]
+    async fn question_broadcast_uses_session_time_limit() {
+        // session.time_limit_sec = 30; q.time_limit_sec = 20 (deliberately different)
+        let session = make_session(30, 20);
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = -1;
+        }
+
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
+
+        // Call do_advance_question directly (pub(crate)) to skip the 3s start delay
+        do_advance_question(session.clone(), tx.clone()).await;
+
+        // Receive the question broadcast
+        let event = tokio::time::timeout(Duration::from_millis(500), rx.recv())
+            .await
+            .expect("timeout waiting for question event")
+            .expect("channel error");
+
+        let msg = match event {
+            GameEvent::BroadcastAll(m) => m,
+            other => panic!("expected BroadcastAll, got {other:?}"),
+        };
+        let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+        assert_eq!(parsed["type"], "question", "wrong message type");
+        // Must use session's time_limit_sec (30), NOT question's (20)
+        assert_eq!(
+            parsed["payload"]["time_limit_sec"], 30,
+            "question broadcast should use session.time_limit_sec"
+        );
+    }
+
+    // ── T003: scoring uses session.time_limit_sec ────────────────────────────
+
+    #[tokio::test]
+    async fn scoring_uses_session_time_limit() {
+        // session.time_limit_sec = 30; q.time_limit_sec = 20 (deliberately different)
+        let session = make_session(30, 20);
+        let player_id = "player-1";
+
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = 0;
+            // Use LinearDecay so scoring depends on time_limit_sec
+            s.scoring_rule = ScoringRule::LinearDecay;
+            // Simulate 5 seconds elapsed
+            s.question_started = Some(Instant::now() - Duration::from_secs(5));
+            s.players.insert(
+                player_id.to_string(),
+                Player::new(player_id.to_string(), "Alice".to_string(), "🙂".to_string()),
+            );
+        }
+
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
+
+        // correct answer is index 1
+        handle_answer(&session, &tx, player_id, 0, 1).await;
+
+        // Collect events until we find answer_result
+        let mut points_awarded = None;
+        for _ in 0..10 {
+            let event = tokio::time::timeout(Duration::from_millis(200), rx.recv()).await;
+            let Ok(Ok(event)) = event else { break };
+            let msg = match &event {
+                GameEvent::PlayerOnly { message, .. } => message.clone(),
+                _ => continue,
+            };
+            let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+            if parsed["type"] == "answer_result" {
+                points_awarded = parsed["payload"]["points_awarded"].as_u64();
+                break;
+            }
+        }
+
+        let points = points_awarded.expect("did not receive answer_result");
+        // With LinearDecay, time_limit=30, 5s elapsed:
+        // step_size = 1000/30 = 33; raw = 1000 - 5*33 = 835
+        // (would be 750 if incorrectly using q.time_limit_sec=20)
+        assert_eq!(points, 835, "scoring should use session.time_limit_sec=30");
+    }
+
+    // ── T008: handle_set_time_limit ──────────────────────────────────────────
+
+    #[test]
+    fn set_time_limit_accepts_minimum_boundary() {
+        let session_arc = make_session(20, 20);
+        let mut session = session_arc.blocking_write();
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(4);
+
+        handle_set_time_limit(&mut session, 10, &tx);
+
+        assert_eq!(session.time_limit_sec, 10);
+        let event = rx.try_recv().expect("expected broadcast");
+        let msg = match event {
+            GameEvent::BroadcastAll(m) => m,
+            other => panic!("expected BroadcastAll, got {other:?}"),
+        };
+        let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+        assert_eq!(parsed["type"], "time_limit_set");
+        assert_eq!(parsed["payload"]["seconds"], 10);
+    }
+
+    #[test]
+    fn set_time_limit_accepts_maximum_boundary() {
+        let session_arc = make_session(20, 20);
+        let mut session = session_arc.blocking_write();
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(4);
+
+        handle_set_time_limit(&mut session, 60, &tx);
+
+        assert_eq!(session.time_limit_sec, 60);
+        let event = rx.try_recv().expect("expected broadcast");
+        let msg = match event {
+            GameEvent::BroadcastAll(m) => m,
+            _ => panic!("expected BroadcastAll"),
+        };
+        let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+        assert_eq!(parsed["payload"]["seconds"], 60);
+    }
+
+    #[test]
+    fn set_time_limit_rejects_below_minimum() {
+        let session_arc = make_session(20, 20);
+        let mut session = session_arc.blocking_write();
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(4);
+
+        handle_set_time_limit(&mut session, 9, &tx);
+
+        // time_limit_sec unchanged
+        assert_eq!(session.time_limit_sec, 20);
+        let event = rx.try_recv().expect("expected error event");
+        let msg = match event {
+            GameEvent::HostOnly(m) => m,
+            other => panic!("expected HostOnly error, got {other:?}"),
+        };
+        let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+        assert_eq!(parsed["type"], "error");
+        assert_eq!(parsed["payload"]["code"], "invalid_time_limit");
+    }
+
+    #[test]
+    fn set_time_limit_rejects_above_maximum() {
+        let session_arc = make_session(20, 20);
+        let mut session = session_arc.blocking_write();
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(4);
+
+        handle_set_time_limit(&mut session, 61, &tx);
+
+        assert_eq!(session.time_limit_sec, 20);
+        let event = rx.try_recv().expect("expected error event");
+        let msg = match event {
+            GameEvent::HostOnly(m) => m,
+            other => panic!("expected HostOnly error, got {other:?}"),
+        };
+        let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+        assert_eq!(parsed["type"], "error");
+        assert_eq!(parsed["payload"]["code"], "invalid_time_limit");
+    }
+
+    #[test]
+    fn set_time_limit_ignored_when_active() {
+        let session_arc = make_session(20, 20);
+        let mut session = session_arc.blocking_write();
+        session.status = SessionStatus::Active;
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(4);
+
+        handle_set_time_limit(&mut session, 30, &tx);
+
+        // No change, no broadcast
+        assert_eq!(session.time_limit_sec, 20);
+        assert!(rx.try_recv().is_err(), "should not broadcast when active");
+    }
+
+    // ── T017: do_end_question idempotency ────────────────────────────────────
+
+    #[tokio::test]
+    async fn end_question_is_idempotent() {
+        let session = make_session(20, 20);
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = 0; // question 0 is active
+        }
+
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
+
+        // First call: question 0 is current → should broadcast question_ended
+        do_end_question(session.clone(), tx.clone(), 0).await;
+
+        // After do_end_question, it calls send_next_question which advances current_question
+        // Wait briefly for the spawn to run
+        tokio::time::sleep(Duration::from_millis(600)).await;
+
+        // Drain received events
+        let mut ended_count = 0usize;
+        loop {
+            match rx.try_recv() {
+                Ok(GameEvent::BroadcastAll(m)) => {
+                    let parsed: serde_json::Value = serde_json::from_str(&m).unwrap();
+                    if parsed["type"] == "question_ended" {
+                        ended_count += 1;
+                    }
+                }
+                _ => break,
+            }
+        }
+
+        // Second call with the same index (0): current_question has advanced, so guard fires
+        do_end_question(session.clone(), tx.clone(), 0).await;
+
+        // No additional question_ended broadcast from the second call
+        let mut extra_ended = 0usize;
+        tokio::time::sleep(Duration::from_millis(100)).await;
+        loop {
+            match rx.try_recv() {
+                Ok(GameEvent::BroadcastAll(m)) => {
+                    let parsed: serde_json::Value = serde_json::from_str(&m).unwrap();
+                    if parsed["type"] == "question_ended" {
+                        extra_ended += 1;
+                    }
+                }
+                _ => break,
+            }
+        }
+
+        assert_eq!(
+            ended_count, 1,
+            "first call should broadcast question_ended once"
+        );
+        assert_eq!(extra_ended, 0, "second call should be a no-op");
+    }
 }

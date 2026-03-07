@@ -14,6 +14,7 @@ const emptyGameState: GameState = {
 	leaderboard: [],
 	countdown: 0,
 	scoringRule: "stepped_decay",
+	timeLimitSec: 20,
 };
 
 describe("Lobby — scoring rule selector", () => {
@@ -81,5 +82,118 @@ describe("Lobby — scoring rule selector", () => {
 		fireEvent.click(screen.getByRole("radio", { name: /fixed score/i }));
 
 		expect(onScoringRuleChange).toHaveBeenCalledWith("fixed_score");
+	});
+});
+
+describe("Lobby — question time limit", () => {
+	it("renders time limit input with default value 20 when isHost is true", () => {
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				timeLimitSec={20}
+				onTimeLimitChange={vi.fn()}
+			/>,
+		);
+
+		expect(screen.getByRole("group", { name: /question time limit/i })).toBeInTheDocument();
+		const input = screen.getByRole("spinbutton");
+		expect(input).toHaveValue(20);
+	});
+
+	it("does NOT render time limit input when isHost is false", () => {
+		render(<Lobby joinCode="ABCD" gameState={emptyGameState} isHost={false} />);
+
+		expect(
+			screen.queryByRole("group", { name: /question time limit/i }),
+		).not.toBeInTheDocument();
+	});
+
+	it("shows error message when value is below minimum (9)", () => {
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				timeLimitSec={20}
+				onTimeLimitChange={vi.fn()}
+			/>,
+		);
+
+		const input = screen.getByRole("spinbutton");
+		fireEvent.change(input, { target: { value: "9" } });
+
+		expect(screen.getByText("Time must be at least 10 seconds.")).toBeInTheDocument();
+	});
+
+	it("shows error message when value is above maximum (61)", () => {
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				timeLimitSec={20}
+				onTimeLimitChange={vi.fn()}
+			/>,
+		);
+
+		const input = screen.getByRole("spinbutton");
+		fireEvent.change(input, { target: { value: "61" } });
+
+		expect(screen.getByText("Time must be no more than 60 seconds.")).toBeInTheDocument();
+	});
+
+	it("shows error message when value is empty", () => {
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				timeLimitSec={20}
+				onTimeLimitChange={vi.fn()}
+			/>,
+		);
+
+		const input = screen.getByRole("spinbutton");
+		fireEvent.change(input, { target: { value: "" } });
+
+		expect(screen.getByText("Please enter a valid number.")).toBeInTheDocument();
+	});
+
+	it("calls onTimeLimitChange with valid value 30", () => {
+		const onTimeLimitChange = vi.fn();
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				timeLimitSec={20}
+				onTimeLimitChange={onTimeLimitChange}
+			/>,
+		);
+
+		const input = screen.getByRole("spinbutton");
+		fireEvent.change(input, { target: { value: "30" } });
+
+		expect(onTimeLimitChange).toHaveBeenCalledWith(30);
+	});
+
+	it("does NOT call onTimeLimitChange for invalid value 9", () => {
+		const onTimeLimitChange = vi.fn();
+		render(
+			<Lobby
+				joinCode="ABCD"
+				gameState={emptyGameState}
+				isHost={true}
+				timeLimitSec={20}
+				onTimeLimitChange={onTimeLimitChange}
+			/>,
+		);
+
+		const input = screen.getByRole("spinbutton");
+		fireEvent.change(input, { target: { value: "9" } });
+
+		expect(onTimeLimitChange).not.toHaveBeenCalled();
 	});
 });

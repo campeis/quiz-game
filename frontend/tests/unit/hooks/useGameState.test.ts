@@ -26,6 +26,19 @@ describe("useGameState", () => {
 		});
 	});
 
+	it("updates timeLimitSec on time_limit_set message", () => {
+		const { result } = renderHook(() => useGameState());
+
+		act(() => {
+			result.current.handleMessage({
+				type: "time_limit_set",
+				payload: { seconds: 45 },
+			});
+		});
+
+		expect(result.current.gameState.timeLimitSec).toBe(45);
+	});
+
 	it("updates player entry with stored avatar on player_reconnected message", () => {
 		const { result } = renderHook(() => useGameState());
 

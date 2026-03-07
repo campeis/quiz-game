@@ -1,0 +1,14 @@
+sequenceDiagram
+    actor H as Host
+    participant FE as Frontend (Lobby)
+    participant BE as Backend (ws_host)
+    actor PL as Players
+
+    Note over H,PL: Host is in Lobby phase (game not yet started)
+    H->>FE: sets time limit input to 30
+    FE->>FE: validates (10 ≤ value ≤ 60)
+    FE->>BE: set_time_limit {seconds: 30}
+    BE->>BE: session.time_limit_sec = 30
+    BE-->>H: time_limit_set {seconds: 30} (BroadcastAll)
+    BE-->>PL: time_limit_set {seconds: 30} (BroadcastAll)
+    Note over BE: limit locked once game starts<br/>each question countdown uses session.time_limit_sec

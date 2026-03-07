@@ -93,6 +93,16 @@ export interface NameAssignedPayload {
 	assigned_name: string;
 }
 
+// === Time Limit Types ===
+
+export interface SetTimeLimitPayload {
+	seconds: number;
+}
+
+export interface TimeLimitSetPayload {
+	seconds: number;
+}
+
 // === Scoring Rule Types ===
 
 export type ScoringRuleName = "stepped_decay" | "linear_decay" | "fixed_score";
@@ -137,4 +147,9 @@ export const MSG = {
 	SET_SCORING_RULE: "set_scoring_rule",
 	// Server → Client (scoring rule)
 	SCORING_RULE_SET: "scoring_rule_set",
+	// Client → Server (time limit)
+	SET_TIME_LIMIT: "set_time_limit",
+	END_QUESTION: "end_question",
+	// Server → Client (time limit)
+	TIME_LIMIT_SET: "time_limit_set",
 } as const;

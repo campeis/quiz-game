@@ -36,8 +36,8 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | `QuizUpload` | File picker that POSTs the quiz file to `/api/upload` and receives the join code |
 | `JoinForm` | Join code + display name form; hosts the avatar preview trigger |
 | `AvatarPickerModal` | Blocking modal overlay over the 30-emoji picker; opens on avatar preview click |
-| `HostDashboard` | Shows connected players, starts the game, displays per-question results |
-| `Lobby` | Waiting room; host can select the scoring rule before starting |
+| `HostDashboard` | Shows per-question progress, answer count, standings, and an "End Question" button to close the current question early |
+| `Lobby` | Waiting room; host can select the scoring rule and configure the per-question time limit before starting |
 | `Question` | Timed question view with answer options, countdown, and active scoring rule label |
 | `Leaderboard` | Ranked standings shown after each question and at game end |
 
@@ -46,7 +46,7 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | Module | Responsibility |
 |--------|---------------|
 | `api.ts` | REST calls — quiz upload (`POST /api/upload`) and session lookup (`GET /api/session/:code`) |
-| `messages.ts` | TypeScript type definitions for all WebSocket message payloads, including `ScoringRuleName` |
+| `messages.ts` | TypeScript type definitions for all WebSocket message payloads, including `ScoringRuleName`, `SetTimeLimitPayload`, and `TimeLimitSetPayload` |
 | `ws-url.ts` | Constructs the WebSocket URL with name + avatar query parameters |
 
 ---
@@ -75,7 +75,7 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 
 | Model | Fields |
 |-------|--------|
-| `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `status`, `question_started`, `scoring_rule` |
+| `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `status`, `question_started`, `scoring_rule`, `time_limit_sec` |
 | `ScoringRule` | Enum: `SteppedDecay` (−250 pts every 5 s), `LinearDecay` (−50 pts/s), `FixedScore` (always max). Implements `calculate_points(correct, elapsed_ms, limit_sec)` — minimum 1 pt for a correct answer |
 | `Quiz` | Title, list of `Question` (text + options, one marked correct) |
 | `Player` | `display_name`, `avatar`, `score`, `correct_count`, `connection_status` |
@@ -102,6 +102,10 @@ Each connected WebSocket task subscribes to this channel and forwards matching m
 ## Data Flow: Selecting a Scoring Rule
 
 ![Scoring rule flow](images/flow-scoring-rule.png)
+
+## Data Flow: Setting the Time Limit
+
+![Time limit flow](images/flow-time-limit.png)
 
 ## Data Flow: Running a Question
 

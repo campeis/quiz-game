@@ -58,6 +58,14 @@ export function HostPage() {
 		send({ type: MSG.SET_SCORING_RULE, payload: { rule } });
 	};
 
+	const handleTimeLimitChange = (seconds: number) => {
+		send({ type: MSG.SET_TIME_LIMIT, payload: { seconds } });
+	};
+
+	const handleEndQuestion = () => {
+		send({ type: MSG.END_QUESTION, payload: {} });
+	};
+
 	return (
 		<main
 			style={{
@@ -96,10 +104,14 @@ export function HostPage() {
 					isHost={true}
 					onStartGame={handleStartGame}
 					onScoringRuleChange={handleScoringRuleChange}
+					timeLimitSec={gameState.timeLimitSec}
+					onTimeLimitChange={handleTimeLimitChange}
 				/>
 			)}
 
-			{phase === "playing" && <HostDashboard gameState={gameState} />}
+			{phase === "playing" && (
+				<HostDashboard gameState={gameState} onEndQuestion={handleEndQuestion} />
+			)}
 
 			{phase === "finished" && <Leaderboard entries={gameState.leaderboard} isFinal={true} />}
 		</main>

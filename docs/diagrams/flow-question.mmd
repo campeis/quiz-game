@@ -3,13 +3,23 @@ sequenceDiagram
     participant GE as game_engine
     actor PL as Players
 
-    H->>GE: start msg
-    GE->>H: question msg (includes scoring_rule)
-    GE->>PL: question msg (BroadcastAll, includes scoring_rule)
-    Note over GE: countdown timer
-    PL->>GE: answer msg
-    GE->>GE: session.scoring_rule.calculate_points()
-    GE->>PL: feedback (PlayerOnly)
-    GE->>H: question_result (HostOnly)
-    GE->>H: leaderboard (BroadcastAll)
-    GE->>PL: leaderboard (BroadcastAll)
+    H->>GE: start_game
+    GE->>H: question {scoring_rule, time_limit_sec} (BroadcastAll)
+    GE->>PL: question {scoring_rule, time_limit_sec} (BroadcastAll)
+
+    Note over GE: countdown timer (time_limit_sec)
+
+    alt Player answers before timer
+        PL->>GE: submit_answer
+        GE->>GE: scoring_rule.calculate_points(elapsed, time_limit_sec)
+        GE-->>PL: answer_result (PlayerOnly)
+    end
+
+    alt Host closes early
+        H->>GE: end_question
+    else Timer expires naturally
+        Note over GE: sleep(time_limit_sec) completes
+    end
+
+    GE->>H: question_ended {correct_index, leaderboard} (BroadcastAll)
+    GE->>PL: question_ended {correct_index, leaderboard} (BroadcastAll)

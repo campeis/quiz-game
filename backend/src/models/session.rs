@@ -27,10 +27,11 @@ pub struct GameSession {
     pub question_started: Option<Instant>,
     pub created_at: Instant,
     pub scoring_rule: ScoringRule,
+    pub time_limit_sec: u64,
 }
 
 impl GameSession {
-    pub fn new(join_code: String, quiz: Quiz) -> Self {
+    pub fn new(join_code: String, quiz: Quiz, default_time_limit_sec: u64) -> Self {
         Self {
             join_code,
             quiz,
@@ -41,6 +42,7 @@ impl GameSession {
             question_started: None,
             created_at: Instant::now(),
             scoring_rule: ScoringRule::default(),
+            time_limit_sec: default_time_limit_sec,
         }
     }
 

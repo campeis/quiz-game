@@ -13,6 +13,7 @@ import {
 	type QuestionPayload,
 	type ScoringRuleName,
 	type ScoringRuleSetPayload,
+	type TimeLimitSetPayload,
 	type WsMessage,
 } from "../services/messages";
 
@@ -35,6 +36,7 @@ export interface GameState {
 	leaderboard: LeaderboardEntryPayload[];
 	countdown: number;
 	scoringRule: ScoringRuleName;
+	timeLimitSec: number;
 }
 
 const initialState: GameState = {
@@ -48,6 +50,7 @@ const initialState: GameState = {
 	leaderboard: [],
 	countdown: 0,
 	scoringRule: "stepped_decay",
+	timeLimitSec: 20,
 };
 
 type Action = { type: "WS_MESSAGE"; message: WsMessage } | { type: "RESET" };
@@ -118,6 +121,10 @@ function reducer(state: GameState, action: Action): GameState {
 		case MSG.SCORING_RULE_SET: {
 			const p = message.payload as ScoringRuleSetPayload;
 			return { ...state, scoringRule: p.rule };
+		}
+		case MSG.TIME_LIMIT_SET: {
+			const p = message.payload as TimeLimitSetPayload;
+			return { ...state, timeLimitSec: p.seconds };
 		}
 		case MSG.GAME_PAUSED:
 			return { ...state, phase: "paused" };
