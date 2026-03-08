@@ -16,6 +16,8 @@ Auto-generated from all feature plans. Last updated: 2026-02-15
 - In-memory only — `GameSession` in `HashMap`; no persistence (010-question-time-limit)
 - Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend), React 19 + Vitest (frontend), Playwright (e2e) (011-streak-bonus)
 - In-memory only (no database); streak counter lives on `Player` struct in `HashMap` (011-streak-bonus)
+- Rust stable (edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio + Serde (backend); React 19 + Rspack (frontend) (012-position-based-scoring)
+- In-memory only — `GameSession` in `DashMap` via `SessionManager`; no persistence (012-position-based-scoring)
 
 ## Project Structure
 
@@ -47,9 +49,9 @@ Rust: follow standard rustfmt + Clippy conventions.
 TypeScript/React: follow Biome rules (no separate Prettier/ESLint config).
 
 ## Recent Changes
+- 012-position-based-scoring: Added Rust stable (edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio + Serde (backend); React 19 + Rspack (frontend)
 - 011-streak-bonus: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend), React 19 + Vitest (frontend), Playwright (e2e)
 - 010-question-time-limit: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e)
-- 009-scoring-rules: Configurable scoring rules (SteppedDecay / LinearDecay / FixedScore) via strategy enum; new WS messages `set_scoring_rule` / `scoring_rule_set`
 
 
 <!-- MANUAL ADDITIONS START -->

@@ -10,6 +10,7 @@ pub enum ScoringRule {
     LinearDecay,
     FixedScore,
     StreakBonus,
+    PositionRace,
 }
 
 impl ScoringRule {
@@ -33,6 +34,10 @@ impl ScoringRule {
             }
             ScoringRule::FixedScore => MAX_SCORE,
             ScoringRule::StreakBonus => MAX_SCORE,
+            // PositionRace points depend on answer order, not time.
+            // Calculation is handled inline in handle_answer(); this path is unreachable
+            // during normal gameplay but returns 0 as a safe fallback.
+            ScoringRule::PositionRace => 0,
         }
     }
 
@@ -46,12 +51,24 @@ impl ScoringRule {
         }
     }
 
+    /// Points awarded for a given arrival position under the PositionRace rule.
+    /// 1st → 1000, 2nd → 750, 3rd → 500, 4th+ → 250.
+    pub fn position_points(pos: u32) -> u32 {
+        match pos {
+            1 => 1000,
+            2 => 750,
+            3 => 500,
+            _ => 250,
+        }
+    }
+
     pub fn display_name(&self) -> &'static str {
         match self {
             ScoringRule::SteppedDecay => "Stepped Decay",
             ScoringRule::LinearDecay => "Linear Decay",
             ScoringRule::FixedScore => "Fixed Score",
             ScoringRule::StreakBonus => "Streak Bonus",
+            ScoringRule::PositionRace => "Position Race",
         }
     }
 }
@@ -96,5 +113,17 @@ mod tests {
             ScoringRule::StreakBonus.calculate_points(correct, 0, 20),
             expected
         );
+    }
+
+    // ── T005: position_points schedule ───────────────────────────────────────
+
+    #[rstest]
+    #[case(1, 1000)]
+    #[case(2, 750)]
+    #[case(3, 500)]
+    #[case(4, 250)]
+    #[case(10, 250)]
+    fn position_race_point_schedule(#[case] pos: u32, #[case] expected: u32) {
+        assert_eq!(ScoringRule::position_points(pos), expected);
     }
 }

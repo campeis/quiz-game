@@ -124,6 +124,7 @@ pub(crate) async fn do_advance_question(
     let question_index = {
         let mut s = session.write().await;
         s.current_question += 1;
+        s.correct_answer_count = 0;
         let idx = s.current_question as usize;
 
         if idx >= s.quiz.questions.len() {
@@ -213,24 +214,39 @@ pub async fn handle_answer(
 
         let pre_answer_streak = player.correct_streak;
 
-        let question = &s.quiz.questions[question_index];
-        let correct = selected_index == question.correct_index;
-        let time_taken_ms = s
-            .question_started
-            .map(|started| started.elapsed().as_millis() as u64)
-            .unwrap_or(0);
+        let (correct, correct_index, time_taken_ms) = {
+            let question = &s.quiz.questions[question_index];
+            let correct = selected_index == question.correct_index;
+            let time_taken_ms = s
+                .question_started
+                .map(|started| started.elapsed().as_millis() as u64)
+                .unwrap_or(0);
+            (correct, question.correct_index, time_taken_ms)
+        };
 
-        let base_points = s
-            .scoring_rule
-            .calculate_points(correct, time_taken_ms, s.time_limit_sec);
-        let points = s
-            .scoring_rule
-            .apply_streak_multiplier(base_points, pre_answer_streak);
+        let (points, position_opt): (u32, Option<u32>) =
+            if s.scoring_rule == ScoringRule::PositionRace {
+                if correct {
+                    s.correct_answer_count += 1;
+                    let pos = s.correct_answer_count;
+                    (ScoringRule::position_points(pos), Some(pos))
+                } else {
+                    (0, None)
+                }
+            } else {
+                let base =
+                    s.scoring_rule
+                        .calculate_points(correct, time_taken_ms, s.time_limit_sec);
+                (
+                    s.scoring_rule
+                        .apply_streak_multiplier(base, pre_answer_streak),
+                    None,
+                )
+            };
         let streak_multiplier: f64 = match &s.scoring_rule {
             ScoringRule::StreakBonus => 1.0 + pre_answer_streak as f64 * 0.5,
             _ => 1.0,
         };
-        let correct_index = question.correct_index;
 
         let player = s.players.get_mut(player_id).unwrap();
         player.answers.push(Answer {
@@ -256,6 +272,7 @@ pub async fn handle_answer(
                     "points_awarded": points,
                     "correct_index": correct_index,
                     "streak_multiplier": streak_multiplier,
+                    "position": position_opt,
                 }
             })
             .to_string(),
@@ -943,6 +960,184 @@ mod tests {
         assert_eq!(
             s.players[player_id].correct_streak, 3,
             "streak should not be modified for non-StreakBonus rules"
+        );
+    }
+
+    // ── T006 / T013: position race ───────────────────────────────────────────
+
+    #[tokio::test]
+    async fn position_race_correct_answer_count_resets_on_new_question() {
+        let session = make_session_with_rule(ScoringRule::PositionRace, 20);
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = -1;
+            s.correct_answer_count = 5; // stale value from previous question
+        }
+        let (tx, _rx) = broadcast::channel::<GameEvent>(16);
+        do_advance_question(session.clone(), tx, make_session_manager()).await;
+
+        let s = session.read().await;
+        assert_eq!(
+            s.correct_answer_count, 0,
+            "correct_answer_count must reset to 0 when a new question starts"
+        );
+    }
+
+    #[tokio::test]
+    async fn position_race_first_correct_answer_awards_1000_pts() {
+        let session = make_session_with_rule(ScoringRule::PositionRace, 20);
+        let player_id = "player-1";
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = 0;
+            s.players.insert(
+                player_id.to_string(),
+                Player::new(player_id.to_string(), "Alice".to_string(), "🙂".to_string()),
+            );
+            s.players.insert(
+                "player-2".to_string(),
+                Player::new("player-2".to_string(), "Bob".to_string(), "🙂".to_string()),
+            );
+        }
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
+        handle_answer(&session, &tx, player_id, 0, 1, make_session_manager()).await; // correct index is 1
+
+        let mut result = None;
+        for _ in 0..10 {
+            let event = tokio::time::timeout(Duration::from_millis(200), rx.recv()).await;
+            let Ok(Ok(event)) = event else { break };
+            let msg = match &event {
+                GameEvent::PlayerOnly { message, .. } => message.clone(),
+                _ => continue,
+            };
+            let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+            if parsed["type"] == "answer_result" {
+                result = Some(parsed);
+                break;
+            }
+        }
+
+        let result = result.expect("no answer_result received");
+        assert_eq!(
+            result["payload"]["points_awarded"], 1000,
+            "1st correct → 1000 pts"
+        );
+        assert_eq!(result["payload"]["position"], 1, "1st correct → position 1");
+    }
+
+    #[tokio::test]
+    async fn position_race_second_correct_answer_awards_750_pts() {
+        let session = make_session_with_rule(ScoringRule::PositionRace, 20);
+        let player1_id = "player-1";
+        let player2_id = "player-2";
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = 0;
+            s.players.insert(
+                player1_id.to_string(),
+                Player::new(
+                    player1_id.to_string(),
+                    "Alice".to_string(),
+                    "🙂".to_string(),
+                ),
+            );
+            s.players.insert(
+                player2_id.to_string(),
+                Player::new(player2_id.to_string(), "Bob".to_string(), "🙂".to_string()),
+            );
+        }
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(32);
+
+        // Player 1 answers first (correct)
+        handle_answer(&session, &tx, player1_id, 0, 1, make_session_manager()).await;
+        // Player 2 answers second (correct)
+        handle_answer(&session, &tx, player2_id, 0, 1, make_session_manager()).await;
+
+        // Collect both answer_result events
+        let mut points_by_player: std::collections::HashMap<String, u64> =
+            std::collections::HashMap::new();
+        for _ in 0..20 {
+            let event = tokio::time::timeout(Duration::from_millis(200), rx.recv()).await;
+            let Ok(Ok(event)) = event else { break };
+            match event {
+                GameEvent::PlayerOnly { player_id, message } => {
+                    let parsed: serde_json::Value = serde_json::from_str(&message).unwrap();
+                    if parsed["type"] == "answer_result" {
+                        if let Some(pts) = parsed["payload"]["points_awarded"].as_u64() {
+                            points_by_player.insert(player_id, pts);
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        assert_eq!(
+            points_by_player.get(player1_id).copied(),
+            Some(1000),
+            "1st correct → 1000 pts"
+        );
+        assert_eq!(
+            points_by_player.get(player2_id).copied(),
+            Some(750),
+            "2nd correct → 750 pts"
+        );
+    }
+
+    #[tokio::test]
+    async fn position_race_wrong_answer_awards_0_pts_and_no_position() {
+        let session = make_session_with_rule(ScoringRule::PositionRace, 20);
+        let player_id = "player-1";
+        {
+            let mut s = session.write().await;
+            s.status = SessionStatus::Active;
+            s.current_question = 0;
+            s.players.insert(
+                player_id.to_string(),
+                Player::new(player_id.to_string(), "Alice".to_string(), "🙂".to_string()),
+            );
+            s.players.insert(
+                "player-2".to_string(),
+                Player::new("player-2".to_string(), "Bob".to_string(), "🙂".to_string()),
+            );
+        }
+        let (tx, mut rx) = broadcast::channel::<GameEvent>(16);
+        // correct index is 1; submit 0 (wrong)
+        handle_answer(&session, &tx, player_id, 0, 0, make_session_manager()).await;
+
+        let mut result = None;
+        for _ in 0..10 {
+            let event = tokio::time::timeout(Duration::from_millis(200), rx.recv()).await;
+            let Ok(Ok(event)) = event else { break };
+            let msg = match &event {
+                GameEvent::PlayerOnly { message, .. } => message.clone(),
+                _ => continue,
+            };
+            let parsed: serde_json::Value = serde_json::from_str(&msg).unwrap();
+            if parsed["type"] == "answer_result" {
+                result = Some(parsed);
+                break;
+            }
+        }
+
+        let result = result.expect("no answer_result received");
+        assert_eq!(
+            result["payload"]["points_awarded"], 0,
+            "wrong answer → 0 pts"
+        );
+        assert!(
+            result["payload"]["position"].is_null(),
+            "wrong answer → position must be null"
+        );
+
+        // Counter must NOT have incremented
+        let s = session.read().await;
+        assert_eq!(
+            s.correct_answer_count, 0,
+            "wrong answer must not increment correct_answer_count"
         );
     }
 

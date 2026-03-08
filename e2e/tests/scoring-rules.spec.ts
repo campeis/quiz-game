@@ -34,3 +34,17 @@ test.describe("Scoring Rules — Stepped Decay (default)", () => {
 		await expect(playerPage.getByText("Stepped Decay")).toBeVisible();
 	});
 });
+
+test.describe("Scoring Rules — Position Race", () => {
+	test.describe.configure({ timeout: 120_000 });
+	test.use({ lobbyOptions: { scoringRule: "Position Race" } });
+
+	test("host selects Position Race and player sees label on question screen", async ({
+		lobby: { hostPage, playerPage },
+	}) => {
+		await hostPage.getByRole("button", { name: /Start/i }).click();
+
+		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Position Race")).toBeVisible();
+	});
+});

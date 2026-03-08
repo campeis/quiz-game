@@ -9,7 +9,15 @@ const SCORING_RULE_LABELS: Record<ScoringRuleName, string> = {
 	linear_decay: "Linear Decay",
 	fixed_score: "Fixed Score",
 	streak_bonus: "Streak Bonus",
+	position_race: "Position Race",
 };
+
+function toOrdinal(n: number): string {
+	if (n === 1) return "1st";
+	if (n === 2) return "2nd";
+	if (n === 3) return "3rd";
+	return `${n}th`;
+}
 
 interface QuestionProps {
 	questionIndex: number;
@@ -23,6 +31,7 @@ interface QuestionProps {
 		points_awarded: number;
 		correct_index: number;
 		streak_multiplier: number;
+		position?: number;
 	} | null;
 	phase: "question" | "question_ended";
 	scoringRule: ScoringRuleName;
@@ -165,6 +174,19 @@ export function Question({
 								}}
 							>
 								×{answerResult.streak_multiplier.toFixed(1)}
+							</p>
+						)}
+					{scoringRule === "position_race" &&
+						answerResult.correct &&
+						answerResult.position != null && (
+							<p
+								style={{
+									color: colors.primary,
+									fontSize: typography.sizes.md,
+									fontWeight: typography.weights.bold,
+								}}
+							>
+								{toOrdinal(answerResult.position)} place
 							</p>
 						)}
 					<p style={{ color: colors.textSecondary, fontSize: typography.sizes.md }}>

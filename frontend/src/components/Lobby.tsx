@@ -24,6 +24,11 @@ const SCORING_RULES: { value: ScoringRuleName; label: string; description: strin
 		label: "Streak Bonus",
 		description: "Multiplier grows with consecutive correct answers",
 	},
+	{
+		value: "position_race",
+		label: "Position Race",
+		description: "Points by answer order: 1st→1000, 2nd→750, 3rd→500, 4th+→250",
+	},
 ];
 
 export function Lobby({

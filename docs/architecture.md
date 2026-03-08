@@ -46,7 +46,7 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | Module | Responsibility |
 |--------|---------------|
 | `api.ts` | REST calls — quiz upload (`POST /api/upload`) and session lookup (`GET /api/session/:code`) |
-| `messages.ts` | TypeScript type definitions for all WebSocket message payloads, including `ScoringRuleName` (`stepped_decay` / `linear_decay` / `fixed_score` / `streak_bonus`), `AnswerResultPayload` (with `streak_multiplier`), `SetTimeLimitPayload`, and `TimeLimitSetPayload` |
+| `messages.ts` | TypeScript type definitions for all WebSocket message payloads, including `ScoringRuleName` (`stepped_decay` / `linear_decay` / `fixed_score` / `streak_bonus` / `position_race`), `AnswerResultPayload` (with `streak_multiplier` and optional `position`), `SetTimeLimitPayload`, and `TimeLimitSetPayload` |
 | `ws-url.ts` | Constructs the WebSocket URL with name + avatar query parameters |
 
 ---
@@ -75,8 +75,8 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 
 | Model | Fields |
 |-------|--------|
-| `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `status`, `question_started`, `scoring_rule`, `time_limit_sec` |
-| `ScoringRule` | Enum: `SteppedDecay` (−250 pts every 5 s), `LinearDecay` (−50 pts/s), `FixedScore` (always max), `StreakBonus` (always 1000 pts base, multiplied by ×(1 + streak × 0.5)). Implements `calculate_points` and `apply_streak_multiplier` |
+| `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `correct_answer_count`, `status`, `question_started`, `scoring_rule`, `time_limit_sec` |
+| `ScoringRule` | Enum: `SteppedDecay` (−250 pts every 5 s), `LinearDecay` (−50 pts/s), `FixedScore` (always max), `StreakBonus` (always 1000 pts base, multiplied by ×(1 + streak × 0.5)), `PositionRace` (1st→1000, 2nd→750, 3rd→500, 4th+→250). Implements `calculate_points`, `apply_streak_multiplier`, and `position_points` |
 | `Quiz` | Title, list of `Question` (text + options, one marked correct) |
 | `Player` | `display_name`, `avatar`, `score`, `correct_count`, `correct_streak`, `connection_status` |
 | `LeaderboardEntry` | Computed from `Player` slice — ranked by score, then name |
@@ -114,6 +114,12 @@ Each connected WebSocket task subscribes to this channel and forwards matching m
 ## Data Flow: Streak Bonus Scoring
 
 ![Streak bonus flow](images/flow-streak-bonus.png)
+
+## Data Flow: Position Race Scoring
+
+![Position race flow](images/flow-position-race.png)
+
+When `scoring_rule = PositionRace`, `game_engine` tracks the order of correct answers per question using `GameSession::correct_answer_count` (a `u32` that resets to 0 in `do_advance_question`). On each correct answer `correct_answer_count` is incremented first, then `ScoringRule::position_points(pos)` maps the resulting position to points (1→1000, 2→750, 3→500, 4+→250). The `answer_result` broadcast includes an optional `position` field (1-based rank) that is `Some(pos)` for correct answers and `None` for wrong or unanswered ones. The frontend `Question` component renders an ordinal rank badge (e.g., "2nd place") only when `scoringRule === "position_race"` and a `position` value is present.
 
 ---
 
