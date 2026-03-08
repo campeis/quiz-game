@@ -28,6 +28,9 @@ pub struct GameSession {
     pub created_at: Instant,
     pub scoring_rule: ScoringRule,
     pub time_limit_sec: u64,
+    /// Counts correct answers received for the current question under PositionRace rule.
+    /// Reset to 0 at the start of each new question.
+    pub correct_answer_count: u32,
 }
 
 impl GameSession {
@@ -43,6 +46,7 @@ impl GameSession {
             created_at: Instant::now(),
             scoring_rule: ScoringRule::default(),
             time_limit_sec: default_time_limit_sec,
+            correct_answer_count: 0,
         }
     }
 

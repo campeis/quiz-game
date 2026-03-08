@@ -1,0 +1,26 @@
+sequenceDiagram
+    actor P1 as Player 1
+    actor P2 as Player 2
+    actor P3 as Player 3
+    participant GE as game_engine
+    participant SR as ScoringRule::PositionRace
+
+    Note over P1,SR: correct_answer_count resets to 0 at question start
+
+    GE->>P1: question N
+    GE->>P2: question N
+    GE->>P3: question N
+
+    P1->>GE: submit_answer (correct, arrives 1st)
+    GE->>GE: correct_answer_count = 1
+    GE->>SR: position_points(1) → 1000
+    GE-->>P1: answer_result {points: 1000, position: 1}
+
+    P2->>GE: submit_answer (correct, arrives 2nd)
+    GE->>GE: correct_answer_count = 2
+    GE->>SR: position_points(2) → 750
+    GE-->>P2: answer_result {points: 750, position: 2}
+
+    P3->>GE: submit_answer (incorrect)
+    Note over GE: count NOT incremented for wrong answers
+    GE-->>P3: answer_result {points: 0, position: null}

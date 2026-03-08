@@ -21,6 +21,14 @@ const streakAnswerResult = {
 	streak_multiplier: 1.5,
 };
 
+const positionAnswerResult = {
+	correct: true,
+	points_awarded: 750,
+	correct_index: 2,
+	streak_multiplier: 1.0,
+	position: 2,
+};
+
 describe("Question", () => {
 	it("renders question text and options", () => {
 		render(<Question {...defaultProps} />);
@@ -144,6 +152,77 @@ describe("Question", () => {
 		);
 
 		expect(screen.queryByText("×1.0")).not.toBeInTheDocument();
+	});
+
+	// ── T010: Position Race label and rank badge ─────────────────────────────
+
+	it("displays 'Position Race' label when scoringRule is position_race", () => {
+		render(<Question {...defaultProps} scoringRule="position_race" />);
+
+		expect(screen.getByText("Position Race")).toBeInTheDocument();
+	});
+
+	it("shows position rank badge for correct position_race answer", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="position_race"
+				answerResult={positionAnswerResult}
+			/>,
+		);
+
+		expect(screen.getByText("Correct!")).toBeInTheDocument();
+		expect(screen.getByText("2nd place")).toBeInTheDocument();
+		expect(screen.getByText("+750 points")).toBeInTheDocument();
+	});
+
+	it("shows '1st place' for position 1", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="position_race"
+				answerResult={{ ...positionAnswerResult, points_awarded: 1000, position: 1 }}
+			/>,
+		);
+
+		expect(screen.getByText("1st place")).toBeInTheDocument();
+	});
+
+	it("shows '3rd place' for position 3", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="position_race"
+				answerResult={{ ...positionAnswerResult, points_awarded: 500, position: 3 }}
+			/>,
+		);
+
+		expect(screen.getByText("3rd place")).toBeInTheDocument();
+	});
+
+	it("does NOT show position rank badge for wrong position_race answer", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="position_race"
+				answerResult={{ correct: false, points_awarded: 0, correct_index: 2, streak_multiplier: 1.0 }}
+			/>,
+		);
+
+		expect(screen.getByText("Incorrect")).toBeInTheDocument();
+		expect(screen.queryByText(/place/)).not.toBeInTheDocument();
+	});
+
+	it("does NOT show position rank badge for non-position_race rules", () => {
+		render(
+			<Question
+				{...defaultProps}
+				scoringRule="fixed_score"
+				answerResult={{ correct: true, points_awarded: 1000, correct_index: 2, streak_multiplier: 1.0, position: 1 }}
+			/>,
+		);
+
+		expect(screen.queryByText(/place/)).not.toBeInTheDocument();
 	});
 
 	it("resets selection state when questionIndex changes", () => {

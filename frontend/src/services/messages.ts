@@ -52,6 +52,8 @@ export interface AnswerResultPayload {
 	points_awarded: number;
 	correct_index: number;
 	streak_multiplier: number;
+	/** 1-based rank among correct responders; present only for PositionRace + correct answer. */
+	position?: number;
 }
 
 export interface LeaderboardEntryPayload {
@@ -106,7 +108,12 @@ export interface TimeLimitSetPayload {
 
 // === Scoring Rule Types ===
 
-export type ScoringRuleName = "stepped_decay" | "linear_decay" | "fixed_score" | "streak_bonus";
+export type ScoringRuleName =
+	| "stepped_decay"
+	| "linear_decay"
+	| "fixed_score"
+	| "streak_bonus"
+	| "position_race";
 
 export interface SetScoringRulePayload {
 	rule: ScoringRuleName;
