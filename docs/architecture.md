@@ -76,7 +76,7 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | Model | Fields |
 |-------|--------|
 | `GameSession` | `join_code`, `quiz`, `players`, `host_id`, `current_question`, `correct_answer_count`, `status`, `question_started`, `scoring_rule`, `time_limit_sec` |
-| `ScoringRule` | Enum: `SteppedDecay` (−250 pts every 5 s), `LinearDecay` (−50 pts/s), `FixedScore` (always max), `StreakBonus` (always 1000 pts base, multiplied by ×(1 + streak × 0.5)), `PositionRace` (1st→1000, 2nd→750, 3rd→500, 4th+→250). Implements `calculate_points`, `apply_streak_multiplier`, and `position_points` |
+| `ScoringRule` | Enum: `SteppedDecay` (−250 pts every 5 s), `LinearDecay` (−50 pts/s), `FixedScore` (always max), `StreakBonus` (always 1000 pts base, multiplied by ×(1 + streak × 0.5)), `PositionRace` (1st→1000, 2nd→750, 3rd→500, 4th+→250). All scoring logic is unified behind `score(ctx: &ScoringContext) -> ScoringOutcome`; each variant delegates to a private function with that signature. `ScoringContext` carries `correct`, `time_taken_ms`, `time_limit_sec`, `streak`, and `correct_answer_count`. `ScoringOutcome` returns `points`, `position` (`Option<u32>`, `Some` only for PositionRace correct answers), and `streak_multiplier` |
 | `Quiz` | Title, list of `Question` (text + options, one marked correct) |
 | `Player` | `display_name`, `avatar`, `score`, `correct_count`, `correct_streak`, `connection_status` |
 | `LeaderboardEntry` | Computed from `Player` slice — ranked by score, then name |
@@ -119,7 +119,7 @@ Each connected WebSocket task subscribes to this channel and forwards matching m
 
 ![Position race flow](images/flow-position-race.png)
 
-When `scoring_rule = PositionRace`, `game_engine` tracks the order of correct answers per question using `GameSession::correct_answer_count` (a `u32` that resets to 0 in `do_advance_question`). On each correct answer `correct_answer_count` is incremented first, then `ScoringRule::position_points(pos)` maps the resulting position to points (1→1000, 2→750, 3→500, 4+→250). The `answer_result` broadcast includes an optional `position` field (1-based rank) that is `Some(pos)` for correct answers and `None` for wrong or unanswered ones. The frontend `Question` component renders an ordinal rank badge (e.g., "2nd place") only when `scoringRule === "position_race"` and a `position` value is present.
+When `scoring_rule = PositionRace`, `game_engine` tracks the order of correct answers per question using `GameSession::correct_answer_count` (a `u32` that resets to 0 in `do_advance_question`). On each answer, `game_engine` calls `scoring_rule.score(&ScoringContext { correct, correct_answer_count, ... })`, which returns a `ScoringOutcome`. When `outcome.position` is `Some`, `correct_answer_count` is incremented by 1. Position-to-points mapping: 1→1000, 2→750, 3→500, 4+→250. The `answer_result` broadcast includes an optional `position` field (1-based rank) that is `Some(pos)` for correct answers and `None` for wrong or unanswered ones. The frontend `Question` component renders an ordinal rank badge (e.g., "2nd place") only when `scoringRule === "position_race"` and a `position` value is present.
 
 ---
 

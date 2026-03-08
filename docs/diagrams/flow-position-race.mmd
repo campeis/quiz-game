@@ -12,13 +12,13 @@ sequenceDiagram
     GE->>P3: question N
 
     P1->>GE: submit_answer (correct, arrives 1st)
+    GE->>SR: score(ScoringContext{correct=true, count=0}) → ScoringOutcome{points: 1000, position: Some(1)}
     GE->>GE: correct_answer_count = 1
-    GE->>SR: position_points(1) → 1000
     GE-->>P1: answer_result {points: 1000, position: 1}
 
     P2->>GE: submit_answer (correct, arrives 2nd)
+    GE->>SR: score(ScoringContext{correct=true, count=1}) → ScoringOutcome{points: 750, position: Some(2)}
     GE->>GE: correct_answer_count = 2
-    GE->>SR: position_points(2) → 750
     GE-->>P2: answer_result {points: 750, position: 2}
 
     P3->>GE: submit_answer (incorrect)

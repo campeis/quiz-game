@@ -7,21 +7,19 @@ sequenceDiagram
 
     GE->>PL: question 1
     PL->>GE: submit_answer (correct)
-    GE->>SR: calculate_points(correct=true) → 1000
-    GE->>SR: apply_streak_multiplier(1000, streak=0) → 1000 (×1.0)
+    GE->>SR: score(ScoringContext{correct=true, streak=0}) → ScoringOutcome{points: 1000, streak_multiplier: 1.0}
     GE->>GE: player.correct_streak = 1
     GE-->>PL: answer_result {points: 1000, streak_multiplier: 1.0}
 
     GE->>PL: question 2
     PL->>GE: submit_answer (correct)
-    GE->>SR: calculate_points(correct=true) → 1000
-    GE->>SR: apply_streak_multiplier(1000, streak=1) → 1500 (×1.5)
+    GE->>SR: score(ScoringContext{correct=true, streak=1}) → ScoringOutcome{points: 1500, streak_multiplier: 1.5}
     GE->>GE: player.correct_streak = 2
     GE-->>PL: answer_result {points: 1500, streak_multiplier: 1.5}
 
     GE->>PL: question 3
     PL->>GE: submit_answer (incorrect)
-    GE->>SR: calculate_points(correct=false) → 0
+    GE->>SR: score(ScoringContext{correct=false, streak=2}) → ScoringOutcome{points: 0, streak_multiplier: 1.0}
     GE->>GE: player.correct_streak = 0 (reset)
     GE-->>PL: answer_result {points: 0, streak_multiplier: 1.0}
 

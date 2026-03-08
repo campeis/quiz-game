@@ -11,10 +11,9 @@ sequenceDiagram
 
     alt Player answers before timer
         PL->>GE: submit_answer
-        GE->>GE: base = scoring_rule.calculate_points(elapsed, time_limit_sec)
-        GE->>GE: points = scoring_rule.apply_streak_multiplier(base, player.correct_streak)
+        GE->>GE: outcome = scoring_rule.score(ScoringContext{elapsed, streak, ...})
         GE->>GE: update player.correct_streak (increment or reset)
-        GE-->>PL: answer_result {correct, points_awarded, streak_multiplier} (PlayerOnly)
+        GE-->>PL: answer_result {correct, points_awarded, streak_multiplier, position?} (PlayerOnly)
     end
 
     alt Host closes early
