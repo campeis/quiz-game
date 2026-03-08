@@ -12,6 +12,8 @@ const SCORING_RULE_LABELS: Record<ScoringRuleName, string> = {
 	position_race: "Position Race",
 };
 
+// Handles 1st/2nd/3rd correctly; falls back to "Nth" for N≥4.
+// Safe for Position Race which caps the distinct tiers at 4+.
 function toOrdinal(n: number): string {
 	if (n === 1) return "1st";
 	if (n === 2) return "2nd";
