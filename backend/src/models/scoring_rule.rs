@@ -52,13 +52,13 @@ impl ScoringRule {
     }
 
     /// Points awarded for a given arrival position under the PositionRace rule.
-    /// 1st → 1000, 2nd → 750, 3rd → 500, 4th+ → 250.
+    /// 1st → MAX_SCORE, 2nd → ¾, 3rd → ½, 4th+ → ¼ (integer division, rounds down).
     pub fn position_points(pos: u32) -> u32 {
         match pos {
-            1 => 1000,
-            2 => 750,
-            3 => 500,
-            _ => 250,
+            1 => MAX_SCORE,
+            2 => MAX_SCORE * 3 / 4,
+            3 => MAX_SCORE / 2,
+            _ => MAX_SCORE / 4,
         }
     }
 
