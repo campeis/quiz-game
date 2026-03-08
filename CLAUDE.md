@@ -11,13 +11,7 @@ Auto-generated from all feature plans. Last updated: 2026-02-15
 - **Testing**: cargo test (backend), Vitest + @testing-library/react (frontend unit), Playwright (e2e)
 - **CI/CD**: GitHub Actions — `actions/checkout`, `dtolnay/rust-toolchain`, `pnpm/action-setup`, `actions/setup-node`, `taiki-e/install-action`, `actions/cache`
 - **Dependencies**: Dependabot (`.github/dependabot.yml`)
-- **Persistence**: In-memory only — no database; all session state lives in `HashMap` for the duration of a session
-- Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e) (010-question-time-limit)
-- In-memory only — `GameSession` in `HashMap`; no persistence (010-question-time-limit)
-- Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend), React 19 + Vitest (frontend), Playwright (e2e) (011-streak-bonus)
-- In-memory only (no database); streak counter lives on `Player` struct in `HashMap` (011-streak-bonus)
-- Rust stable (edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio + Serde (backend); React 19 + Rspack (frontend) (012-position-based-scoring)
-- In-memory only — `GameSession` in `DashMap` via `SessionManager`; no persistence (012-position-based-scoring)
+- **Persistence**: In-memory only — no database; all session state lives in `GameSession` in `SessionManager` for the duration of a session
 
 ## Project Structure
 
@@ -49,10 +43,9 @@ Rust: follow standard rustfmt + Clippy conventions.
 TypeScript/React: follow Biome rules (no separate Prettier/ESLint config).
 
 ## Recent Changes
-- 012-position-based-scoring: Added Rust stable (edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio + Serde (backend); React 19 + Rspack (frontend)
-- 011-streak-bonus: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend), React 19 + Vitest (frontend), Playwright (e2e)
-- 010-question-time-limit: Added Rust (stable, edition 2024) — backend; TypeScript 5.x — frontend + Axum + Tokio (backend); React 19 + Rspack (frontend); Vitest + @testing-library/react (unit); Playwright (e2e)
-
+- 012-position-based-scoring: Position Race scoring rule (1st→1000, 2nd→750, 3rd→500, 4th+→250)
+- 011-streak-bonus: Streak multiplier scoring rule (×1.0 + 0.5 per consecutive correct)
+- 010-question-time-limit: Configurable per-question time limit (10–60 s)
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
