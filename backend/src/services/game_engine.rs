@@ -7,7 +7,7 @@ use tokio::time::{Duration, sleep};
 
 use crate::models::leaderboard::compute_leaderboard;
 use crate::models::player::{Answer, Player};
-use crate::models::scoring_rule::ScoringRule;
+use crate::models::scoring_rule::{ScoringContext, ScoringRule};
 use crate::models::session::{GameSession, SessionStatus};
 use crate::services::session_manager::SessionManager;
 
@@ -224,29 +224,19 @@ pub async fn handle_answer(
             (correct, question.correct_index, time_taken_ms)
         };
 
-        let (points, position_opt): (u32, Option<u32>) =
-            if s.scoring_rule == ScoringRule::PositionRace {
-                if correct {
-                    s.correct_answer_count += 1;
-                    let pos = s.correct_answer_count;
-                    (ScoringRule::position_points(pos), Some(pos))
-                } else {
-                    (0, None)
-                }
-            } else {
-                let base =
-                    s.scoring_rule
-                        .calculate_points(correct, time_taken_ms, s.time_limit_sec);
-                (
-                    s.scoring_rule
-                        .apply_streak_multiplier(base, pre_answer_streak),
-                    None,
-                )
-            };
-        let streak_multiplier: f64 = match &s.scoring_rule {
-            ScoringRule::StreakBonus => 1.0 + pre_answer_streak as f64 * 0.5,
-            _ => 1.0,
-        };
+        let outcome = s.scoring_rule.score(&ScoringContext {
+            correct,
+            time_taken_ms,
+            time_limit_sec: s.time_limit_sec,
+            streak: pre_answer_streak,
+            correct_answer_count: s.correct_answer_count,
+        });
+        if outcome.position.is_some() {
+            s.correct_answer_count += 1;
+        }
+        let points = outcome.points;
+        let position_opt = outcome.position;
+        let streak_multiplier = outcome.streak_multiplier;
 
         let player = s.players.get_mut(player_id).unwrap();
         player.answers.push(Answer {

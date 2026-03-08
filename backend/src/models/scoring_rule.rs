@@ -13,41 +13,36 @@ pub enum ScoringRule {
     PositionRace,
 }
 
-impl ScoringRule {
-    pub fn calculate_points(&self, correct: bool, time_taken_ms: u64, time_limit_sec: u64) -> u32 {
-        if !correct {
-            return 0;
-        }
-        match self {
-            ScoringRule::SteppedDecay => {
-                let num_steps = (time_limit_sec / 5).max(1);
-                let step_size = MAX_SCORE / num_steps as u32;
-                let steps_elapsed = time_taken_ms / 5000;
-                let raw = MAX_SCORE.saturating_sub(steps_elapsed as u32 * step_size);
-                raw.max(1)
-            }
-            ScoringRule::LinearDecay => {
-                let step_size = (MAX_SCORE / time_limit_sec as u32).max(1);
-                let secs_elapsed = time_taken_ms / 1000;
-                let raw = MAX_SCORE.saturating_sub(secs_elapsed as u32 * step_size);
-                raw.max(1)
-            }
-            ScoringRule::FixedScore => MAX_SCORE,
-            ScoringRule::StreakBonus => MAX_SCORE,
-            // PositionRace points depend on answer order, not time.
-            // Calculation is handled inline in handle_answer(); this path is unreachable
-            // during normal gameplay but returns 0 as a safe fallback.
-            ScoringRule::PositionRace => 0,
-        }
-    }
+/// All inputs a scoring rule needs to compute an outcome.
+pub struct ScoringContext {
+    pub correct: bool,
+    pub time_taken_ms: u64,
+    pub time_limit_sec: u64,
+    /// Consecutive correct answers before this one (used by StreakBonus).
+    pub streak: u32,
+    /// Number of players who answered correctly before this answer (used by PositionRace).
+    pub correct_answer_count: u32,
+}
 
-    /// Applies the streak multiplier for StreakBonus rule.
-    /// For all other rules, returns `base` unchanged.
-    /// Multiplier: ×(1.0 + streak × 0.5) — so streak=0→×1.0, streak=1→×1.5, streak=2→×2.0.
-    pub fn apply_streak_multiplier(&self, base: u32, streak: u32) -> u32 {
+/// The result returned by every scoring rule.
+pub struct ScoringOutcome {
+    pub points: u32,
+    /// 1-based arrival rank among correct responders. `Some` only for PositionRace + correct.
+    pub position: Option<u32>,
+    /// Multiplier shown to the player. Always 1.0 except for StreakBonus.
+    pub streak_multiplier: f64,
+}
+
+impl ScoringRule {
+    /// Compute the scoring outcome for an answer.
+    /// Each rule delegates to its own private function with the same signature.
+    pub fn score(&self, ctx: &ScoringContext) -> ScoringOutcome {
         match self {
-            ScoringRule::StreakBonus => (base as f64 * (1.0 + streak as f64 * 0.5)) as u32,
-            _ => base,
+            ScoringRule::SteppedDecay => score_stepped_decay(ctx),
+            ScoringRule::LinearDecay => score_linear_decay(ctx),
+            ScoringRule::FixedScore => score_fixed(ctx),
+            ScoringRule::StreakBonus => score_streak_bonus(ctx),
+            ScoringRule::PositionRace => score_position_race(ctx),
         }
     }
 
@@ -73,49 +68,139 @@ impl ScoringRule {
     }
 }
 
+fn score_stepped_decay(ctx: &ScoringContext) -> ScoringOutcome {
+    let points = if ctx.correct {
+        let num_steps = (ctx.time_limit_sec / 5).max(1);
+        let step_size = MAX_SCORE / num_steps as u32;
+        let steps_elapsed = ctx.time_taken_ms / 5000;
+        MAX_SCORE
+            .saturating_sub(steps_elapsed as u32 * step_size)
+            .max(1)
+    } else {
+        0
+    };
+    ScoringOutcome {
+        points,
+        position: None,
+        streak_multiplier: 1.0,
+    }
+}
+
+fn score_linear_decay(ctx: &ScoringContext) -> ScoringOutcome {
+    let points = if ctx.correct {
+        let step_size = (MAX_SCORE / ctx.time_limit_sec as u32).max(1);
+        let secs_elapsed = ctx.time_taken_ms / 1000;
+        MAX_SCORE
+            .saturating_sub(secs_elapsed as u32 * step_size)
+            .max(1)
+    } else {
+        0
+    };
+    ScoringOutcome {
+        points,
+        position: None,
+        streak_multiplier: 1.0,
+    }
+}
+
+fn score_fixed(ctx: &ScoringContext) -> ScoringOutcome {
+    let points = if ctx.correct { MAX_SCORE } else { 0 };
+    ScoringOutcome {
+        points,
+        position: None,
+        streak_multiplier: 1.0,
+    }
+}
+
+fn score_streak_bonus(ctx: &ScoringContext) -> ScoringOutcome {
+    let streak_multiplier = 1.0 + ctx.streak as f64 * 0.5;
+    let points = if ctx.correct {
+        (MAX_SCORE as f64 * streak_multiplier) as u32
+    } else {
+        0
+    };
+    ScoringOutcome {
+        points,
+        position: None,
+        streak_multiplier,
+    }
+}
+
+fn score_position_race(ctx: &ScoringContext) -> ScoringOutcome {
+    if !ctx.correct {
+        return ScoringOutcome {
+            points: 0,
+            position: None,
+            streak_multiplier: 1.0,
+        };
+    }
+    let pos = ctx.correct_answer_count + 1;
+    ScoringOutcome {
+        points: ScoringRule::position_points(pos),
+        position: Some(pos),
+        streak_multiplier: 1.0,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use rstest::rstest;
 
-    // ── T006: apply_streak_multiplier ─────────────────────────────────────────
-
-    #[rstest]
-    #[case(0, 1000)]
-    #[case(1, 1500)]
-    #[case(2, 2000)]
-    #[case(3, 2500)]
-    fn streak_bonus_multiplier(#[case] streak: u32, #[case] expected: u32) {
-        assert_eq!(
-            ScoringRule::StreakBonus.apply_streak_multiplier(1000, streak),
-            expected
-        );
+    fn ctx(correct: bool) -> ScoringContext {
+        ScoringContext {
+            correct,
+            time_taken_ms: 0,
+            time_limit_sec: 20,
+            streak: 0,
+            correct_answer_count: 0,
+        }
     }
 
+    // ── StreakBonus ───────────────────────────────────────────────────────────
+
     #[rstest]
-    #[case(ScoringRule::FixedScore, 1000, 5, 1000)]
-    #[case(ScoringRule::SteppedDecay, 850, 3, 850)]
-    #[case(ScoringRule::LinearDecay, 750, 2, 750)]
-    fn non_streak_rules_unaffected_by_multiplier(
-        #[case] rule: ScoringRule,
-        #[case] base: u32,
+    #[case(0, 1000, 1.0)]
+    #[case(1, 1500, 1.5)]
+    #[case(2, 2000, 2.0)]
+    #[case(3, 2500, 2.5)]
+    fn streak_bonus_multiplier(
         #[case] streak: u32,
-        #[case] expected: u32,
+        #[case] expected_pts: u32,
+        #[case] expected_mult: f64,
     ) {
-        assert_eq!(rule.apply_streak_multiplier(base, streak), expected);
+        let ctx = ScoringContext {
+            streak,
+            ..ctx(true)
+        };
+        let out = ScoringRule::StreakBonus.score(&ctx);
+        assert_eq!(out.points, expected_pts);
+        assert!((out.streak_multiplier - expected_mult).abs() < f64::EPSILON);
     }
 
     #[rstest]
     #[case(true, 1000)]
     #[case(false, 0)]
-    fn streak_bonus_calculate_points(#[case] correct: bool, #[case] expected: u32) {
+    fn streak_bonus_correct_vs_wrong(#[case] correct: bool, #[case] expected: u32) {
         assert_eq!(
-            ScoringRule::StreakBonus.calculate_points(correct, 0, 20),
+            ScoringRule::StreakBonus.score(&ctx(correct)).points,
             expected
         );
     }
 
-    // ── T005: position_points schedule ───────────────────────────────────────
+    #[rstest]
+    #[case(ScoringRule::FixedScore)]
+    #[case(ScoringRule::SteppedDecay)]
+    #[case(ScoringRule::LinearDecay)]
+    fn non_streak_rules_always_report_multiplier_1_0(#[case] rule: ScoringRule) {
+        let ctx = ScoringContext {
+            streak: 5,
+            ..ctx(true)
+        };
+        assert!((rule.score(&ctx).streak_multiplier - 1.0).abs() < f64::EPSILON);
+    }
+
+    // ── PositionRace ──────────────────────────────────────────────────────────
 
     #[rstest]
     #[case(1, 1000)]
@@ -125,5 +210,27 @@ mod tests {
     #[case(10, 250)]
     fn position_race_point_schedule(#[case] pos: u32, #[case] expected: u32) {
         assert_eq!(ScoringRule::position_points(pos), expected);
+    }
+
+    #[rstest]
+    #[case(0, 1000)] // first correct → pos 1
+    #[case(1, 750)] // second correct → pos 2
+    #[case(2, 500)] // third correct → pos 3
+    #[case(3, 250)] // fourth+ correct → pos 4
+    fn position_race_score_by_count(#[case] prior_count: u32, #[case] expected_pts: u32) {
+        let ctx = ScoringContext {
+            correct_answer_count: prior_count,
+            ..ctx(true)
+        };
+        let out = ScoringRule::PositionRace.score(&ctx);
+        assert_eq!(out.points, expected_pts);
+        assert_eq!(out.position, Some(prior_count + 1));
+    }
+
+    #[test]
+    fn position_race_wrong_answer_yields_zero_and_no_position() {
+        let out = ScoringRule::PositionRace.score(&ctx(false));
+        assert_eq!(out.points, 0);
+        assert_eq!(out.position, None);
     }
 }
