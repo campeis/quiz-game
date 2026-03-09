@@ -8,7 +8,9 @@ A real-time multiplayer quiz game where a host uploads questions, players join v
 
 - **Host a quiz**: Upload a text-based quiz file, get a join code, and control the game flow
 - **Join and play**: Enter a join code and display name to compete in real time
-- **Configurable scoring rules**: Host chooses Stepped Decay, Linear Decay, or Fixed Score before the game starts
+- **Player avatars**: Choose an emoji avatar when joining; displayed throughout the lobby and leaderboard
+- **Configurable scoring rules**: Host chooses Stepped Decay, Linear Decay, Fixed Score, Position Race, or Streak Bonus before the game starts
+- **Configurable time limits**: Per-question time limits (10–60 s) set in the quiz file
 - **Live questions with countdown**: Timed questions with instant feedback on answers
 - **Real-time leaderboard**: Scores update live after each question with ranked standings
 - **WebSocket communication**: Low-latency game state synchronization between host and players
