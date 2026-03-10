@@ -63,7 +63,14 @@ export function Lobby({
 
 	return (
 		<Card style={{ maxWidth: "500px", width: "100%", textAlign: "center" }}>
-			<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.md }}>
+			<h2
+				style={{
+					color: colors.text,
+					fontSize: typography.sizes.lg,
+					fontFamily: typography.fontDisplay,
+					marginBottom: spacing.md,
+				}}
+			>
 				Waiting for Players
 			</h2>
 			<div
@@ -87,6 +94,7 @@ export function Lobby({
 					style={{
 						color: colors.primary,
 						fontSize: typography.sizes.display,
+						fontFamily: typography.fontDisplay,
 						fontWeight: typography.weights.bold,
 						letterSpacing: "0.1em",
 					}}
@@ -113,8 +121,10 @@ export function Lobby({
 							key={p.id}
 							style={{
 								padding: spacing.sm,
-								borderBottom: `1px solid ${colors.border}`,
+								borderBottom: `1px solid ${colors.borderDim}`,
 								color: colors.text,
+								fontFamily: typography.fontBody,
+								fontSize: typography.sizes.xl,
 							}}
 						>
 							{p.avatar} {p.name}
@@ -214,7 +224,7 @@ export function Lobby({
 								backgroundColor: colors.surface,
 								color: colors.text,
 								fontSize: typography.sizes.md,
-								fontFamily: typography.fontFamily,
+								fontFamily: typography.fontBody,
 							}}
 						/>
 						<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>

@@ -1,0 +1,158 @@
+/* Arcade Neon UI — Global Styles
+ * Fonts: Press Start 2P (OFL 1.1, © CodeMan38) + VT323 (OFL 1.1, © Peter Hull)
+ * Both fonts are self-hosted in frontend/src/assets/fonts/
+ */
+
+/* ============================================================
+   @font-face declarations
+   font-display: swap — text always visible; arcade font loads
+   without causing invisible-text (FOIT) period.
+   ============================================================ */
+
+@font-face {
+	font-family: "Press Start 2P";
+	src: url("../assets/fonts/PressStart2P-Regular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+	/* Press Start 2P covers Basic Latin + Latin-1 Supplement only.
+     unicode-range prevents invisible squares for unsupported glyphs
+     (e.g. Cyrillic, CJK player names) — system monospace handles those. */
+	unicode-range: U+0020-007E, U+00A0-00FF;
+}
+
+@font-face {
+	font-family: "VT323";
+	src: url("../assets/fonts/VT323-Regular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+	/* VT323 has broad Latin coverage — no unicode-range restriction needed.
+     Fallback: player names with non-Latin characters render in system monospace. */
+}
+
+/* ============================================================
+   Base styles
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #050510;
+	color: #e0f8ff;
+	font-family: "VT323", monospace;
+	margin: 0;
+	padding: 0;
+}
+
+/* ============================================================
+   @keyframes
+   All animations use opacity / transform / filter only so they
+   are GPU-composited and do not trigger layout.
+   ============================================================ */
+
+/* Generic neon pulse — opacity modulation only.
+   Color comes from the element's inline boxShadow (neonPulseStyle).
+   This makes the keyframe color-agnostic. */
+@keyframes neonPulse {
+	0%,
+	100% {
+		opacity: 0.7;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+/* Correct answer burst — scale + neon green glow */
+@keyframes correctBurst {
+	0% {
+		transform: scale(1);
+		filter: drop-shadow(0 0 4px rgba(57, 255, 20, 0.4));
+	}
+	25% {
+		transform: scale(1.08);
+		filter: drop-shadow(0 0 12px rgba(57, 255, 20, 0.9))
+			drop-shadow(0 0 24px rgba(57, 255, 20, 0.5));
+	}
+	50% {
+		transform: scale(1.12);
+		filter: drop-shadow(0 0 20px rgba(57, 255, 20, 1)) drop-shadow(0 0 40px rgba(57, 255, 20, 0.6));
+	}
+	75% {
+		transform: scale(1.05);
+		filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.6));
+	}
+	100% {
+		transform: scale(1);
+		filter: drop-shadow(0 0 4px rgba(57, 255, 20, 0.3));
+	}
+}
+
+/* Incorrect answer flash — background + red glow */
+@keyframes incorrectFlash {
+	0%,
+	100% {
+		filter: drop-shadow(0 0 4px rgba(255, 49, 49, 0.3));
+	}
+	25% {
+		filter: drop-shadow(0 0 10px rgba(255, 49, 49, 0.8))
+			drop-shadow(0 0 20px rgba(255, 49, 49, 0.4));
+	}
+	50% {
+		filter: drop-shadow(0 0 18px rgba(255, 49, 49, 1)) drop-shadow(0 0 35px rgba(255, 49, 49, 0.5));
+	}
+	75% {
+		filter: drop-shadow(0 0 8px rgba(255, 49, 49, 0.6));
+	}
+}
+
+/* Neon shimmer — multi-color text-shadow cycling */
+@keyframes neonShimmer {
+	0% {
+		text-shadow:
+			0 0 4px rgba(0, 255, 255, 0.4),
+			0 0 8px rgba(255, 0, 255, 0.1);
+	}
+	33% {
+		text-shadow:
+			0 0 8px rgba(0, 255, 255, 0.9),
+			0 0 16px rgba(255, 0, 255, 0.5),
+			0 0 24px rgba(57, 255, 20, 0.2);
+	}
+	66% {
+		text-shadow:
+			0 0 6px rgba(255, 0, 255, 0.8),
+			0 0 12px rgba(0, 255, 255, 0.4),
+			0 0 20px rgba(255, 241, 31, 0.2);
+	}
+	100% {
+		text-shadow:
+			0 0 4px rgba(0, 255, 255, 0.4),
+			0 0 8px rgba(255, 0, 255, 0.1);
+	}
+}
+
+/* ============================================================
+   Reduced motion — suppress all animations/transitions.
+   Static neon colors and box-shadows remain visible.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		/* biome-ignore lint/complexity/noImportantStyles: !important is required to override inline styles set by JS animation libraries */
+		animation-duration: 0.01ms !important;
+		/* biome-ignore lint/complexity/noImportantStyles: required override */
+		animation-iteration-count: 1 !important;
+		/* biome-ignore lint/complexity/noImportantStyles: required override */
+		transition-duration: 0.01ms !important;
+		/* biome-ignore lint/complexity/noImportantStyles: required override */
+		scroll-behavior: auto !important;
+	}
+}

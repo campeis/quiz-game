@@ -43,7 +43,14 @@ export function QuizUpload({ onQuizUploaded }: QuizUploadProps) {
 
 	return (
 		<Card style={{ maxWidth: "500px", width: "100%" }}>
-			<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.md }}>
+			<h2
+				style={{
+					color: colors.text,
+					fontSize: typography.sizes.lg,
+					fontFamily: typography.fontDisplay,
+					marginBottom: spacing.md,
+				}}
+			>
 				Upload Quiz File
 			</h2>
 			<p style={{ color: colors.textSecondary, marginBottom: spacing.lg }}>
@@ -60,7 +67,7 @@ export function QuizUpload({ onQuizUploaded }: QuizUploadProps) {
 					padding: spacing.sm,
 					marginBottom: spacing.lg,
 					color: colors.text,
-					fontFamily: typography.fontFamily,
+					fontFamily: typography.fontBody,
 				}}
 			/>
 			<Button onClick={handleUpload} loading={loading} style={{ width: "100%" }}>

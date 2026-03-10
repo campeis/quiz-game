@@ -78,7 +78,7 @@ export function PlayerPage() {
 				alignItems: "center",
 				justifyContent: "center",
 				padding: spacing.lg,
-				fontFamily: typography.fontFamily,
+				fontFamily: typography.fontBody,
 			}}
 		>
 			{connectionState === "connecting" && phase !== "join" && (
@@ -91,7 +91,15 @@ export function PlayerPage() {
 
 			{phase === "starting" && (
 				<div style={{ textAlign: "center" }}>
-					<h2 style={{ color: colors.text, fontSize: typography.sizes.display }}>Get Ready!</h2>
+					<h2
+						style={{
+							color: colors.primary,
+							fontSize: typography.sizes.xl,
+							fontFamily: typography.fontDisplay,
+						}}
+					>
+						Get Ready!
+					</h2>
 					<p style={{ color: colors.textSecondary, fontSize: typography.sizes.lg }}>
 						The quiz is about to begin...
 					</p>

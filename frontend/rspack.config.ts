@@ -43,6 +43,9 @@ export default defineConfig({
 		new rspack.HtmlRspackPlugin({ template: "./src/index.html" }),
 		isDev && new RefreshPlugin(),
 	].filter(Boolean),
+	experiments: {
+		css: true,
+	},
 	performance: {
 		maxAssetSize: 300_000,
 		maxEntrypointSize: 300_000,

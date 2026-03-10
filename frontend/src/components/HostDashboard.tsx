@@ -1,6 +1,7 @@
 import type { GameState } from "../hooks/useGameState";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
+import { neonBoxShadow } from "./ui/neon";
 import { Timer } from "./ui/Timer";
 import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
@@ -26,7 +27,13 @@ export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) 
 					marginBottom: spacing.md,
 				}}
 			>
-				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
+				<span
+					style={{
+						color: colors.textSecondary,
+						fontSize: typography.sizes.sm,
+						fontFamily: typography.fontDisplay,
+					}}
+				>
 					Question {currentQuestion.question_index + 1} of {currentQuestion.total_questions}
 				</span>
 				<Timer
@@ -39,6 +46,7 @@ export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) 
 				style={{
 					color: colors.text,
 					fontSize: typography.sizes.xl,
+					fontFamily: typography.fontBody,
 					marginBottom: spacing.lg,
 					textAlign: "center",
 				}}
@@ -55,7 +63,9 @@ export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) 
 							backgroundColor: colors.surface,
 							borderRadius: borderRadius.md,
 							color: colors.text,
-							border: `1px solid ${colors.border}`,
+							fontFamily: typography.fontBody,
+							fontSize: typography.sizes.xl,
+							border: `1px solid ${colors.borderDim}`,
 						}}
 					>
 						{option}
@@ -85,6 +95,7 @@ export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) 
 								width: `${answeredRatio * 100}%`,
 								height: "100%",
 								backgroundColor: colors.primary,
+								boxShadow: neonBoxShadow(colors.primary, "low"),
 								borderRadius: borderRadius.full,
 								transition: "width 0.3s ease",
 							}}
@@ -95,7 +106,12 @@ export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) 
 			{leaderboard.length > 0 && (
 				<div>
 					<h3
-						style={{ color: colors.text, fontSize: typography.sizes.lg, marginBottom: spacing.sm }}
+						style={{
+							color: colors.text,
+							fontSize: typography.sizes.lg,
+							fontFamily: typography.fontDisplay,
+							marginBottom: spacing.sm,
+						}}
 					>
 						Standings
 					</h3>
@@ -106,14 +122,22 @@ export function HostDashboard({ gameState, onEndQuestion }: HostDashboardProps) 
 								display: "flex",
 								justifyContent: "space-between",
 								padding: spacing.sm,
-								borderBottom: `1px solid ${colors.border}`,
+								borderBottom: `1px solid ${colors.borderDim}`,
 								color: colors.text,
 							}}
 						>
 							<span>
 								#{entry.rank} {entry.avatar} {entry.display_name}
 							</span>
-							<span style={{ fontWeight: typography.weights.semibold }}>{entry.score} pts</span>
+							<span
+								style={{
+									fontWeight: typography.weights.semibold,
+									fontFamily: typography.fontDisplay,
+									fontSize: typography.sizes.sm,
+								}}
+							>
+								{entry.score} pts
+							</span>
 						</div>
 					))}
 				</div>

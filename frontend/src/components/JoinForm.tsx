@@ -65,7 +65,14 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 					handleSubmit();
 				}}
 			>
-				<h2 style={{ color: colors.text, fontSize: typography.sizes.xl, marginBottom: spacing.lg }}>
+				<h2
+					style={{
+						color: colors.text,
+						fontSize: typography.sizes.lg,
+						fontFamily: typography.fontDisplay,
+						marginBottom: spacing.lg,
+					}}
+				>
 					Join a Game
 				</h2>
 				<label
@@ -100,7 +107,7 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 						borderRadius: "8px",
 						backgroundColor: colors.background,
 						color: colors.text,
-						fontFamily: typography.fontFamily,
+						fontFamily: typography.fontDisplay,
 						boxSizing: "border-box",
 					}}
 				/>
@@ -160,7 +167,7 @@ export function JoinForm({ onJoined }: JoinFormProps) {
 							borderRadius: "8px",
 							backgroundColor: colors.background,
 							color: colors.text,
-							fontFamily: typography.fontFamily,
+							fontFamily: typography.fontBody,
 							boxSizing: "border-box",
 						}}
 					/>

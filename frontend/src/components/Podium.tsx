@@ -1,4 +1,6 @@
+import { useReducedMotion } from "../hooks/useReducedMotion";
 import type { LeaderboardEntryPayload } from "../services/messages";
+import { neonBoxShadow, neonTextShadow } from "./ui/neon";
 import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
 interface PodiumProps {
@@ -7,8 +9,8 @@ interface PodiumProps {
 
 const PODIUM_COLORS = {
 	1: colors.winner,
-	2: "#94a3b8",
-	3: "#c2773a",
+	2: colors.primary,
+	3: colors.accent,
 } as const;
 
 const PODIUM_HEIGHTS = {
@@ -26,6 +28,7 @@ const LABELS = {
 function PodiumSlot({ rank, players }: { rank: 1 | 2 | 3; players: LeaderboardEntryPayload[] }) {
 	const color = PODIUM_COLORS[rank];
 	const height = PODIUM_HEIGHTS[rank];
+	const prefersReducedMotion = useReducedMotion();
 
 	return (
 		<section
@@ -63,10 +66,14 @@ function PodiumSlot({ rank, players }: { rank: 1 | 2 | 3; players: LeaderboardEn
 							<span style={{ fontSize: typography.sizes.xl }}>{p.avatar}</span>
 							<span
 								style={{
-									color: colors.text,
-									fontSize: typography.sizes.sm,
+									color: rank === 1 ? colors.winner : colors.text,
+									fontSize: typography.sizes.lg,
+									fontFamily: typography.fontBody,
 									fontWeight: typography.weights.semibold,
 									textAlign: "center",
+									textShadow: rank === 1 ? neonTextShadow(colors.winner, "medium") : undefined,
+									animation:
+										rank === 1 && !prefersReducedMotion ? "neonShimmer 1.5s infinite" : "none",
 								}}
 							>
 								{p.display_name}
@@ -92,6 +99,8 @@ function PodiumSlot({ rank, players }: { rank: 1 | 2 | 3; players: LeaderboardEn
 					width: "100%",
 					height,
 					backgroundColor: players.length > 0 ? color : colors.surface,
+					boxShadow:
+						rank === 1 && players.length > 0 ? neonBoxShadow(colors.winner, "high") : undefined,
 					borderRadius: `${borderRadius.sm} ${borderRadius.sm} 0 0`,
 					display: "flex",
 					alignItems: "center",
@@ -102,6 +111,7 @@ function PodiumSlot({ rank, players }: { rank: 1 | 2 | 3; players: LeaderboardEn
 				<span
 					style={{
 						fontSize: typography.sizes.xl,
+						fontFamily: typography.fontDisplay,
 						fontWeight: typography.weights.bold,
 						color: players.length > 0 ? colors.background : colors.textSecondary,
 					}}

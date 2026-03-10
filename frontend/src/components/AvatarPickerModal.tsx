@@ -60,7 +60,7 @@ export function AvatarPickerModal({ open, selected, onSelect, onClose }: AvatarP
 			style={{
 				position: "fixed",
 				inset: 0,
-				backgroundColor: "rgba(0, 0, 0, 0.75)",
+				backgroundColor: "rgba(5, 5, 16, 0.92)",
 				zIndex: 1000,
 				display: "flex",
 				alignItems: "center",
@@ -75,7 +75,7 @@ export function AvatarPickerModal({ open, selected, onSelect, onClose }: AvatarP
 				style={{
 					position: "relative",
 					backgroundColor: colors.surface,
-					border: `1px solid ${colors.border}`,
+					border: `2px solid ${colors.border}`,
 					borderRadius: borderRadius.lg,
 					padding: spacing.lg,
 					width: "90%",
@@ -115,7 +115,7 @@ export function AvatarPickerModal({ open, selected, onSelect, onClose }: AvatarP
 					style={{
 						color: colors.text,
 						fontSize: typography.sizes.lg,
-						fontFamily: typography.fontFamily,
+						fontFamily: typography.fontDisplay,
 						margin: 0,
 					}}
 				>

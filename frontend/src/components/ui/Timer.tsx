@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { neonBoxShadow, neonTextShadow } from "./neon";
 import { borderRadius, colors, spacing, typography } from "./tokens";
 
 interface TimerProps {
@@ -9,6 +11,7 @@ interface TimerProps {
 
 export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 	const [remaining, setRemaining] = useState(totalSeconds);
+	const prefersReducedMotion = useReducedMotion();
 
 	useEffect(() => {
 		setRemaining(totalSeconds);
@@ -47,8 +50,9 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 				style={{
 					fontSize: typography.sizes.xxl,
 					fontWeight: typography.weights.bold,
+					fontFamily: typography.fontDisplay,
 					color: urgencyColor,
-					fontFamily: typography.fontFamily,
+					textShadow: neonTextShadow(urgencyColor, "medium"),
 				}}
 				role="timer"
 				aria-label={`${remaining} seconds remaining`}
@@ -60,7 +64,7 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 					width: "100%",
 					maxWidth: "200px",
 					height: "6px",
-					backgroundColor: colors.border,
+					backgroundColor: colors.borderDim,
 					borderRadius: borderRadius.full,
 					overflow: "hidden",
 				}}
@@ -71,7 +75,10 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 						height: "100%",
 						backgroundColor: urgencyColor,
 						borderRadius: borderRadius.full,
-						transition: "width 1s linear, background-color 0.3s ease",
+						boxShadow: neonBoxShadow(urgencyColor, "low"),
+						transition: prefersReducedMotion
+							? "none"
+							: "width 1s linear, background-color 0.3s ease",
 					}}
 				/>
 			</div>

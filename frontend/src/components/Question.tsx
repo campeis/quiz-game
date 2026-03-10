@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 import type { ScoringRuleName } from "../services/messages";
 import { Card } from "./ui/Card";
+import { neonBoxShadow } from "./ui/neon";
 import { Timer } from "./ui/Timer";
 import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
@@ -51,6 +53,7 @@ export function Question({
 	scoringRule,
 }: QuestionProps) {
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+	const prefersReducedMotion = useReducedMotion();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: questionIndex is intentionally used to reset state on question change
 	useEffect(() => {
@@ -68,18 +71,22 @@ export function Question({
 	const getOptionStyle = (index: number): React.CSSProperties => {
 		let borderColor = colors.border;
 		let backgroundColor = colors.surface;
+		let boxShadow: string | undefined;
 
 		if (answerResult) {
 			if (index === answerResult.correct_index) {
 				borderColor = colors.success;
 				backgroundColor = `${colors.success}15`;
+				boxShadow = neonBoxShadow(colors.success, "high");
 			} else if (index === selectedIndex && !answerResult.correct) {
 				borderColor = colors.error;
 				backgroundColor = `${colors.error}15`;
+				boxShadow = neonBoxShadow(colors.error, "medium");
 			}
 		} else if (index === selectedIndex) {
 			borderColor = colors.primary;
 			backgroundColor = `${colors.primary}15`;
+			boxShadow = neonBoxShadow(colors.primary, "medium");
 		}
 
 		return {
@@ -90,13 +97,14 @@ export function Question({
 			borderStyle: "solid",
 			borderColor,
 			backgroundColor,
+			boxShadow,
 			color: colors.text,
-			fontSize: typography.sizes.lg,
+			fontSize: typography.sizes.xl,
 			cursor: hasAnswered ? "default" : "pointer",
 			transition: "all 0.2s ease",
 			textAlign: "left",
 			width: "100%",
-			fontFamily: typography.fontFamily,
+			fontFamily: typography.fontBody,
 		};
 	};
 
@@ -110,10 +118,22 @@ export function Question({
 					marginBottom: spacing.md,
 				}}
 			>
-				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
+				<span
+					style={{
+						color: colors.textSecondary,
+						fontSize: typography.sizes.sm,
+						fontFamily: typography.fontDisplay,
+					}}
+				>
 					Question {questionIndex + 1} of {totalQuestions}
 				</span>
-				<span style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
+				<span
+					style={{
+						color: colors.textSecondary,
+						fontSize: typography.sizes.sm,
+						fontFamily: typography.fontBody,
+					}}
+				>
 					{SCORING_RULE_LABELS[scoringRule]}
 				</span>
 				<Timer
@@ -126,6 +146,7 @@ export function Question({
 				style={{
 					color: colors.text,
 					fontSize: typography.sizes.xl,
+					fontFamily: typography.fontBody,
 					marginBottom: spacing.lg,
 					textAlign: "center",
 				}}
@@ -154,6 +175,11 @@ export function Question({
 						borderRadius: borderRadius.md,
 						backgroundColor: answerResult.correct ? `${colors.success}15` : `${colors.error}15`,
 						textAlign: "center",
+						animation: prefersReducedMotion
+							? "none"
+							: answerResult.correct
+								? "correctBurst 0.5s ease-out forwards"
+								: "incorrectFlash 0.6s ease-out forwards",
 					}}
 				>
 					<p

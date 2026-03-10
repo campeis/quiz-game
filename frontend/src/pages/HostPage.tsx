@@ -76,13 +76,14 @@ export function HostPage() {
 				alignItems: "center",
 				justifyContent: "center",
 				padding: spacing.lg,
-				fontFamily: typography.fontFamily,
+				fontFamily: typography.fontBody,
 			}}
 		>
 			<h1
 				style={{
-					color: colors.text,
-					fontSize: typography.sizes.xxl,
+					color: colors.primary,
+					fontSize: typography.sizes.xl,
+					fontFamily: typography.fontDisplay,
 					marginBottom: spacing.lg,
 				}}
 			>
