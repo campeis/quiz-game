@@ -1,8 +1,6 @@
-import { useReducedMotion } from "../hooks/useReducedMotion";
 import type { LeaderboardEntryPayload } from "../services/messages";
 import { Podium } from "./Podium";
 import { Card } from "./ui/Card";
-import { neonBoxShadow, neonTextShadow } from "./ui/neon";
 import { colors, spacing, typography } from "./ui/tokens";
 
 interface LeaderboardProps {
@@ -11,7 +9,6 @@ interface LeaderboardProps {
 }
 
 export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
-	const prefersReducedMotion = useReducedMotion();
 	return (
 		<Card
 			style={{ maxWidth: "500px", width: "100%" }}
@@ -24,7 +21,6 @@ export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
 					fontFamily: typography.fontDisplay,
 					marginBottom: spacing.lg,
 					textAlign: "center",
-					animation: isFinal && !prefersReducedMotion ? "neonShimmer 1.5s infinite" : "none",
 				}}
 			>
 				{isFinal ? "Final Results" : "Leaderboard"}
@@ -40,25 +36,19 @@ export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
 							justifyContent: "space-between",
 							alignItems: "center",
 							padding: spacing.md,
-							borderBottom:
-								entry.rank === 1 ? `1px solid ${colors.winner}` : `1px solid ${colors.borderDim}`,
-							backgroundColor:
-								entry.rank === 1
-									? `${colors.winner}15`
-									: entry.is_winner
-										? `${colors.primary}15`
-										: "transparent",
-							boxShadow: entry.rank === 1 ? neonBoxShadow(colors.winner, "high") : undefined,
+							borderBottom: `1px solid ${colors.borderDim}`,
+							borderLeft: entry.rank === 1 ? `3px solid ${colors.winner}` : `3px solid transparent`,
+							backgroundColor: entry.rank === 1 ? `${colors.winner}0a` : "transparent",
 						}}
 					>
 						<div style={{ display: "flex", alignItems: "center", gap: spacing.md }}>
 							<span
 								style={{
-									fontSize: typography.sizes.xl,
+									fontSize: typography.sizes.base,
 									fontFamily: typography.fontDisplay,
 									fontWeight: typography.weights.bold,
 									color: entry.rank === 1 ? colors.winner : colors.textSecondary,
-									minWidth: "32px",
+									minWidth: "28px",
 								}}
 							>
 								#{entry.rank}
@@ -70,14 +60,15 @@ export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
 										fontFamily: typography.fontBody,
 										fontSize: typography.sizes.xl,
 										fontWeight: typography.weights.semibold,
-										textShadow:
-											entry.rank === 1 ? neonTextShadow(colors.winner, "medium") : undefined,
+										margin: 0,
 									}}
 								>
 									{entry.avatar} {entry.display_name}
-									{entry.is_winner && " (Winner)"}
+									{entry.is_winner && " ★"}
 								</p>
-								<p style={{ color: colors.textSecondary, fontSize: typography.sizes.sm }}>
+								<p
+									style={{ color: colors.textSecondary, fontSize: typography.sizes.sm, margin: 0 }}
+								>
 									{entry.correct_count} correct
 								</p>
 							</div>
@@ -87,7 +78,7 @@ export function Leaderboard({ entries, isFinal }: LeaderboardProps) {
 								fontSize: typography.sizes.xl,
 								fontFamily: typography.fontDisplay,
 								fontWeight: typography.weights.bold,
-								color: colors.text,
+								color: entry.rank === 1 ? colors.winner : colors.text,
 							}}
 						>
 							{entry.score}

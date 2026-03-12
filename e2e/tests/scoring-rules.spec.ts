@@ -10,7 +10,7 @@ test.describe("Scoring Rules — Linear Decay", () => {
 	}) => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await expect(playerPage.getByText("Linear Decay")).toBeVisible();
 
 		await answerOptions(playerPage).first().click();
@@ -30,7 +30,7 @@ test.describe("Scoring Rules — Stepped Decay (default)", () => {
 
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await expect(playerPage.getByText("Stepped Decay")).toBeVisible();
 	});
 });
@@ -44,7 +44,7 @@ test.describe("Scoring Rules — Position Race", () => {
 	}) => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await expect(playerPage.getByText("Position Race")).toBeVisible();
 	});
 });

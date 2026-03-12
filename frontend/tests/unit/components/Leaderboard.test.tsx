@@ -55,7 +55,7 @@ describe("Leaderboard", () => {
 	it("marks winner with label", () => {
 		render(<Leaderboard entries={mockEntries} isFinal={true} />);
 
-		expect(screen.getByText(/Alice.*\(Winner\)/)).toBeInTheDocument();
+		expect(screen.getByText(/Alice.*★/)).toBeInTheDocument();
 	});
 
 	it("shows correct count", () => {

@@ -1,4 +1,4 @@
-/* Arcade Neon UI — Global Styles
+/* Arcade UI — Global Styles
  * Fonts: Press Start 2P (OFL 1.1, © CodeMan38) + VT323 (OFL 1.1, © Peter Hull)
  * Both fonts are self-hosted in frontend/src/assets/fonts/
  */
@@ -42,104 +42,97 @@
 }
 
 body {
-	background-color: #050510;
-	color: #e0f8ff;
+	background-color: #080808;
+	/* Subtle dot-grid texture */
+	background-image: radial-gradient(circle, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+	background-size: 28px 28px;
+	color: #ffffff;
 	font-family: "VT323", monospace;
 	margin: 0;
 	padding: 0;
 }
 
+/* Very faint scanline overlay — adds depth without distraction */
+body::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	background: repeating-linear-gradient(
+		0deg,
+		transparent,
+		transparent 3px,
+		rgba(0, 0, 0, 0.025) 3px,
+		rgba(0, 0, 0, 0.025) 4px
+	);
+	pointer-events: none;
+	z-index: 9999;
+}
+
 /* ============================================================
    @keyframes
-   All animations use opacity / transform / filter only so they
-   are GPU-composited and do not trigger layout.
    ============================================================ */
 
-/* Generic neon pulse — opacity modulation only.
-   Color comes from the element's inline boxShadow (neonPulseStyle).
-   This makes the keyframe color-agnostic. */
-@keyframes neonPulse {
-	0%,
-	100% {
-		opacity: 0.7;
+/* Card / panel entrance — fade up from below */
+@keyframes enterUp {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
 	}
-	50% {
+	to {
 		opacity: 1;
+		transform: translateY(0);
 	}
 }
 
-/* Correct answer burst — scale + neon green glow */
+/* Correct answer — quick scale pop */
 @keyframes correctBurst {
 	0% {
 		transform: scale(1);
-		filter: drop-shadow(0 0 4px rgba(57, 255, 20, 0.4));
 	}
-	25% {
-		transform: scale(1.08);
-		filter: drop-shadow(0 0 12px rgba(57, 255, 20, 0.9))
-			drop-shadow(0 0 24px rgba(57, 255, 20, 0.5));
+	30% {
+		transform: scale(1.04);
 	}
-	50% {
-		transform: scale(1.12);
-		filter: drop-shadow(0 0 20px rgba(57, 255, 20, 1)) drop-shadow(0 0 40px rgba(57, 255, 20, 0.6));
-	}
-	75% {
-		transform: scale(1.05);
-		filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.6));
+	60% {
+		transform: scale(0.98);
 	}
 	100% {
 		transform: scale(1);
-		filter: drop-shadow(0 0 4px rgba(57, 255, 20, 0.3));
 	}
 }
 
-/* Incorrect answer flash — background + red glow */
+/* Incorrect answer — horizontal shake */
 @keyframes incorrectFlash {
 	0%,
 	100% {
-		filter: drop-shadow(0 0 4px rgba(255, 49, 49, 0.3));
+		transform: translateX(0);
 	}
-	25% {
-		filter: drop-shadow(0 0 10px rgba(255, 49, 49, 0.8))
-			drop-shadow(0 0 20px rgba(255, 49, 49, 0.4));
+	20% {
+		transform: translateX(-5px);
 	}
-	50% {
-		filter: drop-shadow(0 0 18px rgba(255, 49, 49, 1)) drop-shadow(0 0 35px rgba(255, 49, 49, 0.5));
+	40% {
+		transform: translateX(5px);
 	}
-	75% {
-		filter: drop-shadow(0 0 8px rgba(255, 49, 49, 0.6));
+	60% {
+		transform: translateX(-3px);
+	}
+	80% {
+		transform: translateX(3px);
 	}
 }
 
-/* Neon shimmer — multi-color text-shadow cycling */
-@keyframes neonShimmer {
-	0% {
-		text-shadow:
-			0 0 4px rgba(0, 255, 255, 0.4),
-			0 0 8px rgba(255, 0, 255, 0.1);
-	}
-	33% {
-		text-shadow:
-			0 0 8px rgba(0, 255, 255, 0.9),
-			0 0 16px rgba(255, 0, 255, 0.5),
-			0 0 24px rgba(57, 255, 20, 0.2);
-	}
-	66% {
-		text-shadow:
-			0 0 6px rgba(255, 0, 255, 0.8),
-			0 0 12px rgba(0, 255, 255, 0.4),
-			0 0 20px rgba(255, 241, 31, 0.2);
-	}
+/* Timer urgency pulse — subtle opacity only */
+@keyframes urgencyPulse {
+	0%,
 	100% {
-		text-shadow:
-			0 0 4px rgba(0, 255, 255, 0.4),
-			0 0 8px rgba(255, 0, 255, 0.1);
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.6;
 	}
 }
 
 /* ============================================================
    Reduced motion — suppress all animations/transitions.
-   Static neon colors and box-shadows remain visible.
    ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {

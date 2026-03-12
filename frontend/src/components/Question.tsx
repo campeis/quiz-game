@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import type { ScoringRuleName } from "../services/messages";
 import { Card } from "./ui/Card";
-import { neonBoxShadow } from "./ui/neon";
 import { Timer } from "./ui/Timer";
 import { borderRadius, colors, spacing, typography } from "./ui/tokens";
 
@@ -69,39 +68,45 @@ export function Question({
 	};
 
 	const getOptionStyle = (index: number): React.CSSProperties => {
-		let borderColor = colors.border;
-		let backgroundColor = colors.surface;
-		let boxShadow: string | undefined;
+		let borderLeftColor = colors.border;
+		let borderLeftWidth = "2px";
+		let backgroundColor = colors.background;
+		let color = colors.text;
 
 		if (answerResult) {
 			if (index === answerResult.correct_index) {
-				borderColor = colors.success;
-				backgroundColor = `${colors.success}15`;
-				boxShadow = neonBoxShadow(colors.success, "high");
+				borderLeftColor = colors.success;
+				borderLeftWidth = "4px";
+				backgroundColor = `${colors.success}12`;
+				color = colors.success;
 			} else if (index === selectedIndex && !answerResult.correct) {
-				borderColor = colors.error;
-				backgroundColor = `${colors.error}15`;
-				boxShadow = neonBoxShadow(colors.error, "medium");
+				borderLeftColor = colors.error;
+				borderLeftWidth = "4px";
+				backgroundColor = `${colors.error}12`;
+				color = colors.error;
+			} else {
+				color = colors.textSecondary;
 			}
 		} else if (index === selectedIndex) {
-			borderColor = colors.primary;
-			backgroundColor = `${colors.primary}15`;
-			boxShadow = neonBoxShadow(colors.primary, "medium");
+			borderLeftColor = colors.primary;
+			borderLeftWidth = "4px";
+			backgroundColor = `${colors.primary}10`;
+			color = colors.primary;
 		}
 
 		return {
-			padding: spacing.lg,
+			padding: spacing.md,
 			marginBottom: spacing.sm,
 			borderRadius: borderRadius.md,
-			borderWidth: "2px",
-			borderStyle: "solid",
-			borderColor,
+			borderTop: `1px solid ${colors.border}`,
+			borderRight: `1px solid ${colors.border}`,
+			borderBottom: `1px solid ${colors.border}`,
+			borderLeft: `${borderLeftWidth} solid ${borderLeftColor}`,
 			backgroundColor,
-			boxShadow,
-			color: colors.text,
+			color,
 			fontSize: typography.sizes.xl,
 			cursor: hasAnswered ? "default" : "pointer",
-			transition: "all 0.2s ease",
+			transition: "border-left-color 0.15s ease, background-color 0.15s ease, color 0.15s ease",
 			textAlign: "left",
 			width: "100%",
 			fontFamily: typography.fontBody,
@@ -125,7 +130,7 @@ export function Question({
 						fontFamily: typography.fontDisplay,
 					}}
 				>
-					Question {questionIndex + 1} of {totalQuestions}
+					Q{questionIndex + 1}/{totalQuestions}
 				</span>
 				<span
 					style={{
@@ -173,13 +178,14 @@ export function Question({
 						marginTop: spacing.lg,
 						padding: spacing.md,
 						borderRadius: borderRadius.md,
-						backgroundColor: answerResult.correct ? `${colors.success}15` : `${colors.error}15`,
+						borderLeft: `4px solid ${answerResult.correct ? colors.success : colors.error}`,
+						backgroundColor: answerResult.correct ? `${colors.success}10` : `${colors.error}10`,
 						textAlign: "center",
 						animation: prefersReducedMotion
 							? "none"
 							: answerResult.correct
-								? "correctBurst 0.5s ease-out forwards"
-								: "incorrectFlash 0.6s ease-out forwards",
+								? "correctBurst 0.4s ease-out both"
+								: "incorrectFlash 0.5s ease-out both",
 					}}
 				>
 					<p
@@ -187,6 +193,7 @@ export function Question({
 							color: answerResult.correct ? colors.success : colors.error,
 							fontSize: typography.sizes.lg,
 							fontWeight: typography.weights.bold,
+							margin: 0,
 						}}
 					>
 						{answerResult.correct ? "Correct!" : "Incorrect"}
@@ -199,9 +206,10 @@ export function Question({
 									color: colors.primary,
 									fontSize: typography.sizes.md,
 									fontWeight: typography.weights.bold,
+									margin: `${spacing.xs} 0 0`,
 								}}
 							>
-								×{answerResult.streak_multiplier.toFixed(1)}
+								×{answerResult.streak_multiplier.toFixed(1)} streak
 							</p>
 						)}
 					{scoringRule === "position_race" &&
@@ -212,13 +220,20 @@ export function Question({
 									color: colors.primary,
 									fontSize: typography.sizes.md,
 									fontWeight: typography.weights.bold,
+									margin: `${spacing.xs} 0 0`,
 								}}
 							>
 								{toOrdinal(answerResult.position)} place
 							</p>
 						)}
-					<p style={{ color: colors.textSecondary, fontSize: typography.sizes.md }}>
-						+{answerResult.points_awarded} points
+					<p
+						style={{
+							color: colors.textSecondary,
+							fontSize: typography.sizes.md,
+							margin: `${spacing.xs} 0 0`,
+						}}
+					>
+						+{answerResult.points_awarded} pts
 					</p>
 				</div>
 			)}

@@ -15,7 +15,7 @@ test.describe("Streak Bonus Scoring Rule", () => {
 	}) => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await expect(playerPage.getByText("Streak Bonus")).toBeVisible();
 	});
 
@@ -24,11 +24,11 @@ test.describe("Streak Bonus Scoring Rule", () => {
 	}) => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await clickOption(playerPage, 2); // Paris — correct for Q1
 
 		await expect(playerPage.getByText("Correct!")).toBeVisible({ timeout: 10000 });
-		await expect(playerPage.getByText("+1000 points")).toBeVisible();
+		await expect(playerPage.getByText("+1000 pts")).toBeVisible();
 		// streak=0 before this answer → ×1.0 is suppressed
 		await expect(playerPage.getByText(/×\d/)).not.toBeVisible();
 	});
@@ -39,22 +39,22 @@ test.describe("Streak Bonus Scoring Rule", () => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
 		// Q1: correct → streak becomes 1; ×1.0 suppressed
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await clickOption(playerPage, 2); // Paris — correct
 		await expect(playerPage.getByText("Correct!")).toBeVisible({ timeout: 10000 });
 		await expect(playerPage.getByText(/×\d/)).not.toBeVisible();
 
 		// Q2: incorrect → streak resets to 0
-		await expect(playerPage.getByText("Question 2 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q2/")).toBeVisible({ timeout: 15000 });
 		await clickOption(playerPage, 0); // "5" — wrong (correct is "7" = index 1)
 		await expect(playerPage.getByText("Incorrect")).toBeVisible({ timeout: 10000 });
 		await expect(playerPage.getByText(/×\d/)).not.toBeVisible();
 
 		// Q3: correct with streak=0 → ×1.0 → 1000 pts, no multiplier badge
-		await expect(playerPage.getByText("Question 3 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q3/")).toBeVisible({ timeout: 15000 });
 		await clickOption(playerPage, 0); // Mercury — correct
 		await expect(playerPage.getByText("Correct!")).toBeVisible({ timeout: 10000 });
-		await expect(playerPage.getByText("+1000 points")).toBeVisible();
+		await expect(playerPage.getByText("+1000 pts")).toBeVisible();
 		await expect(playerPage.getByText(/×\d/)).not.toBeVisible();
 	});
 
@@ -64,19 +64,19 @@ test.describe("Streak Bonus Scoring Rule", () => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
 		// Q1: correct → streak becomes 1
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 		await clickOption(playerPage, 2); // Paris — correct
 		await expect(playerPage.getByText("Correct!")).toBeVisible({ timeout: 10000 });
 
 		// Q2: player does NOT answer — host ends question, simulating timeout
-		await expect(playerPage.getByText("Question 2 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q2/")).toBeVisible({ timeout: 15000 });
 		await hostPage.getByRole("button", { name: "End Question" }).click();
 
 		// Q3: correct with streak reset by timeout → ×1.0 → 1000 pts, no multiplier badge
-		await expect(playerPage.getByText("Question 3 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q3/")).toBeVisible({ timeout: 15000 });
 		await clickOption(playerPage, 0); // Mercury — correct
 		await expect(playerPage.getByText("Correct!")).toBeVisible({ timeout: 10000 });
-		await expect(playerPage.getByText("+1000 points")).toBeVisible();
+		await expect(playerPage.getByText("+1000 pts")).toBeVisible();
 		await expect(playerPage.getByText(/×\d/)).not.toBeVisible();
 	});
 });

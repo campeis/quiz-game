@@ -24,16 +24,16 @@ test.describe("Full Multiplayer Game", () => {
 		// Both players answer every question
 		for (let q = 1; q <= TOTAL_QUESTIONS; q++) {
 			await expect(
-				player1Page.getByText(`Question ${q} of ${TOTAL_QUESTIONS}`),
+				player1Page.getByText(`Q${q}/${TOTAL_QUESTIONS}`),
 			).toBeVisible({ timeout: 15000 });
 			await expect(
-				player2Page.getByText(`Question ${q} of ${TOTAL_QUESTIONS}`),
+				player2Page.getByText(`Q${q}/${TOTAL_QUESTIONS}`),
 			).toBeVisible({ timeout: 15000 });
 
 			await answerOptions(player1Page).first().click();
 			await answerOptions(player2Page).first().click();
 
-			await expect(player1Page.getByText(/\+\d+ points/)).toBeVisible({ timeout: 10000 });
+			await expect(player1Page.getByText(/\+\d+ pts/)).toBeVisible({ timeout: 10000 });
 		}
 
 		// Verify final leaderboard appears for all participants

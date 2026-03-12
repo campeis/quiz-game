@@ -14,8 +14,8 @@ test.describe("Position Race Scoring Rule", () => {
 	test.describe.configure({ timeout: 120_000 });
 	test.use({ lobbyOptions: { scoringRule: "Position Race" } });
 
-	// T016: first correct responder sees "1st place" and "+1000 points"
-	test("first correct responder sees '1st place' and '+1000 points'", async ({
+	// T016: first correct responder sees "1st place" and "+1000 pts"
+	test("first correct responder sees '1st place' and '+1000 pts'", async ({
 		twoPlayerLobby: { hostPage, player1Page, player2Page, joinCode },
 	}) => {
 		await joinPlayer(player1Page, joinCode, "Alice");
@@ -29,17 +29,17 @@ test.describe("Position Race Scoring Rule", () => {
 
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(player1Page.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(player1Page.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 
 		// Player 1 answers first (correct: index 2 = Paris)
 		await clickOption(player1Page, 2);
 		await expect(player1Page.getByText("Correct!")).toBeVisible({ timeout: 10000 });
 		await expect(player1Page.getByText("1st place")).toBeVisible();
-		await expect(player1Page.getByText("+1000 points")).toBeVisible();
+		await expect(player1Page.getByText("+1000 pts")).toBeVisible();
 	});
 
-	// T017: second correct responder sees "2nd place" and "+750 points"
-	test("second correct responder sees '2nd place' and '+750 points'", async ({
+	// T017: second correct responder sees "2nd place" and "+750 pts"
+	test("second correct responder sees '2nd place' and '+750 pts'", async ({
 		twoPlayerLobby: { hostPage, player1Page, player2Page, joinCode },
 	}) => {
 		await joinPlayer(player1Page, joinCode, "Alice");
@@ -53,8 +53,8 @@ test.describe("Position Race Scoring Rule", () => {
 
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(player1Page.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
-		await expect(player2Page.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(player1Page.getByText("Q1/")).toBeVisible({ timeout: 15000 });
+		await expect(player2Page.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 
 		// Player 1 answers first (1st place → 1000 pts), then Player 2 (2nd place → 750 pts)
 		await clickOption(player1Page, 2);
@@ -63,11 +63,11 @@ test.describe("Position Race Scoring Rule", () => {
 		await clickOption(player2Page, 2);
 		await expect(player2Page.getByText("Correct!")).toBeVisible({ timeout: 10000 });
 		await expect(player2Page.getByText("2nd place")).toBeVisible();
-		await expect(player2Page.getByText("+750 points")).toBeVisible();
+		await expect(player2Page.getByText("+750 pts")).toBeVisible();
 	});
 
 	// T017b: 3rd and 4th+ correct responders get 500 and 250 points respectively
-	test("3rd correct responder gets '+500 points' and 4th+ gets '+250 points'", async ({
+	test("3rd correct responder gets '+500 pts' and 4th+ gets '+250 pts'", async ({
 		browser,
 	}: { browser: Browser }) => {
 		const hostCtx = await browser.newContext();
@@ -98,7 +98,7 @@ test.describe("Position Race Scoring Rule", () => {
 			await hostPage.getByRole("button", { name: /Start/i }).click();
 
 			for (const page of [p1Page, p2Page, p3Page, p4Page]) {
-				await expect(page.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+				await expect(page.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 			}
 
 			// Answer in order: 1st, 2nd, 3rd, 4th
@@ -110,11 +110,11 @@ test.describe("Position Race Scoring Rule", () => {
 
 			await clickOption(p3Page, 2);
 			await expect(p3Page.getByText("3rd place")).toBeVisible({ timeout: 10000 });
-			await expect(p3Page.getByText("+500 points")).toBeVisible();
+			await expect(p3Page.getByText("+500 pts")).toBeVisible();
 
 			await clickOption(p4Page, 2);
 			await expect(p4Page.getByText(/place/)).toBeVisible({ timeout: 10000 });
-			await expect(p4Page.getByText("+250 points")).toBeVisible();
+			await expect(p4Page.getByText("+250 pts")).toBeVisible();
 		} finally {
 			await hostCtx.close();
 			await p1Ctx.close();
@@ -124,19 +124,19 @@ test.describe("Position Race Scoring Rule", () => {
 		}
 	});
 
-	// T018: incorrect answer shows "+0 points" and no position rank badge
-	test("incorrect answer shows '+0 points' and no position rank badge", async ({
+	// T018: incorrect answer shows "+0 pts" and no position rank badge
+	test("incorrect answer shows '+0 pts' and no position rank badge", async ({
 		lobby: { hostPage, playerPage },
 	}) => {
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 
-		await expect(playerPage.getByText("Question 1 of")).toBeVisible({ timeout: 15000 });
+		await expect(playerPage.getByText("Q1/")).toBeVisible({ timeout: 15000 });
 
 		// Answer wrong (index 0 = London, not Paris)
 		await clickOption(playerPage, 0);
 
 		await expect(playerPage.getByText("Incorrect")).toBeVisible({ timeout: 10000 });
-		await expect(playerPage.getByText("+0 points")).toBeVisible();
+		await expect(playerPage.getByText("+0 pts")).toBeVisible();
 		await expect(playerPage.getByText(/place/)).not.toBeVisible();
 	});
 
@@ -160,17 +160,17 @@ test.describe("Position Race Scoring Rule", () => {
 
 		for (let q = 1; q <= TOTAL_QUESTIONS; q++) {
 			await expect(
-				player1Page.getByText(`Question ${q} of ${TOTAL_QUESTIONS}`),
+				player1Page.getByText(`Q${q}/${TOTAL_QUESTIONS}`),
 			).toBeVisible({ timeout: 15000 });
 			await expect(
-				player2Page.getByText(`Question ${q} of ${TOTAL_QUESTIONS}`),
+				player2Page.getByText(`Q${q}/${TOTAL_QUESTIONS}`),
 			).toBeVisible({ timeout: 15000 });
 
 			// Alice always answers first (correctly), Bob answers second (correctly)
 			await clickOption(player1Page, correctIndices[q - 1]);
-			await expect(player1Page.getByText(/\+\d+ points/)).toBeVisible({ timeout: 10000 });
+			await expect(player1Page.getByText(/\+\d+ pts/)).toBeVisible({ timeout: 10000 });
 			await clickOption(player2Page, correctIndices[q - 1]);
-			await expect(player2Page.getByText(/\+\d+ points/)).toBeVisible({ timeout: 10000 });
+			await expect(player2Page.getByText(/\+\d+ pts/)).toBeVisible({ timeout: 10000 });
 		}
 
 		await expect(player1Page.getByText("Final Results")).toBeVisible({ timeout: 30000 });

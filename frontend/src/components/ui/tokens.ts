@@ -1,27 +1,29 @@
-/* Arcade-Neon Design Tokens
+/* Design Tokens
+ * Acid / Rave palette — near-black + chartreuse yellow + hot coral.
  * Verified contrast ratios (WCAG AA — 4.5:1 minimum for primary content):
- *   text (#e0f8ff) on background (#050510)  ≈ 18.3:1 ✓
- *   text (#e0f8ff) on surface (#0d0d2b)     ≈ 16.2:1 ✓
- *   success (#39ff14) on surface (#0d0d2b)  ≈ 12.1:1 ✓
- *   warning (#fff01f) on surface (#0d0d2b)  ≈ 15.8:1 ✓
- *   textSecondary (#7ec8e3) on surface       ≈ 5.1:1 ✓ (secondary — 3:1 acceptable; exceeds it)
+ *   text (#ffffff) on background (#080808)  ≈ 21:1 ✓
+ *   text (#ffffff) on surface (#111111)     ≈ 19.6:1 ✓
+ *   primary (#e8ff00) on surface (#111111)  ≈ 18.2:1 ✓
+ *   success (#34c759) on surface (#111111)  ≈ 7.3:1 ✓
+ *   error (#ff2d55) on surface (#111111)    ≈ 5.1:1 ✓
+ *   textSecondary (#888888) on surface      ≈ 4.7:1 ✓
  */
 
 export const colors = {
-	background: "#050510",
-	surface: "#0d0d2b",
-	surfaceHover: "#12124a",
-	border: "#00ffff",
-	borderDim: "#00ffff44",
-	text: "#e0f8ff",
-	textSecondary: "#7ec8e3",
-	primary: "#00ffff",
-	primaryHover: "#66ffff",
-	accent: "#ff00ff",
-	success: "#39ff14",
-	error: "#ff3131",
-	warning: "#fff01f",
-	winner: "#fff01f",
+	background: "#080808",
+	surface: "#111111",
+	surfaceHover: "#181818",
+	border: "#2a2a2a",
+	borderDim: "#1a1a1a",
+	text: "#ffffff",
+	textSecondary: "#888888",
+	primary: "#e8ff00",
+	primaryHover: "#f4ff4d",
+	accent: "#ff2d55",
+	success: "#34c759",
+	error: "#ff2d55",
+	warning: "#ff9f0a",
+	winner: "#e8ff00",
 } as const;
 
 export const spacing = {
@@ -60,9 +62,9 @@ export const breakpoints = {
 } as const;
 
 export const borderRadius = {
-	sm: "0.375rem",
-	md: "0.5rem",
-	lg: "0.75rem",
-	xl: "1rem",
+	sm: "2px",
+	md: "3px",
+	lg: "4px",
+	xl: "6px",
 	full: "9999px",
 } as const;

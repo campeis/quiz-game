@@ -34,7 +34,7 @@ describe("Question", () => {
 		render(<Question {...defaultProps} />);
 
 		expect(screen.getByText("What is 2+2?")).toBeInTheDocument();
-		expect(screen.getByText("Question 1 of 5")).toBeInTheDocument();
+		expect(screen.getByText("Q1/5")).toBeInTheDocument();
 		expect(screen.getByText("1")).toBeInTheDocument();
 		expect(screen.getByText("3")).toBeInTheDocument();
 		expect(screen.getByText("4")).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe("Question", () => {
 		);
 
 		expect(screen.getByText("Correct!")).toBeInTheDocument();
-		expect(screen.getByText("+1000 points")).toBeInTheDocument();
+		expect(screen.getByText("+1000 pts")).toBeInTheDocument();
 	});
 
 	it("shows incorrect result feedback", () => {
@@ -91,7 +91,7 @@ describe("Question", () => {
 		);
 
 		expect(screen.getByText("Incorrect")).toBeInTheDocument();
-		expect(screen.getByText("+0 points")).toBeInTheDocument();
+		expect(screen.getByText("+0 pts")).toBeInTheDocument();
 	});
 
 	it("displays the scoring rule name when scoringRule is linear_decay", () => {
@@ -115,7 +115,7 @@ describe("Question", () => {
 			/>,
 		);
 
-		expect(screen.getByText("×1.5")).toBeInTheDocument();
+		expect(screen.getByText("×1.5 streak")).toBeInTheDocument();
 	});
 
 	it("does NOT show streak multiplier when scoringRule is not streak_bonus", () => {
@@ -173,7 +173,7 @@ describe("Question", () => {
 
 		expect(screen.getByText("Correct!")).toBeInTheDocument();
 		expect(screen.getByText("2nd place")).toBeInTheDocument();
-		expect(screen.getByText("+750 points")).toBeInTheDocument();
+		expect(screen.getByText("+750 pts")).toBeInTheDocument();
 	});
 
 	it("shows '1st place' for position 1", () => {

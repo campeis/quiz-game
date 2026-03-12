@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
-import { neonBoxShadow, neonTextShadow } from "./neon";
 import { borderRadius, colors, spacing, typography } from "./tokens";
 
 interface TimerProps {
@@ -35,6 +34,7 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 	}, [running, remaining, onExpired]);
 
 	const ratio = remaining / totalSeconds;
+	const isUrgent = ratio <= 0.15;
 	const urgencyColor = ratio > 0.33 ? colors.primary : ratio > 0.15 ? colors.warning : colors.error;
 
 	return (
@@ -52,7 +52,9 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 					fontWeight: typography.weights.bold,
 					fontFamily: typography.fontDisplay,
 					color: urgencyColor,
-					textShadow: neonTextShadow(urgencyColor, "medium"),
+					animation:
+						isUrgent && !prefersReducedMotion ? "urgencyPulse 0.6s ease-in-out infinite" : "none",
+					display: "inline-block",
 				}}
 				role="timer"
 				aria-label={`${remaining} seconds remaining`}
@@ -63,7 +65,7 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 				style={{
 					width: "100%",
 					maxWidth: "200px",
-					height: "6px",
+					height: "4px",
 					backgroundColor: colors.borderDim,
 					borderRadius: borderRadius.full,
 					overflow: "hidden",
@@ -74,8 +76,6 @@ export function Timer({ totalSeconds, onExpired, running }: TimerProps) {
 						width: `${ratio * 100}%`,
 						height: "100%",
 						backgroundColor: urgencyColor,
-						borderRadius: borderRadius.full,
-						boxShadow: neonBoxShadow(urgencyColor, "low"),
 						transition: prefersReducedMotion
 							? "none"
 							: "width 1s linear, background-color 0.3s ease",
