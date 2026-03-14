@@ -15,6 +15,7 @@ A real-time multiplayer quiz game where a host uploads questions, players join v
 - **Real-time leaderboard**: Scores update live after each question with ranked standings
 - **WebSocket communication**: Low-latency game state synchronization between host and players
 - **Reconnection support**: Players and hosts can reconnect if disconnected mid-game
+- **Component browser**: Storybook showcase of all UI components with interactive controls
 
 ## Project Structure
 
@@ -44,7 +45,7 @@ docs/              Architecture documentation and guides
 |----------|-----------|
 | **Backend** | Rust (stable) with Axum web framework |
 | **Frontend** | React 19, TypeScript 5.x |
-| **Bundler** | Rspack |
+| **Bundler** | Rspack (app), Rsbuild/Storybook (component browser) |
 | **Linting** | Biome (frontend), Clippy + rustfmt (backend), yamllint (YAML) |
 | **Testing** | cargo test (backend), Vitest (frontend), Playwright (E2E) |
 | **Package Manager** | pnpm |
@@ -62,8 +63,9 @@ docs/              Architecture documentation and guides
 ### Quick Setup
 
 ```bash
-just setup    # Installs all dependencies (backend + frontend + e2e)
-just dev      # Starts backend and frontend dev servers
+just setup      # Installs all dependencies (backend + frontend + e2e)
+just dev        # Starts backend and frontend dev servers
+just storybook  # Start component browser at http://localhost:6006
 ```
 
 Open `http://localhost:5173` to access the application.

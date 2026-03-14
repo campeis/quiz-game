@@ -76,6 +76,27 @@ cd frontend && pnpm exec biome check src/
 cd frontend && pnpm exec biome check --fix src/
 ```
 
+## Component Browser
+
+```bash
+just storybook
+```
+
+Opens **http://localhost:6006** in your browser. Runs independently of the backend and main dev server — no quiz session or server required.
+
+The browser includes interactive **Controls** and **Actions** panels for every story. Supported components:
+
+| Category | Component | Stories |
+|----------|-----------|---------|
+| UI | Button | Primary, Secondary, Disabled, Loading |
+| UI | Card | Default, Empty, Compact Padding |
+| UI | Timer | Running, Paused, Low Time |
+| Feature | EmojiPicker | Default Selection, No Selection |
+| Feature | Leaderboard | Mid-game, Final Results, Empty |
+| Feature | Podium | Full (3 players), Single Winner, Empty |
+
+Story files live next to their components as `ComponentName.stories.tsx` and are never included in the production build.
+
 ## Build for Production
 
 ```bash
@@ -154,4 +175,5 @@ File format:
 | `just test-e2e`      | Playwright e2e tests                             |
 | `just lint`          | Check linting (clippy + rustfmt + biome + yamllint) |
 | `just lint-fix`      | Auto-fix linting issues                          |
+| `just storybook`     | Start component browser at http://localhost:6006 |
 | `just audit`         | Security audit (cargo audit + pnpm audit)        |

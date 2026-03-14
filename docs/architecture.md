@@ -41,6 +41,12 @@ The application is a real-time multiplayer quiz game with a Rust backend and a R
 | `Question` | Timed question view with answer options, countdown, and active scoring rule label |
 | `Leaderboard` | Ranked standings shown after each question and at game end |
 
+### Component Stories
+
+Story files (`ComponentName.stories.tsx`) live collocated with their components under `src/components/`. They are loaded exclusively by Storybook (via `.storybook/main.ts`) and are never imported by `main.tsx`, so they are excluded from the production bundle.
+
+Storybook uses `storybook-react-rsbuild` as its builder (wrapping Rsbuild) and imports `arcade.css` globally via `.storybook/preview.ts` so all stories render with the arcade neon theme. Run `just storybook` to open the component browser at `http://localhost:6006`.
+
 ### Services
 
 | Module | Responsibility |
