@@ -88,10 +88,9 @@ test.describe("Position Race Scoring Rule", () => {
 			await joinPlayer(p4Page, joinCode, "Dave");
 			await expect(hostPage.getByText("4 players connected")).toBeVisible({ timeout: 10000 });
 
-			await hostPage.getByRole("radio", { name: /Position Race/i }).click();
-			await expect(
-				hostPage.getByRole("radio", { name: /Position Race/i }),
-			).toBeChecked({ timeout: 5000 });
+			const select = hostPage.getByRole("combobox", { name: /scoring rule/i });
+			await select.selectOption({ value: "position_race" });
+			await expect(select).toHaveValue("position_race", { timeout: 5000 });
 
 			await hostPage.getByRole("button", { name: /Start/i }).click();
 
