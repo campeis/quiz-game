@@ -13,6 +13,7 @@
 ```bash
 pnpm test
 pnpm exec biome check src/
+pnpm storybook    # start component browser at http://localhost:6006
 ```
 
 ## Code Style
