@@ -133,8 +133,7 @@ export function Lobby({
 				</ul>
 			)}
 			{isHost && (
-				<fieldset
-					aria-label="Scoring Rule"
+				<div
 					style={{
 						border: `1px solid ${colors.border}`,
 						borderRadius: "8px",
@@ -143,50 +142,39 @@ export function Lobby({
 						textAlign: "left",
 					}}
 				>
-					<legend
+					<label
+						htmlFor="scoring_rule"
 						style={{
+							display: "block",
 							color: colors.textSecondary,
 							fontSize: typography.sizes.sm,
-							padding: `0 ${spacing.xs}`,
+							marginBottom: spacing.xs,
 						}}
 					>
 						Scoring Rule
-					</legend>
-					{SCORING_RULES.map((rule) => (
-						<label
-							key={rule.value}
-							style={{
-								display: "flex",
-								alignItems: "center",
-								gap: spacing.sm,
-								padding: `${spacing.xs} 0`,
-								cursor: "pointer",
-								color: colors.text,
-								fontSize: typography.sizes.md,
-							}}
-						>
-							<input
-								type="radio"
-								name="scoring_rule"
-								value={rule.value}
-								checked={gameState.scoringRule === rule.value}
-								onChange={() => onScoringRuleChange?.(rule.value)}
-							/>
-							<span>
-								<strong>{rule.label}</strong>
-								<span
-									style={{
-										color: colors.textSecondary,
-										fontSize: typography.sizes.sm,
-										marginLeft: spacing.xs,
-									}}
-								>
-									— {rule.description}
-								</span>
-							</span>
-						</label>
-					))}
-				</fieldset>
+					</label>
+					<select
+						id="scoring_rule"
+						value={gameState.scoringRule}
+						onChange={(e) => onScoringRuleChange?.(e.target.value as ScoringRuleName)}
+						style={{
+							width: "100%",
+							padding: `${spacing.xs} ${spacing.sm}`,
+							background: colors.surface,
+							color: colors.text,
+							border: `1px solid ${colors.border}`,
+							borderRadius: "4px",
+							fontSize: typography.sizes.md,
+							cursor: "pointer",
+						}}
+					>
+						{SCORING_RULES.map((rule) => (
+							<option key={rule.value} value={rule.value}>
+								{rule.label} — {rule.description}
+							</option>
+						))}
+					</select>
+				</div>
 			)}
 			{isHost && (
 				<fieldset

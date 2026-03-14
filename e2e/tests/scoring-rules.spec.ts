@@ -26,7 +26,7 @@ test.describe("Scoring Rules — Stepped Decay (default)", () => {
 	test("Stepped Decay is selected by default and label shown on question screen", async ({
 		lobby: { hostPage, playerPage },
 	}) => {
-		await expect(hostPage.getByRole("radio", { name: /Stepped Decay/i })).toBeChecked();
+		await expect(hostPage.getByRole("combobox", { name: /scoring rule/i })).toHaveValue("stepped_decay");
 
 		await hostPage.getByRole("button", { name: /Start/i }).click();
 

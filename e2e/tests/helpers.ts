@@ -5,7 +5,7 @@ export const FIXTURE_PATH = path.resolve(__dirname, "../../fixtures/sample.txt")
 
 export interface LobbyOptions {
 	playerName?: string;
-	/** Radio label to select, e.g. "Streak Bonus", "Linear Decay" */
+	/** Scoring rule display name to select, e.g. "Streak Bonus", "Linear Decay" */
 	scoringRule?: string;
 }
 
@@ -66,11 +66,17 @@ export async function setupLobby(
 	await expect(hostPage.getByText("1 player connected")).toBeVisible({ timeout: 5000 });
 
 	if (options.scoringRule) {
-		const radio = hostPage.getByRole("radio", {
-			name: new RegExp(options.scoringRule, "i"),
-		});
-		await radio.click();
-		await expect(radio).toBeChecked({ timeout: 5000 });
+		const RULE_VALUES: Record<string, string> = {
+			"stepped decay": "stepped_decay",
+			"linear decay": "linear_decay",
+			"fixed score": "fixed_score",
+			"streak bonus": "streak_bonus",
+			"position race": "position_race",
+		};
+		const value = RULE_VALUES[options.scoringRule.toLowerCase()];
+		const select = hostPage.getByRole("combobox", { name: /scoring rule/i });
+		await select.selectOption({ value });
+		await expect(select).toHaveValue(value, { timeout: 5000 });
 	}
 
 	return { hostContext, playerContext, hostPage, playerPage, joinCode };

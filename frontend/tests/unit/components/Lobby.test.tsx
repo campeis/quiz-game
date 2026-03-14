@@ -29,13 +29,13 @@ describe("Lobby — scoring rule selector", () => {
 			/>,
 		);
 
-		expect(screen.getByRole("group", { name: /scoring rule/i })).toBeInTheDocument();
+		expect(screen.getByRole("combobox", { name: /scoring rule/i })).toBeInTheDocument();
 	});
 
 	it("does NOT render scoring rule selector when isHost is false", () => {
 		render(<Lobby joinCode="ABCD" gameState={emptyGameState} isHost={false} />);
 
-		expect(screen.queryByRole("group", { name: /scoring rule/i })).not.toBeInTheDocument();
+		expect(screen.queryByRole("combobox", { name: /scoring rule/i })).not.toBeInTheDocument();
 	});
 
 	it("Stepped Decay option is selected by default", () => {
@@ -48,8 +48,8 @@ describe("Lobby — scoring rule selector", () => {
 			/>,
 		);
 
-		const steppedDecay = screen.getByRole("radio", { name: /stepped decay/i });
-		expect(steppedDecay).toBeChecked();
+		const select = screen.getByRole("combobox", { name: /scoring rule/i });
+		expect(select).toHaveValue("stepped_decay");
 	});
 
 	it("calls onScoringRuleChange with correct rule when Linear Decay is selected", () => {
@@ -63,7 +63,9 @@ describe("Lobby — scoring rule selector", () => {
 			/>,
 		);
 
-		fireEvent.click(screen.getByRole("radio", { name: /linear decay/i }));
+		fireEvent.change(screen.getByRole("combobox", { name: /scoring rule/i }), {
+			target: { value: "linear_decay" },
+		});
 
 		expect(onScoringRuleChange).toHaveBeenCalledWith("linear_decay");
 	});
@@ -79,7 +81,9 @@ describe("Lobby — scoring rule selector", () => {
 			/>,
 		);
 
-		fireEvent.click(screen.getByRole("radio", { name: /fixed score/i }));
+		fireEvent.change(screen.getByRole("combobox", { name: /scoring rule/i }), {
+			target: { value: "fixed_score" },
+		});
 
 		expect(onScoringRuleChange).toHaveBeenCalledWith("fixed_score");
 	});
@@ -94,7 +98,9 @@ describe("Lobby — scoring rule selector", () => {
 			/>,
 		);
 
-		expect(screen.getByRole("radio", { name: /streak bonus/i })).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: /streak bonus/i }),
+		).toBeInTheDocument();
 	});
 
 	it("calls onScoringRuleChange with 'streak_bonus' when Streak Bonus is selected", () => {
@@ -108,7 +114,9 @@ describe("Lobby — scoring rule selector", () => {
 			/>,
 		);
 
-		fireEvent.click(screen.getByRole("radio", { name: /streak bonus/i }));
+		fireEvent.change(screen.getByRole("combobox", { name: /scoring rule/i }), {
+			target: { value: "streak_bonus" },
+		});
 
 		expect(onScoringRuleChange).toHaveBeenCalledWith("streak_bonus");
 	});
