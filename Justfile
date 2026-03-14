@@ -7,6 +7,10 @@ setup:
     cd frontend && pnpm install
     cd e2e && pnpm install && pnpm exec playwright install chromium
 
+# Start Storybook component browser (port 6006)
+storybook:
+    cd frontend && pnpm storybook
+
 # Start backend + frontend dev servers
 dev:
     #!/usr/bin/env bash

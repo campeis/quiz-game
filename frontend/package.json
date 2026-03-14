@@ -8,7 +8,8 @@
 		"lint": "biome check src/",
 		"lint:fix": "biome check --fix src/",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"storybook": "storybook dev -p 6006"
 	},
 	"dependencies": {
 		"react": "^19.0.0",
@@ -17,6 +18,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.6",
+		"@rsbuild/core": "^1.7.3",
+		"@rsbuild/plugin-react": "^1.4.6",
 		"@rspack/cli": "^1.7.8",
 		"@rspack/core": "^1.7.8",
 		"@rspack/plugin-react-refresh": "^1.0.0",
@@ -26,6 +29,8 @@
 		"@types/react-dom": "^19.0.0",
 		"jsdom": "^28.1.0",
 		"react-refresh": "^0.18.0",
+		"storybook": "^10.2.19",
+		"storybook-react-rsbuild": "^3.3.2",
 		"typescript": "^5.7.0",
 		"vitest": "^4.1.0"
 	},
