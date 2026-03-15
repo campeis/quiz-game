@@ -47,6 +47,12 @@ Story files (`ComponentName.stories.tsx`) live collocated with their components 
 
 Storybook uses `storybook-react-rsbuild` as its builder (wrapping Rsbuild) and imports `arcade.css` globally via `.storybook/preview.ts` so all stories render with the arcade neon theme. Run `just storybook` to open the component browser at `http://localhost:6006`.
 
+### Visual Regression Tests
+
+`just test-storybook` builds a static Storybook export and runs Playwright screenshot comparisons against committed baseline PNGs in `e2e/storybook-tests/visual.spec.ts-snapshots/`. A custom Node.js server (`e2e/serve-storybook.mjs`) is used to serve the static build, because Storybook's production build requests the preview iframe at `/iframe` (no extension) — a path standard static servers handle incorrectly.
+
+Baselines are OS+browser specific (`-chromium-linux.png` / `-chromium-darwin.png`). The **Update Storybook Snapshots** GitHub Actions workflow regenerates Linux baselines on demand via `workflow_dispatch`. Run `just snapshot-storybook` locally to regenerate macOS baselines after intentional UI changes.
+
 ### Services
 
 | Module | Responsibility |

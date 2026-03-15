@@ -75,7 +75,7 @@ For detailed setup instructions, game walkthrough, environment configuration, an
 ## Testing and Linting
 
 ```bash
-just test     # Run all tests (backend + frontend + e2e)
+just test     # Run all tests (backend + frontend + e2e + storybook visual regression)
 just lint     # Check linting (clippy + biome + rustfmt + yamllint)
 just lint-fix # Auto-fix lint issues
 ```
@@ -86,4 +86,11 @@ Individual test suites:
 just test-backend    # Rust unit and integration tests
 just test-frontend   # Vitest unit tests
 just test-e2e        # Playwright end-to-end tests
+just test-storybook  # Storybook visual regression tests (builds + compares snapshots)
+```
+
+To update visual regression baselines after intentional UI changes:
+
+```bash
+just snapshot-storybook  # Rebuild Storybook and update PNG baselines
 ```

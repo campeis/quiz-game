@@ -47,6 +47,7 @@ just test
 just test-backend    # Rust unit and integration tests
 just test-frontend   # Vitest unit tests
 just test-e2e        # Playwright end-to-end tests (starts servers automatically)
+just test-storybook  # Storybook visual regression tests (builds static Storybook + compares PNG snapshots)
 ```
 
 ### Individual commands
@@ -55,7 +56,18 @@ just test-e2e        # Playwright end-to-end tests (starts servers automatically
 cd backend && cargo test
 cd frontend && pnpm exec vitest run
 cd e2e && pnpm exec playwright test
+cd e2e && pnpm exec playwright test --config playwright.storybook.config.ts
 ```
+
+### Visual regression snapshots
+
+Baseline PNGs are committed to `e2e/storybook-tests/visual.spec.ts-snapshots/` and are OS+browser specific. After intentional UI changes, regenerate them with:
+
+```bash
+just snapshot-storybook
+```
+
+Snapshots are named `<story-id>-chromium-<os>.png`. CI runs on Linux, so Linux baselines must be committed separately — use the **Update Storybook Snapshots** GitHub Actions workflow (manually triggered via `workflow_dispatch`) to generate and commit them.
 
 ## Linting & Formatting
 
@@ -169,11 +181,13 @@ File format:
 | `just dev`           | Start backend + frontend dev servers             |
 | `just build`         | Production build (backend + frontend)            |
 | `just start`         | Run production server                            |
-| `just test`          | Run all tests (backend + frontend + e2e)         |
-| `just test-backend`  | Backend tests only                               |
-| `just test-frontend` | Frontend unit tests only                         |
-| `just test-e2e`      | Playwright e2e tests                             |
-| `just lint`          | Check linting (clippy + rustfmt + biome + yamllint) |
-| `just lint-fix`      | Auto-fix linting issues                          |
-| `just storybook`     | Start component browser at http://localhost:6006 |
-| `just audit`         | Security audit (cargo audit + pnpm audit)        |
+| `just test`              | Run all tests (backend + frontend + e2e + storybook VR) |
+| `just test-backend`      | Backend tests only                                      |
+| `just test-frontend`     | Frontend unit tests only                                |
+| `just test-e2e`          | Playwright e2e tests                                    |
+| `just test-storybook`    | Build Storybook + run visual regression tests           |
+| `just snapshot-storybook`| Build Storybook + update visual regression baselines    |
+| `just lint`              | Check linting (clippy + rustfmt + biome + yamllint)     |
+| `just lint-fix`          | Auto-fix linting issues                                 |
+| `just storybook`         | Start component browser at http://localhost:6006        |
+| `just audit`             | Security audit (cargo audit + pnpm audit)               |
