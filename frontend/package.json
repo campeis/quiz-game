@@ -35,6 +35,8 @@
 		"vitest": "^4.1.0"
 	},
 	"pnpm": {
-		"overrides": {}
+		"overrides": {
+			"undici@7.22.0": "^7.24.0"
+		}
 	}
 }

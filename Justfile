@@ -43,9 +43,15 @@ test-frontend:
 test-e2e:
     cd e2e && pnpm exec playwright test
 
-# Storybook build smoke test (validates all stories compile)
+# Build Storybook and run visual regression tests
 test-storybook:
     cd frontend && pnpm exec storybook build --quiet
+    cd e2e && pnpm exec playwright test --config playwright.storybook.config.ts
+
+# Update Storybook visual regression snapshot baselines
+snapshot-storybook:
+    cd frontend && pnpm exec storybook build --quiet
+    cd e2e && pnpm exec playwright test --config playwright.storybook.config.ts --update-snapshots
 
 # Lint all code
 lint:
