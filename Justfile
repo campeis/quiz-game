@@ -29,7 +29,7 @@ start:
     cd backend && STATIC_DIR=../frontend/dist cargo run --release
 
 # Run all tests
-test: test-backend test-frontend test-e2e
+test: test-backend test-frontend test-e2e test-storybook
 
 # Backend tests only
 test-backend:
@@ -42,6 +42,10 @@ test-frontend:
 # E2E tests only
 test-e2e:
     cd e2e && pnpm exec playwright test
+
+# Storybook build smoke test (validates all stories compile)
+test-storybook:
+    cd frontend && pnpm exec storybook build --quiet
 
 # Lint all code
 lint:
