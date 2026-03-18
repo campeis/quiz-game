@@ -10,7 +10,7 @@ interface PodiumProps {
 const PODIUM_COLORS = {
 	1: colors.winner,
 	2: colors.primary,
-	3: colors.accent,
+	3: colors.primary,
 } as const;
 
 const PODIUM_HEIGHTS = {
