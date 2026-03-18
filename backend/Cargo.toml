@@ -20,6 +20,6 @@ futures-util = "0.3"
 rstest = "0.26"
 http-body-util = "0.1"
 reqwest = { version = "0.13", features = ["multipart", "json"] }
-tokio-tungstenite = "0.28"
+tokio-tungstenite = "0.29"
 futures-util = "0.3"
 tower = { version = "0.5", features = ["util"] }
