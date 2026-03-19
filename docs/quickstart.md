@@ -128,7 +128,7 @@ Produces:
 4. Open another browser tab, click **"Join a Game"**
 5. Enter the join code; optionally click the avatar preview to pick an emoji, then enter a display name
 6. Click **"Join Game"**
-7. Back on the host tab, choose a **Scoring Rule** (Stepped Decay, Linear Decay, or Fixed Score) and set the **Question Time Limit** (10–60 s, default 20 s) — both can be changed any time before starting
+7. Back on the host tab, choose a **Scoring Rule** (Stepped Decay, Linear Decay, Fixed Score, Streak Bonus, or Position Race) and set the **Question Time Limit** (10–60 s, default 20 s) — both can be changed any time before starting
 8. Click **"Start Quiz"**
 9. Answer questions and watch the leaderboard update live; the host can click **"End Question"** to close a question early before the timer runs out
 
