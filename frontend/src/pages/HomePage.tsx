@@ -27,7 +27,6 @@ export function HomePage() {
 					fontWeight: typography.weights.bold,
 					marginBottom: spacing.xl,
 					textAlign: "center",
-					textShadow: `0 0 10px ${colors.primary}`,
 				}}
 			>
 				Quiz Game
