@@ -1,3 +1,4 @@
+
 import { expect, test } from "@playwright/test";
 
 // Each entry maps a human-readable label to a Storybook story iframe ID.
@@ -30,14 +31,12 @@ const stories: { label: string; id: string }[] = [
 
 for (const story of stories) {
 	test(story.label, async ({ page }) => {
-		// Load the Storybook manager with the story selected. The manager sends a
-		// postMessage channel event to the preview iframe which triggers rendering.
-		await page.goto(`/?path=/story/${story.id}`);
-		// Access the story inside the preview iframe
-		const previewFrame = page.frameLocator("iframe");
+		// Load the preview iframe directly — no Storybook manager chrome
+		await page.goto(`/iframe.html?id=${story.id}&viewMode=story`);
 		// Wait for the story component to render into the storybook root
-		await previewFrame.locator("#storybook-root > *").first().waitFor({ state: "visible" });
-		// Screenshot just the iframe body (the isolated story content)
-		await expect(previewFrame.locator("body")).toHaveScreenshot(`${story.id}.png`);
+		const storyRoot = page.locator("#storybook-root > *").first();
+		await storyRoot.waitFor({ state: "visible" });
+		// Screenshot just the rendered component
+		await expect(storyRoot).toHaveScreenshot(`${story.id}.png`);
 	});
 }
