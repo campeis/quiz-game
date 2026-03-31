@@ -31,8 +31,8 @@ importers:
         specifier: ^1.4.6
         version: 1.4.6(@rsbuild/core@1.7.5)
       '@rspack/cli':
-        specifier: ^1.7.10
-        version: 1.7.10(@rspack/core@1.7.11(@swc/helpers@0.5.20))(@types/express@4.17.25)(tslib@2.8.1)(webpack@5.105.4)
+        specifier: ^1.7.11
+        version: 1.7.11(@rspack/core@1.7.11(@swc/helpers@0.5.20))(@types/express@4.17.25)(tslib@2.8.1)(webpack@5.105.4)
       '@rspack/core':
         specifier: ^1.7.11
         version: 1.7.11(@swc/helpers@0.5.20)
@@ -801,8 +801,8 @@ packages:
   '@rspack/binding@1.7.11':
     resolution: {integrity: sha512-2MGdy2s2HimsDT444Bp5XnALzNRxuBNc7y0JzyuqKbHBywd4x2NeXyhWXXoxufaCFu5PBc9Qq9jyfjW2Aeh06Q==}
 
-  '@rspack/cli@1.7.10':
-    resolution: {integrity: sha512-654U2gprMyuppwiWpzNRiM1HWNFaJpGHSGlEfNwIA1GDZjtJ5S1qcO9uFbptS3kn6Ku1jhZup3IMG+AaaN+QXw==}
+  '@rspack/cli@1.7.11':
+    resolution: {integrity: sha512-vUnflkq4F654wTEpCd+L4RYVbet8L2lNqLMmAGIZvoZddlXm4Duvg+eqcFE9iF8plAjFflRcU7DhB7WZa76pwg==}
     hasBin: true
     peerDependencies:
       '@rspack/core': ^1.0.0-alpha || ^1.x
@@ -3532,7 +3532,7 @@ snapshots:
       '@rspack/binding-win32-ia32-msvc': 1.7.11
       '@rspack/binding-win32-x64-msvc': 1.7.11
 
-  '@rspack/cli@1.7.10(@rspack/core@1.7.11(@swc/helpers@0.5.20))(@types/express@4.17.25)(tslib@2.8.1)(webpack@5.105.4)':
+  '@rspack/cli@1.7.11(@rspack/core@1.7.11(@swc/helpers@0.5.20))(@types/express@4.17.25)(tslib@2.8.1)(webpack@5.105.4)':
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
       '@rspack/core': 1.7.11(@swc/helpers@0.5.20)
