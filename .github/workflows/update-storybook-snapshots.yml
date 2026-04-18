@@ -46,6 +46,7 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
+          cache-compression-type: zstd
 
       - name: Install Playwright system dependencies
         run: |
