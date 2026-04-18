@@ -35,7 +35,6 @@
 		"vitest": "^4.1.4"
 	},
 	"pnpm": {
-		"overrides": {},
-		"onlyBuiltDependencies": ["core-js", "esbuild"]
+		"overrides": {}
 	}
 }
