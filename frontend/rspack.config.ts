@@ -1,7 +1,7 @@
 import path from "node:path";
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
-import RefreshPlugin from "@rspack/plugin-react-refresh";
+import { ReactRefreshRspackPlugin } from '@rspack/plugin-react-refresh';
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -41,7 +41,7 @@ export default defineConfig({
 	},
 	plugins: [
 		new rspack.HtmlRspackPlugin({ template: "./src/index.html" }),
-		isDev && new RefreshPlugin(),
+		isDev && new ReactRefreshRspackPlugin(),
 	].filter(Boolean),
 	experiments: {
 		css: true,
