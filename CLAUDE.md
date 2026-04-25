@@ -43,3 +43,8 @@ See `backend/CLAUDE.md`, `frontend/CLAUDE.md`, and `e2e/CLAUDE.md` for subsystem
 ## Active Technologies
 - TypeScript 5.7 / React 19 + `storybook` (>=8), `storybook-react-rsbuild` (Rspack-ecosystem Storybook builder), `@rsbuild/core`, `@rsbuild/plugin-react`, `@storybook/addon-essentials`; existing: Rspack 1.7, Biome 2.x, pnpm (014-add-storybook)
 - N/A — developer-only tooling, no persistence (014-add-storybook)
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
