@@ -28,8 +28,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@rsbuild/core@2.0.2(core-js@3.47.0))(@rspack/core@2.0.0(@swc/helpers@0.5.21))
       '@rspack/cli':
-        specifier: ^2.0.0
-        version: 2.0.0(@rspack/core@2.0.0(@swc/helpers@0.5.21))(@rspack/dev-server@2.0.1(@rspack/core@2.0.0(@swc/helpers@0.5.21)))
+        specifier: ^2.0.1
+        version: 2.0.1(@rspack/core@2.0.0(@swc/helpers@0.5.21))(@rspack/dev-server@2.0.1(@rspack/core@2.0.0(@swc/helpers@0.5.21)))
       '@rspack/core':
         specifier: ^2.0.0
         version: 2.0.0(@swc/helpers@0.5.21)
@@ -788,8 +788,8 @@ packages:
   '@rspack/binding@2.0.0':
     resolution: {integrity: sha512-WA2f9eQpejkvf5Vrnf6wNCn1m8RT1p08NjgOZpKhsCzr0uBjWeRvGduawlrFFHZh/jPnWZTVaVdQ08FEAWbwGw==}
 
-  '@rspack/cli@2.0.0':
-    resolution: {integrity: sha512-drBB/biz6NHvjEqKLRzJmdPTn/6rg1TLLOY1o7lOySA1nLYoao5h+33TFRCKwpioEigpdAldw35crCLlQ/GHbQ==}
+  '@rspack/cli@2.0.1':
+    resolution: {integrity: sha512-UwqLnShg6ui3LOsJfJvyGNfHtgkGd/Cjjm2T7jR6lTkoX9Jj7YKl55gkPqNw34et8+gp/5Ehso6tsga8bqZi5Q==}
     hasBin: true
     peerDependencies:
       '@rspack/core': ^2.0.0-0
@@ -2981,7 +2981,7 @@ snapshots:
       '@rspack/binding-win32-ia32-msvc': 2.0.0
       '@rspack/binding-win32-x64-msvc': 2.0.0
 
-  '@rspack/cli@2.0.0(@rspack/core@2.0.0(@swc/helpers@0.5.21))(@rspack/dev-server@2.0.1(@rspack/core@2.0.0(@swc/helpers@0.5.21)))':
+  '@rspack/cli@2.0.1(@rspack/core@2.0.0(@swc/helpers@0.5.21))(@rspack/dev-server@2.0.1(@rspack/core@2.0.0(@swc/helpers@0.5.21)))':
     dependencies:
       '@rspack/core': 2.0.0(@swc/helpers@0.5.21)
     optionalDependencies:
