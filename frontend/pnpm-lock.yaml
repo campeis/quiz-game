@@ -22,11 +22,11 @@ importers:
         specifier: ^2.4.14
         version: 2.4.14
       '@rsbuild/core':
-        specifier: ^2.0.3
-        version: 2.0.3
+        specifier: ^2.0.5
+        version: 2.0.5
       '@rsbuild/plugin-react':
         specifier: ^2.0.0
-        version: 2.0.0(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))
+        version: 2.0.0(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))
       '@rspack/cli':
         specifier: ^2.0.2
         version: 2.0.2(@rspack/core@2.0.2(@swc/helpers@0.5.21))(@rspack/dev-server@2.0.1(@rspack/core@2.0.2(@swc/helpers@0.5.21)))
@@ -62,13 +62,13 @@ importers:
         version: 10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       storybook-react-rsbuild:
         specifier: ^3.3.3
-        version: 3.3.3(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))(webpack@5.105.4)
+        version: 3.3.3(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))(webpack@5.105.4)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
       vitest:
         specifier: ^4.1.5
-        version: 4.1.5(@types/node@25.6.0)(jsdom@29.1.1)(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))
+        version: 4.1.5(@types/node@25.6.0)(jsdom@29.1.1)(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))
 
 packages:
 
@@ -710,8 +710,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rsbuild/core@2.0.3':
-    resolution: {integrity: sha512-2myp7jUgGen50saxW8OJD/eMVKp7HnuBN5MUzwRb6mDbRZZVpoorfI4LQqiGSBNjGLB6jltvx/R2yHmcmnchwg==}
+  '@rsbuild/core@2.0.5':
+    resolution: {integrity: sha512-KajO50hbXb32S8MsyDh2f+xKcVeRy9Gfzdcy0JjpMLj22djHugly6jrGo7jH7ls9X6/TDcyCTncSuNK4+D2lTw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -2099,6 +2099,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  terser@5.47.0:
+    resolution: {integrity: sha512-TV+JFkQFtljk12ffyYAA4+zVF4Hs+qaROsT+Qo9o2/z39x+IUn+pvsmomiCPlp5YigfR1OdbGHOvc0L+Ca1X7g==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   thingies@2.6.0:
     resolution: {integrity: sha512-rMHRjmlFLM1R96UYPvpmnc3LYtdFrT33JIB7L9hetGue1qAPfn1N2LJeEjxUSidu1Iku+haLZXDuEXUHNGO/lg==}
     engines: {node: '>=10.18'}
@@ -2902,30 +2907,30 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.60.3':
     optional: true
 
-  '@rsbuild/core@2.0.3':
+  '@rsbuild/core@2.0.5':
     dependencies:
       '@rspack/core': 2.0.2(@swc/helpers@0.5.21)
       '@swc/helpers': 0.5.21
     transitivePeerDependencies:
       - '@module-federation/runtime-tools'
 
-  '@rsbuild/plugin-react@2.0.0(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))':
+  '@rsbuild/plugin-react@2.0.0(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))':
     dependencies:
       '@rspack/plugin-react-refresh': 2.0.0(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-refresh@0.18.0)
       react-refresh: 0.18.0
     optionalDependencies:
-      '@rsbuild/core': 2.0.3
+      '@rsbuild/core': 2.0.5
     transitivePeerDependencies:
       - '@rspack/core'
 
-  '@rsbuild/plugin-type-check@1.3.4(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(tslib@2.8.1)(typescript@6.0.3)':
+  '@rsbuild/plugin-type-check@1.3.4(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(tslib@2.8.1)(typescript@6.0.3)':
     dependencies:
       deepmerge: 4.3.1
       json5: 2.2.3
       reduce-configs: 1.1.2
       ts-checker-rspack-plugin: 1.3.0(@rspack/core@2.0.2(@swc/helpers@0.5.21))(tslib@2.8.1)(typescript@6.0.3)
     optionalDependencies:
-      '@rsbuild/core': 2.0.3
+      '@rsbuild/core': 2.0.5
     transitivePeerDependencies:
       - '@rspack/core'
       - tslib
@@ -3174,21 +3179,21 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@3.2.4(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))':
+  '@vitest/mocker@3.2.4(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))':
     dependencies:
       '@vitest/spy': 3.2.4
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.2(@types/node@25.6.0)(terser@5.46.2)
+      vite: 7.3.2(@types/node@25.6.0)(terser@5.47.0)
 
-  '@vitest/mocker@4.1.5(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))':
+  '@vitest/mocker@4.1.5(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))':
     dependencies:
       '@vitest/spy': 4.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.2(@types/node@25.6.0)(terser@5.46.2)
+      vite: 7.3.2(@types/node@25.6.0)(terser@5.47.0)
 
   '@vitest/pretty-format@3.2.4':
     dependencies:
@@ -4161,12 +4166,12 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.60.3
       fsevents: 2.3.3
 
-  rsbuild-plugin-html-minifier-terser@1.1.3(@rsbuild/core@2.0.3):
+  rsbuild-plugin-html-minifier-terser@1.1.3(@rsbuild/core@2.0.5):
     dependencies:
       '@types/html-minifier-terser': 7.0.2
       html-minifier-terser: 7.2.0
     optionalDependencies:
-      '@rsbuild/core': 2.0.3
+      '@rsbuild/core': 2.0.5
 
   run-applescript@7.1.0: {}
 
@@ -4253,11 +4258,11 @@ snapshots:
 
   std-env@4.1.0: {}
 
-  storybook-builder-rsbuild@3.3.3(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2)):
+  storybook-builder-rsbuild@3.3.3(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0)):
     dependencies:
-      '@rsbuild/core': 2.0.3
-      '@rsbuild/plugin-type-check': 1.3.4(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(tslib@2.8.1)(typescript@6.0.3)
-      '@vitest/mocker': 3.2.4(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))
+      '@rsbuild/core': 2.0.5
+      '@rsbuild/plugin-type-check': 1.3.4(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(tslib@2.8.1)(typescript@6.0.3)
+      '@vitest/mocker': 3.2.4(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))
       browser-assert: 1.2.1
       case-sensitive-paths-webpack-plugin: 2.4.0
       cjs-module-lexer: 2.2.0
@@ -4268,7 +4273,7 @@ snapshots:
       path-browserify: 1.0.1
       picocolors: 1.1.1
       process: 0.11.10
-      rsbuild-plugin-html-minifier-terser: 1.1.3(@rsbuild/core@2.0.3)
+      rsbuild-plugin-html-minifier-terser: 1.1.3(@rsbuild/core@2.0.5)
       sirv: 2.0.4
       storybook: 10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       ts-dedent: 2.2.0
@@ -4285,10 +4290,10 @@ snapshots:
       - tslib
       - vite
 
-  storybook-react-rsbuild@3.3.3(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))(webpack@5.105.4):
+  storybook-react-rsbuild@3.3.3(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rollup@4.60.3)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))(webpack@5.105.4):
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@4.60.3)
-      '@rsbuild/core': 2.0.3
+      '@rsbuild/core': 2.0.5
       '@storybook/react': 10.3.6(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@6.0.3)
       '@storybook/react-docgen-typescript-plugin': 1.0.1(typescript@6.0.3)(webpack@5.105.4)
       find-up: 5.0.0
@@ -4299,7 +4304,7 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
       resolve: 1.22.12
       storybook: 10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      storybook-builder-rsbuild: 3.3.3(@rsbuild/core@2.0.3)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))
+      storybook-builder-rsbuild: 3.3.3(@rsbuild/core@2.0.5)(@rspack/core@2.0.2(@swc/helpers@0.5.21))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(storybook@10.3.6(@testing-library/dom@10.4.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))
       tsconfig-paths: 4.2.0
     optionalDependencies:
       typescript: 6.0.3
@@ -4357,10 +4362,17 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
-      terser: 5.46.2
+      terser: 5.47.0
       webpack: 5.105.4
 
   terser@5.46.2:
+    dependencies:
+      '@jridgewell/source-map': 0.3.11
+      acorn: 8.16.0
+      commander: 2.20.3
+      source-map-support: 0.5.21
+
+  terser@5.47.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.16.0
@@ -4467,7 +4479,7 @@ snapshots:
       is-typed-array: 1.1.15
       which-typed-array: 1.1.20
 
-  vite@7.3.2(@types/node@25.6.0)(terser@5.46.2):
+  vite@7.3.2(@types/node@25.6.0)(terser@5.47.0):
     dependencies:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
@@ -4478,12 +4490,12 @@ snapshots:
     optionalDependencies:
       '@types/node': 25.6.0
       fsevents: 2.3.3
-      terser: 5.46.2
+      terser: 5.47.0
 
-  vitest@4.1.5(@types/node@25.6.0)(jsdom@29.1.1)(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2)):
+  vitest@4.1.5(@types/node@25.6.0)(jsdom@29.1.1)(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0)):
     dependencies:
       '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(vite@7.3.2(@types/node@25.6.0)(terser@5.46.2))
+      '@vitest/mocker': 4.1.5(vite@7.3.2(@types/node@25.6.0)(terser@5.47.0))
       '@vitest/pretty-format': 4.1.5
       '@vitest/runner': 4.1.5
       '@vitest/snapshot': 4.1.5
@@ -4500,7 +4512,7 @@ snapshots:
       tinyexec: 1.1.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vite: 7.3.2(@types/node@25.6.0)(terser@5.46.2)
+      vite: 7.3.2(@types/node@25.6.0)(terser@5.47.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.6.0
