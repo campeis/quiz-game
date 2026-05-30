@@ -31,4 +31,4 @@ updates:
     schedule:
       interval: daily
     cooldown:
-      default-days: 2     
+      default-days: 2
