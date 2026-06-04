@@ -18,10 +18,10 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
-		"@rsbuild/core": "^2.0.9",
+		"@rsbuild/core": "^2.0.10",
 		"@rsbuild/plugin-react": "^2.0.1",
-		"@rspack/cli": "^2.0.5",
-		"@rspack/core": "^2.0.5",
+		"@rspack/cli": "^2.0.6",
+		"@rspack/core": "^2.0.6",
 		"@rspack/dev-server": "^2.0.3",
 		"@rspack/plugin-react-refresh": "^2.0.1",
 		"@testing-library/jest-dom": "^6.9.1",
