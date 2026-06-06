@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: daily
     cooldown:
-      default-days: 2
+      default-days: 7
     groups:
       rs-pack:
         patterns:
@@ -31,4 +31,4 @@ updates:
     schedule:
       interval: daily
     cooldown:
-      default-days: 2
+      default-days: 7
