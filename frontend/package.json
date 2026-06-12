@@ -23,7 +23,7 @@
 		"@rspack/cli": "^2.0.6",
 		"@rspack/core": "^2.0.6",
 		"@rspack/dev-server": "^2.0.3",
-		"@rspack/plugin-react-refresh": "^2.0.1",
+		"@rspack/plugin-react-refresh": "^2.0.2",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
 		"@types/react": "^19.2.15",
