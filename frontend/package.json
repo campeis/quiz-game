@@ -17,7 +17,7 @@
 		"react-router-dom": "^7.18.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.1",
+		"@biomejs/biome": "^2.5.2",
 		"@rsbuild/core": "^2.1.2",
 		"@rsbuild/plugin-react": "^2.1.0",
 		"@rspack/cli": "^2.1.2",
