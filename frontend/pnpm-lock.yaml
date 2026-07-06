@@ -22,11 +22,11 @@ importers:
         specifier: ^2.5.2
         version: 2.5.2
       '@rsbuild/core':
-        specifier: ^2.1.2
-        version: 2.1.2
+        specifier: ^2.1.4
+        version: 2.1.4
       '@rsbuild/plugin-react':
         specifier: ^2.1.0
-        version: 2.1.0(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))
+        version: 2.1.0(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))
       '@rspack/cli':
         specifier: ^2.1.2
         version: 2.1.2(@rspack/core@2.1.2(@swc/helpers@0.5.23))(@rspack/dev-server@2.1.0(@rspack/core@2.1.2(@swc/helpers@0.5.23)))
@@ -62,7 +62,7 @@ importers:
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook-react-rsbuild:
         specifier: ^3.3.4
-        version: 3.3.4(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.0)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))(webpack@5.105.4)
+        version: 3.3.4(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.0)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))(webpack@5.105.4)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -1140,8 +1140,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rsbuild/core@2.1.2':
-    resolution: {integrity: sha512-EP24Oj01bdwtw/Xl3LiaLe/WG6PBQV2yWbbCh+2TkMDc9dNHiyBTnR+/JZvGxI8RdO5qU0rH4YgMOJ6nVXIQSA==}
+  '@rsbuild/core@2.1.4':
+    resolution: {integrity: sha512-kdubx/qB6tXduCdqaW78OULLZJ3ludpuA4mOkDko18THsI1rUy9U34DsaDSnotE8GAvTeme+FX9MnqLEUlg8kQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -1599,8 +1599,8 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  baseline-browser-mapping@2.10.40:
-    resolution: {integrity: sha512-BSSLZ9/Cjjv7Gtj5B68ZzXcXUg8iOf3fme+FCuh8rC/Go+Kmh8cox7M3A8dolou16s64QjLPOSdngh7GxXvkSw==}
+  baseline-browser-mapping@2.10.41:
+    resolution: {integrity: sha512-WwS7MHhqGHHlaVsqRZnhvCEMS0owDX+SxRlve7JkuH7My1Ara3ZriTmCQupPfYjxMZ8I/tgxtJYr2t7taHaH4A==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1790,8 +1790,8 @@ packages:
   electron-to-chromium@1.5.376:
     resolution: {integrity: sha512-cUVA7/RvbFTEuw/i3obUwDTRIXojaxkResf+ibByPFxjc6XK3VNtcQXV0NSbAlJ0FMjcJGgftVVB4Qo184EXvA==}
 
-  electron-to-chromium@1.5.384:
-    resolution: {integrity: sha512-g6KAKY1vkYsADvSPWvdJsuYT0ixdcu6lUtD9P/wJKGBEDlZVXh2AX42j1mPqqaQPDluWjara9ziQ7xqAeXCt5A==}
+  electron-to-chromium@1.5.387:
+    resolution: {integrity: sha512-TaxwufTFDufvPEoXdhwVrA3UdFWBeWGkYoJ1K8ldF1xe6gKfth6iRNS5lTQ5JPNOHdGQm8PT1QYKUqFLCiUefQ==}
 
   endent@2.1.0:
     resolution: {integrity: sha512-r8VyPX7XL8U01Xgnb1CjZ3XV+z90cXIJ9JPE/R9SEC9vpw2P6CfsRPJmp20DppC5N7ZAMCmjYkJIa744Iyg96w==}
@@ -3677,30 +3677,30 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.62.0':
     optional: true
 
-  '@rsbuild/core@2.1.2':
+  '@rsbuild/core@2.1.4':
     dependencies:
       '@rspack/core': 2.1.2(@swc/helpers@0.5.23)
       '@swc/helpers': 0.5.23
     transitivePeerDependencies:
       - '@module-federation/runtime-tools'
 
-  '@rsbuild/plugin-react@2.1.0(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))':
+  '@rsbuild/plugin-react@2.1.0(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))':
     dependencies:
       '@rspack/plugin-react-refresh': 2.0.2(@rspack/core@2.1.2(@swc/helpers@0.5.23))(react-refresh@0.18.0)
       react-refresh: 0.18.0
     optionalDependencies:
-      '@rsbuild/core': 2.1.2
+      '@rsbuild/core': 2.1.4
     transitivePeerDependencies:
       - '@rspack/core'
 
-  '@rsbuild/plugin-type-check@1.4.0(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(tslib@2.8.1)(typescript@6.0.3)':
+  '@rsbuild/plugin-type-check@1.4.0(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(tslib@2.8.1)(typescript@6.0.3)':
     dependencies:
       deepmerge: 4.3.1
       json5: 2.2.3
       reduce-configs: 1.1.2
       ts-checker-rspack-plugin: 1.4.0(@rspack/core@2.1.2(@swc/helpers@0.5.23))(tslib@2.8.1)(typescript@6.0.3)
     optionalDependencies:
-      '@rsbuild/core': 2.1.2
+      '@rsbuild/core': 2.1.4
     transitivePeerDependencies:
       - '@rspack/core'
       - tslib
@@ -4147,7 +4147,7 @@ snapshots:
 
   baseline-browser-mapping@2.10.38: {}
 
-  baseline-browser-mapping@2.10.40: {}
+  baseline-browser-mapping@2.10.41: {}
 
   bidi-js@1.0.3:
     dependencies:
@@ -4176,9 +4176,9 @@ snapshots:
 
   browserslist@4.28.4:
     dependencies:
-      baseline-browser-mapping: 2.10.40
+      baseline-browser-mapping: 2.10.41
       caniuse-lite: 1.0.30001800
-      electron-to-chromium: 1.5.384
+      electron-to-chromium: 1.5.387
       node-releases: 2.0.50
       update-browserslist-db: 1.2.3(browserslist@4.28.4)
 
@@ -4328,7 +4328,7 @@ snapshots:
 
   electron-to-chromium@1.5.376: {}
 
-  electron-to-chromium@1.5.384: {}
+  electron-to-chromium@1.5.387: {}
 
   endent@2.1.0:
     dependencies:
@@ -5041,12 +5041,12 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.62.0
       fsevents: 2.3.3
 
-  rsbuild-plugin-html-minifier-terser@1.1.5(@rsbuild/core@2.1.2):
+  rsbuild-plugin-html-minifier-terser@1.1.5(@rsbuild/core@2.1.4):
     dependencies:
       '@types/html-minifier-terser': 7.0.2
       html-minifier-terser: 7.2.0
     optionalDependencies:
-      '@rsbuild/core': 2.1.2
+      '@rsbuild/core': 2.1.4
 
   run-applescript@7.1.0: {}
 
@@ -5133,10 +5133,10 @@ snapshots:
 
   std-env@4.1.0: {}
 
-  storybook-builder-rsbuild@3.3.4(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0)):
+  storybook-builder-rsbuild@3.3.4(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0)):
     dependencies:
-      '@rsbuild/core': 2.1.2
-      '@rsbuild/plugin-type-check': 1.4.0(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(tslib@2.8.1)(typescript@6.0.3)
+      '@rsbuild/core': 2.1.4
+      '@rsbuild/plugin-type-check': 1.4.0(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(tslib@2.8.1)(typescript@6.0.3)
       '@vitest/mocker': 3.2.4(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))
       browser-assert: 1.2.1
       case-sensitive-paths-webpack-plugin: 2.4.0
@@ -5148,7 +5148,7 @@ snapshots:
       path-browserify: 1.0.1
       picocolors: 1.1.1
       process: 0.11.10
-      rsbuild-plugin-html-minifier-terser: 1.1.5(@rsbuild/core@2.1.2)
+      rsbuild-plugin-html-minifier-terser: 1.1.5(@rsbuild/core@2.1.4)
       sirv: 2.0.4
       storybook: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       ts-dedent: 2.3.0
@@ -5166,10 +5166,10 @@ snapshots:
       - tslib
       - vite
 
-  storybook-react-rsbuild@3.3.4(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.0)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))(webpack@5.105.4):
+  storybook-react-rsbuild@3.3.4(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.0)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))(webpack@5.105.4):
     dependencies:
       '@rollup/pluginutils': 5.4.0(rollup@4.62.0)
-      '@rsbuild/core': 2.1.2
+      '@rsbuild/core': 2.1.4
       '@storybook/react': 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)
       '@storybook/react-docgen-typescript-plugin': 1.0.1(typescript@6.0.3)(webpack@5.105.4)
       find-up: 5.0.0
@@ -5180,7 +5180,7 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       resolve: 1.22.12
       storybook: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      storybook-builder-rsbuild: 3.3.4(@rsbuild/core@2.1.2)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))
+      storybook-builder-rsbuild: 3.3.4(@rsbuild/core@2.1.4)(@rspack/core@2.1.2(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(tslib@2.8.1)(typescript@6.0.3)(vite@7.3.5(@types/node@26.1.0)(terser@5.48.0))
       tsconfig-paths: 4.2.0
     optionalDependencies:
       typescript: 6.0.3
