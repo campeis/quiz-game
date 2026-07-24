@@ -1,5 +1,5 @@
 allowBuilds:
   core-js: true
   esbuild: true
-minimumReleaseAge: 2880
+minimumReleaseAge: 0
 minimumReleaseAgeStrict: false
