@@ -12,11 +12,11 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8
       react-dom:
-        specifier: ^19.2.7
-        version: 19.2.7(react@19.2.8)
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
       react-router-dom:
         specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
+        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.5.8
@@ -44,13 +44,13 @@ importers:
         version: 7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.10(@types/node@26.2.0)(jsdom@30.0.1)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0)))
       '@testing-library/react':
         specifier: ^16.3.2
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18
       '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.18)
+        specifier: ^19.2.4
+        version: 19.2.4(@types/react@19.2.18)
       jsdom:
         specifier: ^30.0.1
         version: 30.0.1
@@ -62,7 +62,7 @@ importers:
         version: 10.5.7(@types/react@19.2.18)(react@19.2.8)
       storybook-react-rsbuild:
         specifier: ^3.4.1
-        version: 3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))(webpack@5.105.4)
+        version: 3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))(webpack@5.105.4)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -1434,8 +1434,8 @@ packages:
   '@types/node@26.2.0':
     resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
 
-  '@types/react-dom@19.2.3':
-    resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
+  '@types/react-dom@19.2.4':
+    resolution: {integrity: sha512-Bsc+QHgp+P/F02XDzNCY9jnZNCUuLki36KT7VKrTXXLdHf+vHMNZnW1rVu5DNW/rCK+fya3DATySbLM4yhtKUw==}
     peerDependencies:
       '@types/react': ^19.2.0
 
@@ -1946,6 +1946,9 @@ packages:
 
   es-module-lexer@2.3.1:
     resolution: {integrity: sha512-shc1dbU90Yl/xq1QrC7QRtfcwURZuVRfPhZbDoldJ1cn1gzDvBaBWlv0eFolj5+0znnPJz5TXLxsN77X/12KTA==}
+
+  es-module-lexer@2.3.2:
+    resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
 
   es-object-atoms@1.1.2:
     resolution: {integrity: sha512-HWcBoN6NileqtSydK2FqHbS/LoDd2pqrnQHLyJzBj4kOp/ky2MWMN694xOfkK8/SnUsW2DH7EfyVlydKCsm1Zw==}
@@ -2471,10 +2474,10 @@ packages:
     resolution: {integrity: sha512-aEZ9qP+/M+58x2qgfSFEWH1BxLyHe5+qkLNJOZQb5iGS017jpbRnoKhNRrXPeA6RfBrZO5wZrT9DMC1UqE1f1w==}
     engines: {node: ^20.9.0 || >=22}
 
-  react-dom@19.2.7:
-    resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
+  react-dom@19.2.8:
+    resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
     peerDependencies:
-      react: ^19.2.7
+      react: ^19.2.8
 
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
@@ -3943,27 +3946,27 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/react-dom-shim@10.5.7(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))':
+  '@storybook/react-dom-shim@10.5.7(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))':
     dependencies:
       react: 19.2.8
-      react-dom: 19.2.7(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
       storybook: 10.5.7(@types/react@19.2.18)(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.18
-      '@types/react-dom': 19.2.3(@types/react@19.2.18)
+      '@types/react-dom': 19.2.4(@types/react@19.2.18)
 
-  '@storybook/react@10.5.7(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)':
+  '@storybook/react@10.5.7(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 10.5.7(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))
+      '@storybook/react-dom-shim': 10.5.7(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))
       react: 19.2.8
       react-docgen: 8.0.3
       react-docgen-typescript: 2.4.0(typescript@7.0.2)
-      react-dom: 19.2.7(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
       storybook: 10.5.7(@types/react@19.2.18)(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.18
-      '@types/react-dom': 19.2.3(@types/react@19.2.18)
+      '@types/react-dom': 19.2.4(@types/react@19.2.18)
       typescript: 7.0.2
     transitivePeerDependencies:
       - supports-color
@@ -4004,15 +4007,15 @@ snapshots:
     optionalDependencies:
       vitest: 4.1.10(@types/node@26.2.0)(jsdom@30.0.1)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))
 
-  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)':
+  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@testing-library/dom': 10.4.1
       react: 19.2.8
-      react-dom: 19.2.7(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.18
-      '@types/react-dom': 19.2.3(@types/react@19.2.18)
+      '@types/react-dom': 19.2.4(@types/react@19.2.18)
 
   '@testing-library/user-event@14.6.3(@testing-library/dom@10.4.1)':
     dependencies:
@@ -4075,7 +4078,7 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
-  '@types/react-dom@19.2.3(@types/react@19.2.18)':
+  '@types/react-dom@19.2.4(@types/react@19.2.18)':
     dependencies:
       '@types/react': 19.2.18
 
@@ -4544,6 +4547,8 @@ snapshots:
   es-module-lexer@1.7.0: {}
 
   es-module-lexer@2.3.1: {}
+
+  es-module-lexer@2.3.2: {}
 
   es-object-atoms@1.1.2:
     dependencies:
@@ -5142,7 +5147,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  react-dom@19.2.7(react@19.2.8):
+  react-dom@19.2.8(react@19.2.8):
     dependencies:
       react: 19.2.8
       scheduler: 0.27.0
@@ -5151,19 +5156,19 @@ snapshots:
 
   react-refresh@0.18.0: {}
 
-  react-router-dom@7.18.2(react-dom@19.2.7(react@19.2.8))(react@19.2.8):
+  react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       react: 19.2.8
-      react-dom: 19.2.7(react@19.2.8)
-      react-router: 7.18.2(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
+      react-router: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  react-router@7.18.2(react-dom@19.2.7(react@19.2.8))(react@19.2.8):
+  react-router@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       cookie: 1.1.1
       react: 19.2.8
       set-cookie-parser: 2.7.2
     optionalDependencies:
-      react-dom: 19.2.7(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
 
   react@19.2.8: {}
 
@@ -5324,7 +5329,7 @@ snapshots:
 
   std-env@4.2.0: {}
 
-  storybook-builder-rsbuild@3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0)):
+  storybook-builder-rsbuild@3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0)):
     dependencies:
       '@rsbuild/core': 2.1.11
       '@rsbuild/plugin-type-check': 1.6.0(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(typescript@7.0.2)
@@ -5349,7 +5354,7 @@ snapshots:
       util-deprecate: 1.0.2
     optionalDependencies:
       react: 19.2.8
-      react-dom: 19.2.7(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
       typescript: 7.0.2
     transitivePeerDependencies:
       - '@rspack/core'
@@ -5357,21 +5362,21 @@ snapshots:
       - msw
       - vite
 
-  storybook-react-rsbuild@3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))(webpack@5.105.4):
+  storybook-react-rsbuild@3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))(webpack@5.105.4):
     dependencies:
       '@rollup/pluginutils': 5.4.0(rollup@4.62.2)
       '@rsbuild/core': 2.1.11
-      '@storybook/react': 10.5.7(@types/react-dom@19.2.3(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)
+      '@storybook/react': 10.5.7(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)
       '@storybook/react-docgen-typescript-plugin': 1.0.1(typescript@7.0.2)(webpack@5.105.4)
       find-up: 5.0.0
       magic-string: 0.30.21
       react: 19.2.8
       react-docgen: 8.0.3
       react-docgen-typescript: 2.4.0(typescript@7.0.2)
-      react-dom: 19.2.7(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
       resolve: 1.22.12
       storybook: 10.5.7(@types/react@19.2.18)(react@19.2.8)
-      storybook-builder-rsbuild: 3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(react-dom@19.2.7(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))
+      storybook-builder-rsbuild: 3.4.1(@rsbuild/core@2.1.11)(@rspack/core@2.1.9(@swc/helpers@0.5.23))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.7(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.50.0))
       tsconfig-paths: 4.2.0
     optionalDependencies:
       typescript: 7.0.2
@@ -5630,7 +5635,7 @@ snapshots:
       browserslist: 4.28.8
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.24.5
-      es-module-lexer: 2.3.1
+      es-module-lexer: 2.3.2
       eslint-scope: 5.1.1
       events: 3.3.0
       glob-to-regexp: 0.4.1
