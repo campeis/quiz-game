@@ -29,13 +29,13 @@ importers:
         version: 2.1.0(@rsbuild/core@2.1.13)(@rspack/core@2.1.10(@swc/helpers@0.5.23))
       '@rspack/cli':
         specifier: ^2.1.10
-        version: 2.1.10(@rspack/core@2.1.10(@swc/helpers@0.5.23))(@rspack/dev-server@2.2.0(@rspack/core@2.1.10(@swc/helpers@0.5.23)))
+        version: 2.1.10(@rspack/core@2.1.10(@swc/helpers@0.5.23))(@rspack/dev-server@2.2.1(@rspack/core@2.1.10(@swc/helpers@0.5.23)))
       '@rspack/core':
         specifier: ^2.1.10
         version: 2.1.10(@swc/helpers@0.5.23)
       '@rspack/dev-server':
-        specifier: ^2.2.0
-        version: 2.2.0(@rspack/core@2.1.10(@swc/helpers@0.5.23))
+        specifier: ^2.2.1
+        version: 2.2.1(@rspack/core@2.1.10(@swc/helpers@0.5.23))
       '@rspack/plugin-react-refresh':
         specifier: ^2.0.2
         version: 2.0.2(@rspack/core@2.1.10(@swc/helpers@0.5.23))(react-refresh@0.18.0)
@@ -1277,8 +1277,8 @@ packages:
       '@rspack/core':
         optional: true
 
-  '@rspack/dev-server@2.2.0':
-    resolution: {integrity: sha512-Bd0DNphOJ5/KAm3bFpUUZeP7O6jvVDNdXJEmlpsVZLfdSgjmrd6Ut/EHCBv95tmiwOQN0M41SdvlUU4f855HFA==}
+  '@rspack/dev-server@2.2.1':
+    resolution: {integrity: sha512-Il8HbYGK3rH5rM0XmUOsOGZVw69BKRpBZ61P28Fy8ry35CtfniDBWtbo/rvJtIT/sK0qwijmNrhF498ltsV+uA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       '@rspack/core': ^2.0.0
@@ -3892,11 +3892,11 @@ snapshots:
       '@rspack/binding-win32-ia32-msvc': 2.1.10
       '@rspack/binding-win32-x64-msvc': 2.1.10
 
-  '@rspack/cli@2.1.10(@rspack/core@2.1.10(@swc/helpers@0.5.23))(@rspack/dev-server@2.2.0(@rspack/core@2.1.10(@swc/helpers@0.5.23)))':
+  '@rspack/cli@2.1.10(@rspack/core@2.1.10(@swc/helpers@0.5.23))(@rspack/dev-server@2.2.1(@rspack/core@2.1.10(@swc/helpers@0.5.23)))':
     dependencies:
       '@rspack/core': 2.1.10(@swc/helpers@0.5.23)
     optionalDependencies:
-      '@rspack/dev-server': 2.2.0(@rspack/core@2.1.10(@swc/helpers@0.5.23))
+      '@rspack/dev-server': 2.2.1(@rspack/core@2.1.10(@swc/helpers@0.5.23))
 
   '@rspack/core@2.1.10(@swc/helpers@0.5.23)':
     dependencies:
@@ -3908,7 +3908,7 @@ snapshots:
     optionalDependencies:
       '@rspack/core': 2.1.10(@swc/helpers@0.5.23)
 
-  '@rspack/dev-server@2.2.0(@rspack/core@2.1.10(@swc/helpers@0.5.23))':
+  '@rspack/dev-server@2.2.1(@rspack/core@2.1.10(@swc/helpers@0.5.23))':
     dependencies:
       '@rspack/core': 2.1.10(@swc/helpers@0.5.23)
       '@rspack/dev-middleware': 2.0.3(@rspack/core@2.1.10(@swc/helpers@0.5.23))
