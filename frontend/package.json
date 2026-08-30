@@ -14,24 +14,24 @@
 	"dependencies": {
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
-		"react-router-dom": "^7.18.2"
+		"react-router-dom": "^7.18.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.10",
-		"@rsbuild/core": "^2.2.0",
+		"@biomejs/biome": "^2.5.11",
+		"@rsbuild/core": "^2.2.1",
 		"@rsbuild/plugin-react": "^2.1.0",
-		"@rspack/cli": "^2.2.0",
-		"@rspack/core": "^2.2.0",
+		"@rspack/cli": "^2.2.1",
+		"@rspack/core": "^2.2.1",
 		"@rspack/dev-server": "^2.2.1",
 		"@rspack/plugin-react-refresh": "^2.0.2",
 		"@testing-library/jest-dom": "^7.0.1",
-		"@testing-library/react": "^16.3.2",
+		"@testing-library/react": "^16.3.3",
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.5",
 		"jsdom": "^30.0.1",
 		"react-refresh": "^0.18.0",
 		"storybook": "^10.5.10",
-		"storybook-react-rsbuild": "^3.4.1",
+		"storybook-react-rsbuild": "^3.4.2",
 		"typescript": "^7.0.2",
 		"vite": "^7.3.6",
 		"vitest": "^4.1.11"
