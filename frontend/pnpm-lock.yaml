@@ -58,11 +58,11 @@ importers:
         specifier: ^0.18.0
         version: 0.18.0
       storybook:
-        specifier: ^10.5.10
-        version: 10.5.10(@types/react@19.2.18)(react@19.2.8)
+        specifier: ^10.6.0
+        version: 10.6.0(@types/react@19.2.18)(react@19.2.8)
       storybook-react-rsbuild:
         specifier: ^3.4.2
-        version: 3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.63.1)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2))(webpack@5.105.4(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(postcss@8.5.26))
+        version: 3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.63.1)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2))(webpack@5.105.4(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(postcss@8.5.26))
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -1234,8 +1234,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@testing-library/user-event@14.6.6':
-    resolution: {integrity: sha512-Jbs9FpkkIDw8FgSc6kOVsOv8JuuqGAL7J4X1oot77JxAoDlkNn2GRkd0aYRVuQ+pVQAiHWVkE4rX/dkF5fBiCw==}
+  '@testing-library/user-event@14.6.7':
+    resolution: {integrity: sha512-MPCpX8bxe8zS+JmmTwLp8jd0dy1rAm60Te/SL8JrQM3qvQJcBOs1d7IefJMyZzqM3EWBrDn/LWDt1BCGu4ASfg==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
@@ -1575,8 +1575,8 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
-  ast-types@0.16.1:
-    resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
+  ast-types@0.16.3:
+    resolution: {integrity: sha512-FvWoWYfSCM6kRxCSH+MGLHIKKGRL6A6AW7Zek2O32REPQRdg131428uRTKMBYAeRd3XXAaHDS60Wpri7CdKDrA==}
     engines: {node: '>=4'}
 
   available-typed-arrays@1.0.7:
@@ -2500,8 +2500,8 @@ packages:
       typescript:
         optional: true
 
-  storybook@10.5.10:
-    resolution: {integrity: sha512-Rz8k9ejFHsi7lbtJTaxZlhCUz4GkbJIKEoKDjXeLfr/ZhXip73E6keKxW0KH8iGeKiCqHAbJCV4YIQrxTOLiig==}
+  storybook@10.6.0:
+    resolution: {integrity: sha512-H48X6AURAFTpfN2zEux6vNesee5Oq8Gxj1IanYmblPZ218sfKSeyyerF1NC7GD7BrruoC8L4/cU0zII4y+d6zw==}
     hasBin: true
     peerDependencies:
       '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -2618,8 +2618,8 @@ packages:
     resolution: {integrity: sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==}
     engines: {node: '>=14.0.0'}
 
-  tinyspy@4.0.4:
-    resolution: {integrity: sha512-azl+t0z7pw/z958Gy9svOTuzqIk6xq+NSheJzn5MMWtWTFywIacg2wUlzKFGtt3cthx0r2SxMK0yzJOR0IES7Q==}
+  tinyspy@4.0.6:
+    resolution: {integrity: sha512-u8KszXvGfU68hVcZpRHKG28T0krMuv2G5nDhiHaMLen/gIuFEgIJhaJuO69qjnXg5paSrbPMFfx3brNuN8eVSg==}
     engines: {node: '>=14.0.0'}
 
   tldts-core@7.4.11:
@@ -3714,24 +3714,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/react-dom-shim@10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))':
+  '@storybook/react-dom-shim@10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))':
     dependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-      storybook: 10.5.10(@types/react@19.2.18)(react@19.2.8)
+      storybook: 10.6.0(@types/react@19.2.18)(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.18
       '@types/react-dom': 19.2.5(@types/react@19.2.18)
 
-  '@storybook/react@10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)':
+  '@storybook/react@10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))
+      '@storybook/react-dom-shim': 10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))
       react: 19.2.8
       react-docgen: 8.0.3(supports-color@8.1.1)
       react-docgen-typescript: 2.4.0(typescript@7.0.2)
       react-dom: 19.2.8(react@19.2.8)
-      storybook: 10.5.10(@types/react@19.2.18)(react@19.2.8)
+      storybook: 10.6.0(@types/react@19.2.18)(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.18
       '@types/react-dom': 19.2.5(@types/react@19.2.18)
@@ -3785,7 +3785,7 @@ snapshots:
       '@types/react': 19.2.18
       '@types/react-dom': 19.2.5(@types/react@19.2.18)
 
-  '@testing-library/user-event@14.6.6(@testing-library/dom@10.4.1)':
+  '@testing-library/user-event@14.6.7(@testing-library/dom@10.4.1)':
     dependencies:
       '@testing-library/dom': 10.4.1
 
@@ -3971,11 +3971,11 @@ snapshots:
 
   '@vitest/spy@3.2.4':
     dependencies:
-      tinyspy: 4.0.4
+      tinyspy: 4.0.6
 
   '@vitest/spy@3.2.7':
     dependencies:
-      tinyspy: 4.0.4
+      tinyspy: 4.0.6
 
   '@vitest/spy@4.1.11': {}
 
@@ -4112,7 +4112,7 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
-  ast-types@0.16.1:
+  ast-types@0.16.3:
     dependencies:
       tslib: 2.8.1
 
@@ -4917,7 +4917,7 @@ snapshots:
 
   recast@0.23.21:
     dependencies:
-      ast-types: 0.16.1
+      ast-types: 0.16.3
       esprima: 4.0.1
       source-map: 0.6.1
       tiny-invariant: 1.3.3
@@ -5069,7 +5069,7 @@ snapshots:
 
   std-env@4.2.0: {}
 
-  storybook-builder-rsbuild@3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2)):
+  storybook-builder-rsbuild@3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2)):
     dependencies:
       '@rsbuild/core': 2.2.3
       '@rsbuild/plugin-type-check': 1.6.0(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(typescript@7.0.2)
@@ -5087,7 +5087,7 @@ snapshots:
       process: 0.11.10
       rsbuild-plugin-html-minifier-terser: 1.1.5(@rsbuild/core@2.2.3)
       sirv: 2.0.4
-      storybook: 10.5.10(@types/react@19.2.18)(react@19.2.8)
+      storybook: 10.6.0(@types/react@19.2.18)(react@19.2.8)
       ts-dedent: 2.3.0
       url: 0.11.4
       util: 0.12.5
@@ -5102,11 +5102,11 @@ snapshots:
       - msw
       - vite
 
-  storybook-react-rsbuild@3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.63.1)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2))(webpack@5.105.4(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(postcss@8.5.26)):
+  storybook-react-rsbuild@3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.63.1)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2))(webpack@5.105.4(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(postcss@8.5.26)):
     dependencies:
       '@rollup/pluginutils': 5.4.0(rollup@4.63.1)
       '@rsbuild/core': 2.2.3
-      '@storybook/react': 10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)
+      '@storybook/react': 10.5.10(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))(supports-color@8.1.1)(typescript@7.0.2)
       '@storybook/react-docgen-typescript-plugin': 1.0.1(supports-color@8.1.1)(typescript@7.0.2)(webpack@5.105.4(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(postcss@8.5.26))
       find-up: 5.0.0
       magic-string: 0.30.21
@@ -5115,8 +5115,8 @@ snapshots:
       react-docgen-typescript: 2.4.0(typescript@7.0.2)
       react-dom: 19.2.8(react@19.2.8)
       resolve: 1.22.12
-      storybook: 10.5.10(@types/react@19.2.18)(react@19.2.8)
-      storybook-builder-rsbuild: 3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.5.10(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2))
+      storybook: 10.6.0(@types/react@19.2.18)(react@19.2.8)
+      storybook-builder-rsbuild: 3.4.2(@rsbuild/core@2.2.3)(@rspack/core@2.2.2(@swc/helpers@0.5.23))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(storybook@10.6.0(@types/react@19.2.18)(react@19.2.8))(typescript@7.0.2)(vite@7.3.6(@types/node@26.2.0)(terser@5.51.2))
       tsconfig-paths: 4.2.0
     optionalDependencies:
       typescript: 7.0.2
@@ -5131,13 +5131,13 @@ snapshots:
       - vite
       - webpack
 
-  storybook@10.5.10(@types/react@19.2.18)(react@19.2.8):
+  storybook@10.6.0(@types/react@19.2.18)(react@19.2.8):
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 2.1.0(react@19.2.8)
       '@testing-library/dom': 10.4.1
       '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.6(@testing-library/dom@10.4.1)
+      '@testing-library/user-event': 14.6.7(@testing-library/dom@10.4.1)
       '@vitest/expect': 3.2.4
       '@vitest/spy': 3.2.4
       '@webcontainer/env': 1.1.1
@@ -5214,7 +5214,7 @@ snapshots:
 
   tinyrainbow@3.1.1: {}
 
-  tinyspy@4.0.4: {}
+  tinyspy@4.0.6: {}
 
   tldts-core@7.4.11: {}
 
