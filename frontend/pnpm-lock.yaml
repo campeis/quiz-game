@@ -22,16 +22,16 @@ importers:
         specifier: ^2.5.14
         version: 2.5.14
       '@rsbuild/core':
-        specifier: ^2.2.10
+        specifier: ^2.2.11
         version: 2.2.11
       '@rsbuild/plugin-react':
-        specifier: ^2.1.0
+        specifier: ^2.1.1
         version: 2.1.1(@rsbuild/core@2.2.11)(@rspack/core@2.2.8(@swc/helpers@0.5.23))
       '@rspack/cli':
-        specifier: ^2.2.7
+        specifier: ^2.2.8
         version: 2.2.8(@rspack/core@2.2.8(@swc/helpers@0.5.23))(@rspack/dev-server@2.2.1(@rspack/core@2.2.8(@swc/helpers@0.5.23)))
       '@rspack/core':
-        specifier: ^2.2.7
+        specifier: ^2.2.8
         version: 2.2.8(@swc/helpers@0.5.23)
       '@rspack/dev-server':
         specifier: ^2.2.1
