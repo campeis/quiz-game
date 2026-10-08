@@ -18,7 +18,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.15",
-		"@rsbuild/core": "^2.2.11",
+		"@rsbuild/core": "^2.2.12",
 		"@rsbuild/plugin-react": "^2.1.1",
 		"@rspack/cli": "^2.2.8",
 		"@rspack/core": "^2.2.8",
