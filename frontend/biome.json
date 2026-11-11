@@ -9,7 +9,7 @@
 	},
 	"linter": {
 		"enabled": true,
-		"rules": { "preset": "none" }
+		"rules": { "preset": "recommended" }
 	},
 	"formatter": {
 		"enabled": true,
