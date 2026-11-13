@@ -3,6 +3,9 @@ name = "quiz-server"
 version = "0.1.0"
 edition = "2024"
 
+[registry]
+global-min-publish-age = "3 days"
+
 [dependencies]
 axum = { version = "0.8", features = ["ws", "multipart"] }
 dashmap = "6"
