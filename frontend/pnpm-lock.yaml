@@ -61,8 +61,8 @@ importers:
         specifier: ^10.6.7
         version: 10.6.7(@types/react@19.3.0)(react@19.3.1)
       storybook-react-rsbuild:
-        specifier: ^3.6.3
-        version: 3.6.3(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(supports-color@8.1.1)(typescript@7.0.2)(webpack@5.112.2(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.32))
+        specifier: ^3.6.4
+        version: 3.6.4(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(supports-color@8.1.1)(typescript@7.0.2)(webpack@5.112.2(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.32))
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2419,13 +2419,13 @@ packages:
   std-env@4.3.0:
     resolution: {integrity: sha512-OtU/EgQ1kIm5KwqQpBC6ZEMXrZRui11w8zgfTWp8cdO9B8OaPsbA8bTHO2P+HNo1VlUTGMVBwPhydu6poeXiag==}
 
-  storybook-builder-rsbuild@3.6.3:
-    resolution: {integrity: sha512-8mVnw369mymhmvklbOm/+qZdG9pwd42XGt/6RWwcLzjd272dnRypBo0kXIYgXDSQe5Cez63Ae/Ejb/RsYKzITA==}
+  storybook-builder-rsbuild@3.6.4:
+    resolution: {integrity: sha512-7ZNeScesNgnwKH3mXp4qBq5c0CGQnjcqln99neF+cldjeQ2NZGIcikZsUCNmVzfcdkrn987pNDbNiDjCN3Y9sw==}
     peerDependencies:
       '@rsbuild/core': ^1.5.0 || ^2.0.0-0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      storybook: ^10.6.6
+      storybook: ^10.6.7
       typescript: '*'
     peerDependenciesMeta:
       react:
@@ -2435,14 +2435,14 @@ packages:
       typescript:
         optional: true
 
-  storybook-react-rsbuild@3.6.3:
-    resolution: {integrity: sha512-Rqx0/FFs3NZFBCRK0GgQVMXs+Higz7phlSaiCMe7vCf4ypwEuEQ+enIXE8bUbh27OIY4YjHuYSdLUoXJHcrkeQ==}
+  storybook-react-rsbuild@3.6.4:
+    resolution: {integrity: sha512-y5nd0mRKyN60kMcRvJs7wOhe7l24f26w9zNoU8HkEP0n85SofVyqw0pVqjGmfJS2os9dqrByd05yd/QSwER67g==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@rsbuild/core': ^1.5.0 || ^2.0.0-0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      storybook: ^10.6.6
+      storybook: ^10.6.7
       typescript: '>= 4.2.x'
     peerDependenciesMeta:
       typescript:
@@ -4846,7 +4846,7 @@ snapshots:
 
   std-env@4.3.0: {}
 
-  storybook-builder-rsbuild@3.6.3(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(typescript@7.0.2):
+  storybook-builder-rsbuild@3.6.4(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(typescript@7.0.2):
     dependencies:
       '@rsbuild/core': 2.3.3
       '@rsbuild/plugin-type-check': 1.6.1(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(typescript@7.0.2)
@@ -4876,7 +4876,7 @@ snapshots:
       - '@rspack/core'
       - '@typescript/native-preview'
 
-  storybook-react-rsbuild@3.6.3(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(supports-color@8.1.1)(typescript@7.0.2)(webpack@5.112.2(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.32)):
+  storybook-react-rsbuild@3.6.4(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(supports-color@8.1.1)(typescript@7.0.2)(webpack@5.112.2(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.32)):
     dependencies:
       '@rollup/pluginutils': 5.5.1
       '@rsbuild/core': 2.3.3
@@ -4889,7 +4889,7 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       resolve: 1.22.14
       storybook: 10.6.7(@types/react@19.3.0)(react@19.3.1)
-      storybook-builder-rsbuild: 3.6.3(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(typescript@7.0.2)
+      storybook-builder-rsbuild: 3.6.4(@rsbuild/core@2.3.3)(@rspack/core@2.3.3(@swc/helpers@0.5.24))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(storybook@10.6.7(@types/react@19.3.0)(react@19.3.1))(typescript@7.0.2)
       tsconfig-paths: 4.2.0
     optionalDependencies:
       typescript: 7.0.2
